@@ -3,8 +3,11 @@
 import { useState } from "react";
 import { LineChart } from "./LineChart";
 import { MobileOrderScreen } from "./MobileOrderScreen";
+import { MobileSpotOrderScreen } from "./MobileSpotOrderScreen";
 
 const TIME_PERIODS = ["1D", "1W", "1M", "3M", "1Y", "ALL"] as const;
+
+type TradeMode = "spot" | "perps";
 
 const pairs = [
   { symbol: "BTC", full: "Bitcoin", price: 67432.51, change: 1573.82, changePct: 2.34 },
@@ -16,12 +19,13 @@ export function MobileTradeView() {
   const [selectedPair, setSelectedPair] = useState(pairs[0]);
   const [showPairPicker, setShowPairPicker] = useState(false);
   const [selectedPeriod, setSelectedPeriod] = useState<string>("1D");
-  const [orderScreen, setOrderScreen] = useState<"long" | "short" | null>(null);
+  const [tradeMode, setTradeMode] = useState<TradeMode>("spot");
+  const [orderScreen, setOrderScreen] = useState<"long" | "short" | "buy" | "sell" | null>(null);
 
   const isPositive = selectedPair.changePct >= 0;
   const accentColor = isPositive ? "text-green" : "text-red";
 
-  if (orderScreen) {
+  if (orderScreen === "long" || orderScreen === "short") {
     return (
       <MobileOrderScreen
         side={orderScreen}
@@ -32,9 +36,21 @@ export function MobileTradeView() {
     );
   }
 
+  if (orderScreen === "buy" || orderScreen === "sell") {
+    return (
+      <MobileSpotOrderScreen
+        side={orderScreen}
+        onClose={() => setOrderScreen(null)}
+        price={selectedPair.price}
+        symbol={selectedPair.symbol}
+        fullName={selectedPair.full}
+      />
+    );
+  }
+
   return (
     <div className="flex flex-col h-full bg-bg-primary">
-      {/* Minimal header - Robinhood style */}
+      {/* Minimal header */}
       <div className="flex items-center justify-between px-4 pt-1 pb-0">
         <button className="w-10 h-10 flex items-center justify-center -ml-2">
           <svg width="20" height="20" viewBox="0 0 20 20" className="text-text-primary">
@@ -104,6 +120,28 @@ export function MobileTradeView() {
           </div>
         </div>
 
+        {/* Spot / Perps toggle */}
+        <div className="px-5 pt-3 pb-1">
+          <div className="flex bg-bg-secondary rounded-full p-1 max-w-[200px]">
+            <button
+              onClick={() => setTradeMode("spot")}
+              className={`flex-1 py-1.5 text-[12px] font-semibold rounded-full transition-all ${
+                tradeMode === "spot" ? "bg-bg-tertiary text-text-primary shadow-sm" : "text-text-tertiary"
+              }`}
+            >
+              Spot
+            </button>
+            <button
+              onClick={() => setTradeMode("perps")}
+              className={`flex-1 py-1.5 text-[12px] font-semibold rounded-full transition-all ${
+                tradeMode === "perps" ? "bg-bg-tertiary text-text-primary shadow-sm" : "text-text-tertiary"
+              }`}
+            >
+              Perps
+            </button>
+          </div>
+        </div>
+
         {/* Price */}
         <div className="px-5 pt-2 pb-2">
           <div className="text-[34px] font-bold leading-none tracking-tight">
@@ -125,7 +163,7 @@ export function MobileTradeView() {
           <LineChart positive={isPositive} />
         </div>
 
-        {/* Time periods - plain text, not pills */}
+        {/* Time periods */}
         <div className="flex justify-between px-5 pt-3 pb-1">
           {TIME_PERIODS.map((period) => (
             <button
@@ -143,24 +181,56 @@ export function MobileTradeView() {
           ))}
         </div>
 
-        {/* Your Position - if any */}
+        {/* Your Position / Holdings */}
         <div className="mx-5 mt-5">
-          <div className="text-[17px] font-bold mb-3">Your Position</div>
+          <div className="text-[17px] font-bold mb-3">
+            {tradeMode === "spot" ? "Your Holdings" : "Your Position"}
+          </div>
           <div className="py-4 text-center">
-            <div className="text-[15px] text-text-secondary">You don&apos;t own any {selectedPair.full}</div>
+            <div className="text-[15px] text-text-secondary">
+              You don&apos;t own any {selectedPair.full}
+            </div>
           </div>
         </div>
 
+        {/* Recurring / DCA callout for spot */}
+        {tradeMode === "spot" && (
+          <div className="mx-5 mt-2">
+            <button
+              onClick={() => setOrderScreen("buy")}
+              className="w-full flex items-center gap-3 bg-bg-secondary rounded-2xl px-4 py-4 active:bg-bg-hover transition-colors"
+            >
+              <div className="w-10 h-10 rounded-full bg-green/10 flex items-center justify-center shrink-0">
+                <svg width="18" height="18" viewBox="0 0 24 24" className="text-green">
+                  <path d="M23 4v6h-6M1 20v-6h6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+              <div className="flex-1 text-left">
+                <div className="text-[14px] font-semibold">Set Up Recurring Buy</div>
+                <div className="text-[12px] text-text-tertiary">Auto-buy {selectedPair.symbol} daily, weekly, or monthly</div>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 20 20" className="text-text-tertiary shrink-0">
+                <path d="M7 4l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+          </div>
+        )}
+
         {/* Key Statistics */}
-        <div className="mx-5 mt-4">
+        <div className="mx-5 mt-5">
           <div className="text-[17px] font-bold mb-1">Key Statistics</div>
           <StatRow label="24h Volume" value="$1.23B" />
           <StatRow label="High Today" value={`$${(selectedPair.price * 1.015).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`} />
           <StatRow label="Low Today" value={`$${(selectedPair.price * 0.975).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`} />
           <StatRow label="Market Cap" value="$1.32T" />
-          <StatRow label="Open Interest" value="$2.4B" />
-          <StatRow label="Funding Rate" value="0.0100%" />
-          <StatRow label="Max Leverage" value="50x" />
+          {tradeMode === "perps" && (
+            <>
+              <StatRow label="Open Interest" value="$2.4B" />
+              <StatRow label="Funding Rate" value="0.0100%" />
+              <StatRow label="Max Leverage" value="50x" />
+            </>
+          )}
         </div>
 
         {/* About */}
@@ -178,20 +248,37 @@ export function MobileTradeView() {
 
       {/* Fixed bottom buttons */}
       <div className="fixed bottom-0 left-0 right-0 bg-bg-primary px-5 pb-4 pt-2 z-30 lg:hidden">
-        <div className="flex gap-3">
-          <button
-            onClick={() => setOrderScreen("long")}
-            className="flex-1 py-[14px] rounded-full bg-green font-semibold text-[15px] text-white active:scale-[0.97] transition-transform"
-          >
-            Long
-          </button>
-          <button
-            onClick={() => setOrderScreen("short")}
-            className="flex-1 py-[14px] rounded-full bg-red font-semibold text-[15px] text-white active:scale-[0.97] transition-transform"
-          >
-            Short
-          </button>
-        </div>
+        {tradeMode === "spot" ? (
+          <div className="flex gap-3">
+            <button
+              onClick={() => setOrderScreen("buy")}
+              className="flex-1 py-[14px] rounded-full bg-green font-semibold text-[15px] text-white active:scale-[0.97] transition-transform"
+            >
+              Buy
+            </button>
+            <button
+              onClick={() => setOrderScreen("sell")}
+              className="flex-1 py-[14px] rounded-full bg-red font-semibold text-[15px] text-white active:scale-[0.97] transition-transform"
+            >
+              Sell
+            </button>
+          </div>
+        ) : (
+          <div className="flex gap-3">
+            <button
+              onClick={() => setOrderScreen("long")}
+              className="flex-1 py-[14px] rounded-full bg-green font-semibold text-[15px] text-white active:scale-[0.97] transition-transform"
+            >
+              Long
+            </button>
+            <button
+              onClick={() => setOrderScreen("short")}
+              className="flex-1 py-[14px] rounded-full bg-red font-semibold text-[15px] text-white active:scale-[0.97] transition-transform"
+            >
+              Short
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
