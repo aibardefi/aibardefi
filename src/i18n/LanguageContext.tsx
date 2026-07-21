@@ -7,22 +7,26 @@ type LanguageContextType = {
   lang: Language;
   setLang: (lang: Language) => void;
   t: (key: TranslationKey, vars?: Record<string, string | number>) => string;
+  ready: boolean;
 };
 
 const LanguageContext = createContext<LanguageContextType>({
   lang: "en",
   setLang: () => {},
   t: (key) => key,
+  ready: false,
 });
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [lang, setLangState] = useState<Language>("en");
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem("alphadex-lang") as Language | null;
     if (saved && translations[saved]) {
       setLangState(saved);
     }
+    setReady(true);
   }, []);
 
   const setLang = useCallback((l: Language) => {
@@ -44,7 +48,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <LanguageContext.Provider value={{ lang, setLang, t }}>
+    <LanguageContext.Provider value={{ lang, setLang, t, ready }}>
       {children}
     </LanguageContext.Provider>
   );

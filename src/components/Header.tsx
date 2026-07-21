@@ -17,9 +17,9 @@ export function Header() {
   const isTradeActive = pathname.startsWith("/trade");
 
   return (
-    <header className="h-16 bg-bg-secondary border-b border-border flex items-center px-8 shrink-0">
-      <Link href="/" className="flex items-center mr-12">
-        <span className="text-xl tracking-tight">
+    <header className="h-14 lg:h-16 bg-bg-secondary border-b border-border flex items-center px-4 lg:px-8 shrink-0">
+      <Link href="/" className="flex items-center mr-4 lg:mr-12 shrink-0">
+        <span className="text-lg lg:text-xl tracking-tight">
           <span className="font-semibold text-text-primary">Alpha</span>
           <span className="font-semibold text-green">DEX</span>
         </span>
@@ -28,7 +28,7 @@ export function Header() {
       <nav className="flex items-center gap-8 h-full">
         <Link
           href="/trade"
-          className={`text-sm transition-colors ${
+          className={`text-sm transition-colors whitespace-nowrap ${
             isTradeActive
               ? "text-text-primary"
               : "text-text-secondary hover:text-text-primary"
@@ -38,19 +38,19 @@ export function Header() {
         </Link>
       </nav>
 
-      <div className="ml-auto flex items-center gap-2">
+      <div className="ml-auto flex items-center gap-1.5 lg:gap-2">
         {/* Language picker */}
         <div className="relative">
           <button
             onClick={() => setShowLangMenu(!showLangMenu)}
-            className="h-9 px-2.5 flex items-center gap-1.5 rounded-full text-text-secondary hover:text-text-primary hover:bg-bg-tertiary transition-colors text-sm font-medium"
+            className="h-9 px-2 lg:px-2.5 flex items-center gap-1.5 rounded-full text-text-secondary hover:text-text-primary hover:bg-bg-tertiary transition-colors text-sm font-medium"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="10" />
               <line x1="2" y1="12" x2="22" y2="12" />
               <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" />
             </svg>
-            <span className="hidden sm:inline">{lang.toUpperCase()}</span>
+            <span className="text-xs lg:text-sm">{lang.toUpperCase()}</span>
           </button>
 
           {showLangMenu && (
@@ -104,7 +104,7 @@ export function Header() {
 
         <Link
           href="/trade"
-          className="px-6 py-2 text-sm bg-btn-bg text-btn-text rounded-full font-medium hover:bg-btn-hover transition-colors"
+          className="hidden lg:inline-flex px-6 py-2 text-sm bg-btn-bg text-btn-text rounded-full font-medium hover:bg-btn-hover transition-colors"
         >
           {t("trade")}
         </Link>

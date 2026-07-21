@@ -1,9 +1,12 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
 
+type Trade = { price: string; amount: string; time: string; isBuy: boolean };
+
 function generateTrades(count: number) {
-  const trades = [];
+  const trades: Trade[] = [];
   let price = 67432.51;
   for (let i = 0; i < count; i++) {
     const isBuy = Math.random() > 0.45;
@@ -23,10 +26,13 @@ function generateTrades(count: number) {
   return trades;
 }
 
-const trades = generateTrades(25);
-
 export function RecentTrades() {
   const { t } = useLanguage();
+  const [trades, setTrades] = useState<Trade[]>([]);
+
+  useEffect(() => {
+    setTrades(generateTrades(25));
+  }, []);
 
   return (
     <div className="flex flex-col h-full">

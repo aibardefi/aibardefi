@@ -1,9 +1,12 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
 
+type Order = { price: string; amount: string; total: string };
+
 function generateOrders(basePrice: number, side: "ask" | "bid", count: number) {
-  const orders = [];
+  const orders: Order[] = [];
   for (let i = 0; i < count; i++) {
     const offset = (i + 1) * (Math.random() * 5 + 1);
     const price =
@@ -20,16 +23,25 @@ function generateOrders(basePrice: number, side: "ask" | "bid", count: number) {
 }
 
 const BASE_PRICE = 67432.51;
-const asks = generateOrders(BASE_PRICE, "ask", 12);
-const bids = generateOrders(BASE_PRICE, "bid", 12);
-
-const maxTotal = Math.max(
-  ...asks.map((o) => parseFloat(o.total)),
-  ...bids.map((o) => parseFloat(o.total))
-);
 
 export function OrderBook() {
   const { t } = useLanguage();
+  const [asks, setAsks] = useState<Order[]>([]);
+  const [bids, setBids] = useState<Order[]>([]);
+  const [maxTotal, setMaxTotal] = useState(1);
+
+  useEffect(() => {
+    const a = generateOrders(BASE_PRICE, "ask", 12);
+    const b = generateOrders(BASE_PRICE, "bid", 12);
+    setAsks(a);
+    setBids(b);
+    setMaxTotal(
+      Math.max(
+        ...a.map((o) => parseFloat(o.total)),
+        ...b.map((o) => parseFloat(o.total))
+      )
+    );
+  }, []);
 
   return (
     <div className="flex flex-col h-full">

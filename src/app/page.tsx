@@ -16,7 +16,7 @@ export default function Home() {
   return (
     <div className="flex-1 flex flex-col">
       <div className="flex-1 flex flex-col items-center justify-center px-6">
-        <h1 className="text-6xl md:text-7xl font-semibold tracking-tight text-text-primary mb-5 text-center">
+        <h1 className="text-4xl sm:text-6xl md:text-7xl font-semibold tracking-tight text-text-primary mb-5 text-center leading-tight">
           {t("heroTitle")}
         </h1>
         <p className="text-lg text-text-secondary mb-10">
@@ -31,7 +31,7 @@ export default function Home() {
       </div>
 
       <div className="border-t border-border">
-        <div className="max-w-4xl mx-auto py-10 px-6 grid grid-cols-4 gap-8">
+        <div className="max-w-4xl mx-auto py-10 px-6 grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8">
           {stats.map((stat) => (
             <div key={stat.label} className="text-center">
               <p className="text-sm text-text-secondary mb-1">{stat.label}</p>
