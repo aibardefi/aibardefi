@@ -12,14 +12,14 @@ export default function Home() {
     <div className="flex-1 flex flex-col">
       <div className="flex-1 flex flex-col items-center justify-center px-6">
         <h1 className="text-6xl md:text-7xl font-semibold tracking-tight text-text-primary mb-5">
-          Trade with AI
+          Trade. Invest. Earn.
         </h1>
         <p className="text-lg text-text-secondary mb-10">
           Perps on Solana. Up to 50x.
         </p>
         <Link
           href="/trade"
-          className="px-10 py-3.5 bg-text-primary text-bg-primary rounded-full text-sm font-medium hover:bg-white transition-colors"
+          className="px-10 py-3.5 bg-btn-bg text-btn-text rounded-full text-sm font-medium hover:bg-btn-hover transition-colors"
         >
           Start trading
         </Link>

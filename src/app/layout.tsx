@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AibarDeFi Exchange",
-  description: "Decentralized trading platform",
+  title: "AlphaDEX",
+  description: "Decentralized trading platform on Solana",
 };
 
 export default function RootLayout({
@@ -26,11 +27,15 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      data-theme="dark"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <body className="min-h-screen flex flex-col bg-bg-primary text-text-primary">
-        <Header />
-        <main className="flex-1 flex flex-col">{children}</main>
+        <ThemeProvider>
+          <Header />
+          <main className="flex-1 flex flex-col">{children}</main>
+        </ThemeProvider>
       </body>
     </html>
   );

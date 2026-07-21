@@ -29,26 +29,41 @@ export function PriceChart() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const resizeObserver = new ResizeObserver(() => {
+    const draw = () => {
       const rect = container.getBoundingClientRect();
       const dpr = window.devicePixelRatio || 1;
       canvas.width = rect.width * dpr;
       canvas.height = rect.height * dpr;
       canvas.style.width = `${rect.width}px`;
       canvas.style.height = `${rect.height}px`;
-      ctx.scale(dpr, dpr);
-      draw(ctx, rect.width, rect.height);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      renderChart(ctx, rect.width, rect.height);
+    };
+
+    const resizeObserver = new ResizeObserver(draw);
+    resizeObserver.observe(container);
+
+    const observer = new MutationObserver(draw);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
     });
 
-    resizeObserver.observe(container);
-    return () => resizeObserver.disconnect();
+    return () => {
+      resizeObserver.disconnect();
+      observer.disconnect();
+    };
   }, []);
 
-  function draw(ctx: CanvasRenderingContext2D, w: number, h: number) {
+  function renderChart(ctx: CanvasRenderingContext2D, w: number, h: number) {
     const data = generateCandlestickData(60);
     const padding = { top: 20, right: 60, bottom: 30, left: 10 };
     const chartW = w - padding.left - padding.right;
     const chartH = h - padding.top - padding.bottom;
+
+    const style = getComputedStyle(document.documentElement);
+    const gridColor = style.getPropertyValue("--border-color").trim();
+    const labelColor = style.getPropertyValue("--text-tertiary").trim();
 
     ctx.clearRect(0, 0, w, h);
 
@@ -60,7 +75,7 @@ export function PriceChart() {
     const toY = (price: number) =>
       padding.top + chartH - ((price - minPrice) / priceRange) * chartH;
 
-    ctx.strokeStyle = "#1e1e1e";
+    ctx.strokeStyle = gridColor;
     ctx.lineWidth = 0.5;
     for (let i = 0; i <= 5; i++) {
       const y = padding.top + (chartH / 5) * i;
@@ -70,7 +85,7 @@ export function PriceChart() {
       ctx.stroke();
 
       const price = maxPrice - (priceRange / 5) * i;
-      ctx.fillStyle = "#555555";
+      ctx.fillStyle = labelColor;
       ctx.font = "11px Arial";
       ctx.textAlign = "left";
       ctx.fillText(price.toFixed(0), w - padding.right + 8, y + 4);
