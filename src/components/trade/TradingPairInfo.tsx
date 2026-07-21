@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const pairs = [
   { symbol: "BTC/USDT", price: 67432.51, change: 2.34 },
@@ -10,6 +11,7 @@ const pairs = [
 ];
 
 export function TradingPairInfo() {
+  const { t } = useLanguage();
   const [selectedPair, setSelectedPair] = useState(pairs[0]);
   const [showDropdown, setShowDropdown] = useState(false);
 
@@ -83,7 +85,7 @@ export function TradingPairInfo() {
           </span>
         </div>
         <div className="flex flex-col shrink-0">
-          <span className="text-text-tertiary text-xs">24h Change</span>
+          <span className="text-text-tertiary text-xs">{t("change24h")}</span>
           <span
             className={selectedPair.change >= 0 ? "text-green" : "text-red"}
           >
@@ -92,7 +94,7 @@ export function TradingPairInfo() {
           </span>
         </div>
         <div className="flex flex-col shrink-0 hidden sm:flex">
-          <span className="text-text-tertiary text-xs">24h High</span>
+          <span className="text-text-tertiary text-xs">{t("high24h")}</span>
           <span>
             {(selectedPair.price * 1.015).toLocaleString("en-US", {
               minimumFractionDigits: 2,
@@ -100,7 +102,7 @@ export function TradingPairInfo() {
           </span>
         </div>
         <div className="flex flex-col shrink-0 hidden sm:flex">
-          <span className="text-text-tertiary text-xs">24h Low</span>
+          <span className="text-text-tertiary text-xs">{t("low24h")}</span>
           <span>
             {(selectedPair.price * 0.975).toLocaleString("en-US", {
               minimumFractionDigits: 2,
@@ -108,7 +110,7 @@ export function TradingPairInfo() {
           </span>
         </div>
         <div className="flex flex-col shrink-0 hidden sm:flex">
-          <span className="text-text-tertiary text-xs">24h Volume</span>
+          <span className="text-text-tertiary text-xs">{t("volume24h")}</span>
           <span>1.23B USDT</span>
         </div>
       </div>

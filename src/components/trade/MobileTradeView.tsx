@@ -4,6 +4,7 @@ import { useState } from "react";
 import { LineChart } from "./LineChart";
 import { MobileOrderScreen } from "./MobileOrderScreen";
 import { MobileSpotOrderScreen } from "./MobileSpotOrderScreen";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const TIME_PERIODS = ["1D", "1W", "1M", "3M", "1Y", "ALL"] as const;
 
@@ -16,6 +17,7 @@ const pairs = [
 ];
 
 export function MobileTradeView() {
+  const { t } = useLanguage();
   const [selectedPair, setSelectedPair] = useState(pairs[0]);
   const [showPairPicker, setShowPairPicker] = useState(false);
   const [selectedPeriod, setSelectedPeriod] = useState<string>("1D");
@@ -47,6 +49,8 @@ export function MobileTradeView() {
       />
     );
   }
+
+  const descKey = selectedPair.symbol === "BTC" ? "btcDesc" : selectedPair.symbol === "ETH" ? "ethDesc" : "solDesc";
 
   return (
     <div className="flex flex-col h-full bg-bg-primary">
@@ -129,7 +133,7 @@ export function MobileTradeView() {
                 tradeMode === "spot" ? "bg-bg-tertiary text-text-primary shadow-sm" : "text-text-tertiary"
               }`}
             >
-              Spot
+              {t("spot")}
             </button>
             <button
               onClick={() => setTradeMode("perps")}
@@ -137,7 +141,7 @@ export function MobileTradeView() {
                 tradeMode === "perps" ? "bg-bg-tertiary text-text-primary shadow-sm" : "text-text-tertiary"
               }`}
             >
-              Perps
+              {t("perps")}
             </button>
           </div>
         </div>
@@ -154,7 +158,7 @@ export function MobileTradeView() {
             <span className={`text-[15px] font-medium ${accentColor}`}>
               ({isPositive ? "+" : ""}{selectedPair.changePct}%)
             </span>
-            <span className="text-[13px] text-text-tertiary">Today</span>
+            <span className="text-[13px] text-text-tertiary">{t("today")}</span>
           </div>
         </div>
 
@@ -184,11 +188,11 @@ export function MobileTradeView() {
         {/* Your Position / Holdings */}
         <div className="mx-5 mt-5">
           <div className="text-[17px] font-bold mb-3">
-            {tradeMode === "spot" ? "Your Holdings" : "Your Position"}
+            {tradeMode === "spot" ? t("yourHoldings") : t("yourPosition")}
           </div>
           <div className="py-4 text-center">
             <div className="text-[15px] text-text-secondary">
-              You don&apos;t own any {selectedPair.full}
+              {t("noHoldings", { name: selectedPair.full })}
             </div>
           </div>
         </div>
@@ -207,8 +211,8 @@ export function MobileTradeView() {
                 </svg>
               </div>
               <div className="flex-1 text-left">
-                <div className="text-[14px] font-semibold">Set Up Recurring Buy</div>
-                <div className="text-[12px] text-text-tertiary">Auto-buy {selectedPair.symbol} daily, weekly, or monthly</div>
+                <div className="text-[14px] font-semibold">{t("setupRecurring")}</div>
+                <div className="text-[12px] text-text-tertiary">{t("recurringDesc", { symbol: selectedPair.symbol })}</div>
               </div>
               <svg width="16" height="16" viewBox="0 0 20 20" className="text-text-tertiary shrink-0">
                 <path d="M7 4l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -219,29 +223,25 @@ export function MobileTradeView() {
 
         {/* Key Statistics */}
         <div className="mx-5 mt-5">
-          <div className="text-[17px] font-bold mb-1">Key Statistics</div>
-          <StatRow label="24h Volume" value="$1.23B" />
-          <StatRow label="High Today" value={`$${(selectedPair.price * 1.015).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`} />
-          <StatRow label="Low Today" value={`$${(selectedPair.price * 0.975).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`} />
-          <StatRow label="Market Cap" value="$1.32T" />
+          <div className="text-[17px] font-bold mb-1">{t("keyStats")}</div>
+          <StatRow label={t("volume24h")} value="$1.23B" />
+          <StatRow label={t("highToday")} value={`$${(selectedPair.price * 1.015).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`} />
+          <StatRow label={t("lowToday")} value={`$${(selectedPair.price * 0.975).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`} />
+          <StatRow label={t("marketCap")} value="$1.32T" />
           {tradeMode === "perps" && (
             <>
-              <StatRow label="Open Interest" value="$2.4B" />
-              <StatRow label="Funding Rate" value="0.0100%" />
-              <StatRow label="Max Leverage" value="50x" />
+              <StatRow label={t("openInterest")} value="$2.4B" />
+              <StatRow label={t("fundingRate")} value="0.0100%" />
+              <StatRow label={t("maxLeverage")} value="50x" />
             </>
           )}
         </div>
 
         {/* About */}
         <div className="mx-5 mt-6 mb-6">
-          <div className="text-[17px] font-bold mb-2">About {selectedPair.full}</div>
+          <div className="text-[17px] font-bold mb-2">{t("about", { name: selectedPair.full })}</div>
           <p className="text-[14px] text-text-secondary leading-[1.6]">
-            {selectedPair.symbol === "BTC"
-              ? "Bitcoin is a decentralized digital currency that can be transferred on the peer-to-peer bitcoin network. Transactions are verified by network nodes through cryptography and recorded in a public distributed ledger called a blockchain."
-              : selectedPair.symbol === "ETH"
-              ? "Ethereum is a decentralized blockchain platform that establishes a peer-to-peer network for securely executing and verifying application code, called smart contracts."
-              : "Solana is a high-performance blockchain supporting builders around the world creating crypto apps that scale. It processes thousands of transactions per second with minimal fees."}
+            {t(descKey as "btcDesc" | "ethDesc" | "solDesc")}
           </p>
         </div>
       </div>
@@ -254,13 +254,13 @@ export function MobileTradeView() {
               onClick={() => setOrderScreen("buy")}
               className="flex-1 py-[14px] rounded-full bg-green font-semibold text-[15px] text-white active:scale-[0.97] transition-transform"
             >
-              Buy
+              {t("buy")}
             </button>
             <button
               onClick={() => setOrderScreen("sell")}
               className="flex-1 py-[14px] rounded-full bg-red font-semibold text-[15px] text-white active:scale-[0.97] transition-transform"
             >
-              Sell
+              {t("sell")}
             </button>
           </div>
         ) : (
@@ -269,13 +269,13 @@ export function MobileTradeView() {
               onClick={() => setOrderScreen("long")}
               className="flex-1 py-[14px] rounded-full bg-green font-semibold text-[15px] text-white active:scale-[0.97] transition-transform"
             >
-              Long
+              {t("long")}
             </button>
             <button
               onClick={() => setOrderScreen("short")}
               className="flex-1 py-[14px] rounded-full bg-red font-semibold text-[15px] text-white active:scale-[0.97] transition-transform"
             >
-              Short
+              {t("short")}
             </button>
           </div>
         )}

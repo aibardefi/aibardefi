@@ -3,15 +3,16 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { LanguageProvider } from "@/i18n/LanguageContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
-  subsets: ["latin"],
+  subsets: ["latin", "cyrillic"],
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
-  subsets: ["latin"],
+  subsets: ["latin", "cyrillic"],
 });
 
 export const metadata: Metadata = {
@@ -36,8 +37,10 @@ export default function RootLayout({
     >
       <body className="min-h-screen flex flex-col bg-bg-primary text-text-primary">
         <ThemeProvider>
-          <Header />
-          <main className="flex-1 flex flex-col">{children}</main>
+          <LanguageProvider>
+            <Header />
+            <main className="flex-1 flex flex-col">{children}</main>
+          </LanguageProvider>
         </ThemeProvider>
       </body>
     </html>

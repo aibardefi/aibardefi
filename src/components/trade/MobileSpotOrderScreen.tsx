@@ -1,16 +1,18 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
+import { useLanguage } from "@/i18n/LanguageContext";
+import type { TranslationKey } from "@/i18n/translations";
 
 type BuySell = "buy" | "sell";
 type Frequency = "once" | "daily" | "weekly" | "biweekly" | "monthly";
 
-const FREQUENCY_LABELS: Record<Frequency, string> = {
-  once: "One-Time",
-  daily: "Every Day",
-  weekly: "Every Week",
-  biweekly: "Every 2 Weeks",
-  monthly: "Every Month",
+const FREQUENCY_KEYS: Record<Frequency, TranslationKey> = {
+  once: "oneTime",
+  daily: "everyDay",
+  weekly: "everyWeek",
+  biweekly: "every2Weeks",
+  monthly: "everyMonth",
 };
 
 const QUICK_AMOUNTS = ["10", "25", "50", "100"];
@@ -28,6 +30,7 @@ export function MobileSpotOrderScreen({
   symbol: string;
   fullName: string;
 }) {
+  const { t } = useLanguage();
   const [amount, setAmount] = useState("0");
   const [frequency, setFrequency] = useState<Frequency>("once");
   const [showFrequency, setShowFrequency] = useState(false);
@@ -102,13 +105,15 @@ export function MobileSpotOrderScreen({
           </svg>
         </div>
         <div className="text-2xl font-bold mb-2">
-          {frequency === "once" ? "Order Placed" : "Recurring Buy Set"}
+          {frequency === "once" ? t("orderPlaced") : t("recurringBuySet")}
         </div>
         <div className="text-text-secondary text-center text-[15px]">
-          {isBuy ? "Buying" : "Selling"} ${amountNum.toLocaleString("en-US", { minimumFractionDigits: 2 })} of {fullName}
+          {isBuy
+            ? t("buyingAmount", { amount: amountNum.toLocaleString("en-US", { minimumFractionDigits: 2 }), name: fullName })
+            : t("sellingAmount", { amount: amountNum.toLocaleString("en-US", { minimumFractionDigits: 2 }), name: fullName })}
           {frequency !== "once" && (
             <div className="mt-1 text-text-tertiary text-[13px]">
-              {FREQUENCY_LABELS[frequency]}
+              {t(FREQUENCY_KEYS[frequency])}
             </div>
           )}
         </div>
@@ -116,7 +121,7 @@ export function MobileSpotOrderScreen({
           onClick={onClose}
           className="mt-8 px-8 py-3 rounded-full bg-bg-secondary text-[15px] font-semibold active:scale-[0.97] transition-transform"
         >
-          Done
+          {t("done")}
         </button>
       </div>
     );
@@ -132,7 +137,7 @@ export function MobileSpotOrderScreen({
               <path d="M13 4l-6 6 6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
-          <div className="text-[15px] font-semibold">Review Order</div>
+          <div className="text-[15px] font-semibold">{t("reviewOrder")}</div>
           <div className="w-10" />
         </div>
 
@@ -143,28 +148,28 @@ export function MobileSpotOrderScreen({
               {symbol.charAt(0)}
             </div>
             <div className="text-[13px] text-text-tertiary mb-1">
-              {isBuy ? "Buying" : "Selling"} {fullName}
+              {isBuy ? t("buyingName", { name: fullName }) : t("sellingName", { name: fullName })}
             </div>
             <div className="text-[36px] font-bold tracking-tight">
               ${amountNum.toLocaleString("en-US", { minimumFractionDigits: 2 })}
             </div>
             {frequency !== "once" && (
               <div className="mt-1 px-3 py-1 rounded-full bg-green/10 text-green text-[12px] font-semibold">
-                {FREQUENCY_LABELS[frequency]}
+                {t(FREQUENCY_KEYS[frequency])}
               </div>
             )}
           </div>
 
           {/* Details */}
           <div className="space-y-4">
-            <ReviewRow label="Market Price" value={`$${price.toLocaleString("en-US", { minimumFractionDigits: 2 })}`} />
-            <ReviewRow label={`Est. ${symbol} Amount`} value={`${estimatedQty.toFixed(6)} ${symbol}`} />
-            <ReviewRow label="Network Fee" value="~$0.00" />
+            <ReviewRow label={t("marketPrice")} value={`$${price.toLocaleString("en-US", { minimumFractionDigits: 2 })}`} />
+            <ReviewRow label={t("estAmount", { symbol })} value={`${estimatedQty.toFixed(6)} ${symbol}`} />
+            <ReviewRow label={t("networkFee")} value="~$0.00" />
             {frequency !== "once" && (
-              <ReviewRow label="Schedule" value={FREQUENCY_LABELS[frequency]} />
+              <ReviewRow label={t("schedule")} value={t(FREQUENCY_KEYS[frequency])} />
             )}
             <div className="border-t border-border/50 pt-4">
-              <ReviewRow label="Total" value={`$${amountNum.toLocaleString("en-US", { minimumFractionDigits: 2 })}`} bold />
+              <ReviewRow label={t("total")} value={`$${amountNum.toLocaleString("en-US", { minimumFractionDigits: 2 })}`} bold />
             </div>
           </div>
         </div>
@@ -177,7 +182,7 @@ export function MobileSpotOrderScreen({
           >
             <div className="absolute inset-0 flex items-center justify-center">
               <span className="text-[14px] font-semibold text-green">
-                Swipe to {isBuy ? "Buy" : "Sell"}
+                {isBuy ? t("swipeToBuy") : t("swipeToSell")}
               </span>
             </div>
             <div
@@ -211,7 +216,7 @@ export function MobileSpotOrderScreen({
           </svg>
         </button>
         <div className="text-[15px] font-semibold">
-          {isBuy ? "Buy" : "Sell"} {symbol}
+          {isBuy ? t("buyName", { symbol }) : t("sellName", { symbol })}
         </div>
         <div className="w-10" />
       </div>
@@ -226,7 +231,7 @@ export function MobileSpotOrderScreen({
               : "text-text-tertiary border-transparent"
           }`}
         >
-          One-Time
+          {t("oneTime")}
         </button>
         <button
           onClick={() => setShowFrequency(!showFrequency)}
@@ -236,7 +241,7 @@ export function MobileSpotOrderScreen({
               : "text-text-tertiary border-transparent"
           }`}
         >
-          Recurring
+          {t("recurring")}
           <svg
             width="8"
             height="8"
@@ -260,7 +265,7 @@ export function MobileSpotOrderScreen({
                   frequency === freq ? "text-green" : "text-text-secondary"
                 }`}
               >
-                {FREQUENCY_LABELS[freq]}
+                {t(FREQUENCY_KEYS[freq])}
                 {frequency === freq && (
                   <svg width="16" height="16" viewBox="0 0 24 24" className="text-green">
                     <path d="M5 13l4 4L19 7" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -280,7 +285,7 @@ export function MobileSpotOrderScreen({
               <path d="M23 4v6h-6M1 20v-6h6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-            <span className="text-[12px] font-semibold text-green">{FREQUENCY_LABELS[frequency]}</span>
+            <span className="text-[12px] font-semibold text-green">{t(FREQUENCY_KEYS[frequency])}</span>
           </div>
         </div>
       )}
@@ -293,7 +298,7 @@ export function MobileSpotOrderScreen({
         <div className="text-[13px] text-text-tertiary mt-2">
           {amountNum > 0
             ? `≈ ${estimatedQty.toFixed(6)} ${symbol}`
-            : `$0.00 available`}
+            : t("availableBalance")}
         </div>
 
         {/* Quick amount buttons */}
@@ -346,7 +351,7 @@ export function MobileSpotOrderScreen({
             amountNum > 0 ? "bg-green" : "bg-green/30"
           }`}
         >
-          Review {isBuy ? "Buy" : "Sell"}
+          {isBuy ? t("reviewBuy") : t("reviewSell")}
         </button>
       </div>
     </div>

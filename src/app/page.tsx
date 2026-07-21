@@ -1,27 +1,32 @@
-import Link from "next/link";
+"use client";
 
-const stats = [
-  { label: "Volume", value: "$4.2M" },
-  { label: "Traders", value: "1,847" },
-  { label: "Markets", value: "20" },
-  { label: "Leverage", value: "50x" },
-];
+import Link from "next/link";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 export default function Home() {
+  const { t } = useLanguage();
+
+  const stats = [
+    { label: t("volume"), value: "$4.2M" },
+    { label: t("traders"), value: "1,847" },
+    { label: t("markets"), value: "20" },
+    { label: t("leverage"), value: "50x" },
+  ];
+
   return (
     <div className="flex-1 flex flex-col">
       <div className="flex-1 flex flex-col items-center justify-center px-6">
-        <h1 className="text-6xl md:text-7xl font-semibold tracking-tight text-text-primary mb-5">
-          Trade. Invest. Earn.
+        <h1 className="text-6xl md:text-7xl font-semibold tracking-tight text-text-primary mb-5 text-center">
+          {t("heroTitle")}
         </h1>
         <p className="text-lg text-text-secondary mb-10">
-          Perps on Solana. Up to 50x.
+          {t("heroSubtitle")}
         </p>
         <Link
           href="/trade"
           className="px-10 py-3.5 bg-btn-bg text-btn-text rounded-full text-sm font-medium hover:bg-btn-hover transition-colors"
         >
-          Start trading
+          {t("startTrading")}
         </Link>
       </div>
 

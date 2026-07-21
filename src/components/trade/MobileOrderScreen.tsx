@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 type Side = "long" | "short";
 type OrderType = "market" | "limit";
@@ -18,6 +19,7 @@ export function MobileOrderScreen({
   price: number;
   symbol: string;
 }) {
+  const { t } = useLanguage();
   const [orderType, setOrderType] = useState<OrderType>("market");
   const [leverage, setLeverage] = useState(10);
   const [amount, setAmount] = useState("0");
@@ -61,8 +63,7 @@ export function MobileOrderScreen({
 
   const handleSwipeStart = useCallback((clientX: number) => {
     if (!swipeRef.current) return;
-    const track = swipeRef.current;
-    trackWidthRef.current = track.getBoundingClientRect().width;
+    trackWidthRef.current = swipeRef.current.getBoundingClientRect().width;
     startXRef.current = clientX;
     setSwiping(true);
     setSwipeX(0);
@@ -99,9 +100,9 @@ export function MobileOrderScreen({
             <path d="M5 13l4 4L19 7" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
-        <div className="text-2xl font-bold mb-2">Order Placed</div>
+        <div className="text-2xl font-bold mb-2">{t("orderPlaced")}</div>
         <div className="text-text-secondary text-center">
-          {isLong ? "Long" : "Short"} {symbol} · ${amountNum.toLocaleString("en-US", { minimumFractionDigits: 2 })} · {leverage}x
+          {isLong ? t("long") : t("short")} {symbol} · ${amountNum.toLocaleString("en-US", { minimumFractionDigits: 2 })} · {leverage}x
         </div>
       </div>
     );
@@ -117,7 +118,7 @@ export function MobileOrderScreen({
           </svg>
         </button>
         <div className="text-[15px] font-semibold">
-          <span className={accent}>{isLong ? "Long" : "Short"}</span> {symbol}
+          {isLong ? t("longSymbol", { symbol }) : t("shortSymbol", { symbol })}
         </div>
         <div className="w-10" />
       </div>
@@ -132,7 +133,7 @@ export function MobileOrderScreen({
               : "text-text-tertiary border-transparent"
           }`}
         >
-          Market
+          {t("market")}
         </button>
         <button
           onClick={() => setOrderType("limit")}
@@ -142,7 +143,7 @@ export function MobileOrderScreen({
               : "text-text-tertiary border-transparent"
           }`}
         >
-          Limit
+          {t("limit")}
         </button>
       </div>
 
@@ -150,7 +151,7 @@ export function MobileOrderScreen({
       {orderType === "limit" && (
         <div className="px-8 pt-2 pb-1">
           <div className="flex items-center justify-center bg-bg-secondary rounded-2xl px-4 py-3">
-            <span className="text-text-tertiary text-sm mr-1">Limit Price</span>
+            <span className="text-text-tertiary text-sm mr-1">{t("limitPrice")}</span>
             <span className="text-sm font-medium ml-auto">$</span>
             <input
               type="number"
@@ -169,7 +170,7 @@ export function MobileOrderScreen({
           onClick={() => setShowLeverage(!showLeverage)}
           className="flex items-center gap-2 mx-auto"
         >
-          <span className={`text-[13px] font-bold ${accent}`}>{leverage}x Leverage</span>
+          <span className={`text-[13px] font-bold ${accent}`}>{t("xLeverage", { n: leverage })}</span>
           <svg
             width="10"
             height="10"
@@ -205,9 +206,9 @@ export function MobileOrderScreen({
         </div>
         <div className="text-[13px] text-text-tertiary mt-2">
           {amountNum > 0 ? (
-            <>≈ {(amountNum / activePrice).toFixed(6)} {symbol} · Margin ${margin.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</>
+            <>≈ {(amountNum / activePrice).toFixed(6)} {symbol} · {t("marginRequired")} ${margin.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</>
           ) : (
-            `$0.00 available`
+            t("availableBalance")
           )}
         </div>
       </div>
@@ -224,14 +225,7 @@ export function MobileOrderScreen({
               >
                 {key === "backspace" ? (
                   <svg width="24" height="24" viewBox="0 0 24 24" className="text-text-primary">
-                    <path
-                      d="M9 18l-6-6 6-6M21 18V6H9"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
+                    <path d="M9 18l-6-6 6-6M21 18V6H9" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                     <path d="M13 10l4 4M17 10l-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                   </svg>
                 ) : (
@@ -251,7 +245,7 @@ export function MobileOrderScreen({
         >
           <div className="absolute inset-0 flex items-center justify-center">
             <span className={`text-[14px] font-semibold ${accent}`}>
-              Swipe to {isLong ? "Open Long" : "Open Short"}
+              {isLong ? t("swipeToOpenLong") : t("swipeToOpenShort")}
             </span>
           </div>
           <div

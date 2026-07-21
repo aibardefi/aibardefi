@@ -1,5 +1,7 @@
 "use client";
 
+import { useLanguage } from "@/i18n/LanguageContext";
+
 function generateTrades(count: number) {
   const trades = [];
   let price = 67432.51;
@@ -24,16 +26,18 @@ function generateTrades(count: number) {
 const trades = generateTrades(25);
 
 export function RecentTrades() {
+  const { t } = useLanguage();
+
   return (
     <div className="flex flex-col h-full">
       <div className="px-3 py-2 border-b border-border">
-        <h3 className="text-sm font-medium">Recent Trades</h3>
+        <h3 className="text-sm font-medium">{t("recentTrades")}</h3>
       </div>
 
       <div className="grid grid-cols-3 px-3 py-1.5 text-xs text-text-tertiary border-b border-border">
-        <span>Price(USDT)</span>
-        <span className="text-right">Amount(BTC)</span>
-        <span className="text-right">Time</span>
+        <span>{t("priceUsdt")}</span>
+        <span className="text-right">{t("amountBtc")}</span>
+        <span className="text-right">{t("time")}</span>
       </div>
 
       <div className="flex-1 overflow-y-auto min-h-0">

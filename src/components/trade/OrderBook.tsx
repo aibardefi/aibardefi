@@ -1,5 +1,7 @@
 "use client";
 
+import { useLanguage } from "@/i18n/LanguageContext";
+
 function generateOrders(basePrice: number, side: "ask" | "bid", count: number) {
   const orders = [];
   for (let i = 0; i < count; i++) {
@@ -27,16 +29,18 @@ const maxTotal = Math.max(
 );
 
 export function OrderBook() {
+  const { t } = useLanguage();
+
   return (
     <div className="flex flex-col h-full">
       <div className="px-3 py-2 border-b border-border">
-        <h3 className="text-sm font-medium">Order Book</h3>
+        <h3 className="text-sm font-medium">{t("orderBook")}</h3>
       </div>
 
       <div className="grid grid-cols-3 px-3 py-1.5 text-xs text-text-tertiary border-b border-border">
-        <span>Price(USDT)</span>
-        <span className="text-right">Amount(BTC)</span>
-        <span className="text-right">Total</span>
+        <span>{t("priceUsdt")}</span>
+        <span className="text-right">{t("amountBtc")}</span>
+        <span className="text-right">{t("total")}</span>
       </div>
 
       <div className="flex-1 overflow-y-auto min-h-0 flex flex-col">

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 type Side = "buy" | "sell";
 type OrderType = "limit" | "market";
@@ -8,6 +9,7 @@ type OrderType = "limit" | "market";
 const SLIDER_MARKS = [0, 25, 50, 75, 100];
 
 export function TradeForm() {
+  const { t } = useLanguage();
   const [side, setSide] = useState<Side>("buy");
   const [orderType, setOrderType] = useState<OrderType>("limit");
   const [price, setPrice] = useState("67432.51");
@@ -22,7 +24,7 @@ export function TradeForm() {
   return (
     <div className="flex flex-col h-full">
       <div className="px-3 py-2 border-b border-border">
-        <h3 className="text-sm font-medium">Place Order</h3>
+        <h3 className="text-sm font-medium">{t("placeOrder")}</h3>
       </div>
 
       <div className="p-3 flex flex-col gap-3">
@@ -35,7 +37,7 @@ export function TradeForm() {
                 : "text-text-secondary hover:text-text-primary"
             }`}
           >
-            Buy
+            {t("buy")}
           </button>
           <button
             onClick={() => setSide("sell")}
@@ -45,7 +47,7 @@ export function TradeForm() {
                 : "text-text-secondary hover:text-text-primary"
             }`}
           >
-            Sell
+            {t("sell")}
           </button>
         </div>
 
@@ -58,7 +60,7 @@ export function TradeForm() {
                 : "border-transparent text-text-secondary hover:text-text-primary"
             }`}
           >
-            Limit
+            {t("limit")}
           </button>
           <button
             onClick={() => setOrderType("market")}
@@ -68,14 +70,14 @@ export function TradeForm() {
                 : "border-transparent text-text-secondary hover:text-text-primary"
             }`}
           >
-            Market
+            {t("market")}
           </button>
         </div>
 
         {orderType === "limit" && (
           <div>
             <label className="text-xs text-text-tertiary mb-1 block">
-              Price
+              {t("price")}
             </label>
             <div className="flex items-center bg-bg-primary border border-border rounded px-3 py-2 focus-within:border-yellow transition-colors">
               <input
@@ -83,7 +85,7 @@ export function TradeForm() {
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
                 className="flex-1 bg-transparent text-sm outline-none text-text-primary"
-                placeholder="Price"
+                placeholder={t("price")}
               />
               <span className="text-xs text-text-tertiary ml-2">USDT</span>
             </div>
@@ -92,7 +94,7 @@ export function TradeForm() {
 
         <div>
           <label className="text-xs text-text-tertiary mb-1 block">
-            Amount
+            {t("amount")}
           </label>
           <div className="flex items-center bg-bg-primary border border-border rounded px-3 py-2 focus-within:border-yellow transition-colors">
             <input
@@ -100,7 +102,7 @@ export function TradeForm() {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               className="flex-1 bg-transparent text-sm outline-none text-text-primary"
-              placeholder="Amount"
+              placeholder={t("amount")}
             />
             <span className="text-xs text-text-tertiary ml-2">BTC</span>
           </div>
@@ -135,7 +137,7 @@ export function TradeForm() {
 
         <div>
           <label className="text-xs text-text-tertiary mb-1 block">
-            Total
+            {t("total")}
           </label>
           <div className="flex items-center bg-bg-primary border border-border rounded px-3 py-2">
             <span className="flex-1 text-sm text-text-secondary">
@@ -148,7 +150,7 @@ export function TradeForm() {
         </div>
 
         <div className="flex justify-between text-xs text-text-secondary">
-          <span>Available</span>
+          <span>{t("available")}</span>
           <span>0.00 {side === "buy" ? "USDT" : "BTC"}</span>
         </div>
 
@@ -159,7 +161,7 @@ export function TradeForm() {
               : "bg-red hover:bg-red-hover"
           }`}
         >
-          {side === "buy" ? `Buy BTC` : `Sell BTC`}
+          {side === "buy" ? t("buySymbol", { symbol: "BTC" }) : t("sellSymbol", { symbol: "BTC" })}
         </button>
       </div>
     </div>
