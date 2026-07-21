@@ -8,7 +8,10 @@ import { MobileTradeView } from "@/components/trade/MobileTradeView";
 export default function TradePage() {
   return (
     <div className="flex flex-col flex-1 min-h-0">
-      <TradingPairInfo />
+      {/* Desktop pair info bar - hidden on mobile */}
+      <div className="hidden lg:block">
+        <TradingPairInfo />
+      </div>
 
       {/* Desktop layout */}
       <div className="hidden lg:grid flex-1 grid-cols-[1fr_280px_320px] grid-rows-[1fr_1fr] min-h-0 gap-px bg-border">
