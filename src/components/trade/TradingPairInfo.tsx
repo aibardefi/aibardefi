@@ -14,13 +14,13 @@ export function TradingPairInfo() {
   const [showDropdown, setShowDropdown] = useState(false);
 
   return (
-    <div className="bg-bg-secondary border-b border-border px-4 py-2 flex items-center gap-6">
-      <div className="relative">
+    <div className="bg-bg-secondary border-b border-border px-4 py-2 flex items-center gap-4 lg:gap-6 overflow-x-auto scrollbar-hide">
+      <div className="relative shrink-0">
         <button
           onClick={() => setShowDropdown(!showDropdown)}
           className="flex items-center gap-2 hover:bg-bg-tertiary px-2 py-1 rounded transition-colors"
         >
-          <span className="text-xl font-bold">{selectedPair.symbol}</span>
+          <span className="text-lg lg:text-xl font-bold whitespace-nowrap">{selectedPair.symbol}</span>
           <svg
             width="12"
             height="12"
@@ -70,10 +70,10 @@ export function TradingPairInfo() {
         )}
       </div>
 
-      <div className="flex items-center gap-6 text-sm">
+      <div className="flex items-center gap-4 lg:gap-6 text-sm shrink-0">
         <div>
           <span
-            className={`text-2xl font-semibold ${
+            className={`text-xl lg:text-2xl font-semibold ${
               selectedPair.change >= 0 ? "text-green" : "text-red"
             }`}
           >
@@ -82,7 +82,7 @@ export function TradingPairInfo() {
             })}
           </span>
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col shrink-0">
           <span className="text-text-tertiary text-xs">24h Change</span>
           <span
             className={selectedPair.change >= 0 ? "text-green" : "text-red"}
@@ -91,7 +91,7 @@ export function TradingPairInfo() {
             {selectedPair.change}%
           </span>
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col shrink-0 hidden sm:flex">
           <span className="text-text-tertiary text-xs">24h High</span>
           <span>
             {(selectedPair.price * 1.015).toLocaleString("en-US", {
@@ -99,7 +99,7 @@ export function TradingPairInfo() {
             })}
           </span>
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col shrink-0 hidden sm:flex">
           <span className="text-text-tertiary text-xs">24h Low</span>
           <span>
             {(selectedPair.price * 0.975).toLocaleString("en-US", {
@@ -107,7 +107,7 @@ export function TradingPairInfo() {
             })}
           </span>
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col shrink-0 hidden sm:flex">
           <span className="text-text-tertiary text-xs">24h Volume</span>
           <span>1.23B USDT</span>
         </div>
