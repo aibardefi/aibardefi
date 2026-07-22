@@ -1,50 +1,64 @@
 use anchor_lang::prelude::*;
-use anchor_lang::system_program;
+use anchor_spl::token::{self, Token, TokenAccount, Transfer};
 use crate::state::*;
 
 #[derive(Accounts)]
 pub struct Deposit<'info> {
+    #[account(mut)]
+    pub market: Account<'info, Market>,
+
     #[account(
         init_if_needed,
         payer = owner,
-        space = UserAccount::LEN,
-        seeds = [b"user", owner.key().as_ref()],
-        bump,
+        space = 8 + UserAccount::LEN,
+        seeds = [b"user", market.key().as_ref(), owner.key().as_ref()],
+        bump
     )]
     pub user_account: Account<'info, UserAccount>,
 
-    /// CHECK: vault PDA that holds SOL
     #[account(
         mut,
-        seeds = [b"vault"],
-        bump,
+        seeds = [b"vault", &market.market_index.to_le_bytes()],
+        bump = market.vault_bump,
     )]
-    pub vault: UncheckedAccount<'info>,
+    pub quote_vault: Account<'info, TokenAccount>,
+
+    #[account(
+        mut,
+        constraint = user_token_account.mint == market.quote_mint,
+        constraint = user_token_account.owner == owner.key(),
+    )]
+    pub user_token_account: Account<'info, TokenAccount>,
 
     #[account(mut)]
     pub owner: Signer<'info>,
 
+    pub token_program: Program<'info, Token>,
     pub system_program: Program<'info, System>,
 }
 
 pub fn handle_deposit(ctx: Context<Deposit>, amount: u64) -> Result<()> {
-    let user_account = &mut ctx.accounts.user_account;
-    user_account.owner = ctx.accounts.owner.key();
-    user_account.bump = ctx.bumps.user_account;
-
-    system_program::transfer(
+    token::transfer(
         CpiContext::new(
-            ctx.accounts.system_program.to_account_info(),
-            system_program::Transfer {
-                from: ctx.accounts.owner.to_account_info(),
-                to: ctx.accounts.vault.to_account_info(),
+            ctx.accounts.token_program.to_account_info(),
+            Transfer {
+                from: ctx.accounts.user_token_account.to_account_info(),
+                to: ctx.accounts.quote_vault.to_account_info(),
+                authority: ctx.accounts.owner.to_account_info(),
             },
         ),
         amount,
     )?;
 
-    user_account.balance = user_account.balance.checked_add(amount).unwrap();
+    let user = &mut ctx.accounts.user_account;
+    user.owner = ctx.accounts.owner.key();
+    user.balance = user.balance.checked_add(amount).unwrap();
+    user.bump = ctx.bumps.user_account;
 
-    msg!("Deposited {} lamports", amount);
+    emit!(DepositEvent {
+        owner: ctx.accounts.owner.key(),
+        amount,
+    });
+
     Ok(())
 }

@@ -1,7 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useWallet } from "@solana/wallet-adapter-react";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { usePlaceOrder } from "@/hooks/usePlaceOrder";
+import { useUserAccount, formatBalance } from "@/hooks/useUserAccount";
+import { toRawPrice, formatPrice } from "@/hooks/useMarket";
+import { PRICE_DECIMALS } from "@/lib/constants";
 
 type Side = "buy" | "sell";
 type OrderType = "limit" | "market";
@@ -10,16 +15,45 @@ const SLIDER_MARKS = [0, 25, 50, 75, 100];
 
 export function TradeForm() {
   const { t } = useLanguage();
+  const { connected } = useWallet();
+  const { placeOrder, loading: orderLoading } = usePlaceOrder(0);
+  const { account, refetch } = useUserAccount(0);
+
   const [side, setSide] = useState<Side>("buy");
   const [orderType, setOrderType] = useState<OrderType>("limit");
   const [price, setPrice] = useState("67432.51");
   const [amount, setAmount] = useState("");
   const [sliderValue, setSliderValue] = useState(0);
+  const [status, setStatus] = useState<string | null>(null);
 
   const total =
     price && amount
       ? (parseFloat(price) * parseFloat(amount)).toFixed(2)
       : "0.00";
+
+  const available = account ? formatBalance(account.available) : "0.00";
+
+  const handleSubmit = async () => {
+    if (!connected) return;
+    if (!price || !amount) return;
+
+    setStatus(null);
+    try {
+      await placeOrder({
+        side: side === "buy" ? "long" : "short",
+        price: toRawPrice(parseFloat(price)),
+        size: Math.round(parseFloat(amount) * PRICE_DECIMALS),
+        orderType,
+        leverage: 1,
+      });
+      setStatus("Order placed!");
+      setAmount("");
+      refetch();
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Transaction failed";
+      setStatus(msg);
+    }
+  };
 
   return (
     <div className="flex flex-col h-full">
@@ -87,7 +121,7 @@ export function TradeForm() {
                 className="flex-1 bg-transparent text-sm outline-none text-text-primary"
                 placeholder={t("price")}
               />
-              <span className="text-xs text-text-tertiary ml-2">USDT</span>
+              <span className="text-xs text-text-tertiary ml-2">USDC</span>
             </div>
           </div>
         )}
@@ -145,23 +179,39 @@ export function TradeForm() {
                 minimumFractionDigits: 2,
               })}
             </span>
-            <span className="text-xs text-text-tertiary ml-2">USDT</span>
+            <span className="text-xs text-text-tertiary ml-2">USDC</span>
           </div>
         </div>
 
         <div className="flex justify-between text-xs text-text-secondary">
           <span>{t("available")}</span>
-          <span>0.00 {side === "buy" ? "USDT" : "BTC"}</span>
+          <span>{available} USDC</span>
         </div>
 
+        {status && (
+          <div className={`text-xs px-2 py-1.5 rounded ${
+            status.includes("placed") ? "bg-green/10 text-green" : "bg-red/10 text-red"
+          }`}>
+            {status}
+          </div>
+        )}
+
         <button
-          className={`w-full py-2.5 rounded font-medium text-sm text-white transition-colors ${
+          onClick={handleSubmit}
+          disabled={orderLoading || !amount}
+          className={`w-full py-2.5 rounded font-medium text-sm text-white transition-colors disabled:opacity-50 ${
             side === "buy"
               ? "bg-green hover:bg-green-hover"
               : "bg-red hover:bg-red-hover"
           }`}
         >
-          {side === "buy" ? t("buySymbol", { symbol: "BTC" }) : t("sellSymbol", { symbol: "BTC" })}
+          {orderLoading
+            ? "Submitting..."
+            : connected
+            ? side === "buy"
+              ? t("buySymbol", { symbol: "BTC" })
+              : t("sellSymbol", { symbol: "BTC" })
+            : "Connect Wallet"}
         </button>
       </div>
     </div>

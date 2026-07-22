@@ -3,9 +3,18 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { useTheme } from "./ThemeProvider";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { LANGUAGE_NAMES, type Language } from "@/i18n/translations";
+
+const WalletMultiButton = dynamic(
+  () =>
+    import("@solana/wallet-adapter-react-ui").then(
+      (mod) => mod.WalletMultiButton
+    ),
+  { ssr: false }
+);
 
 const LANGS: Language[] = ["en", "ru", "kk"];
 
@@ -102,12 +111,15 @@ export function Header() {
           )}
         </button>
 
-        <Link
-          href="/trade"
-          className="hidden lg:inline-flex px-6 py-2 text-sm bg-btn-bg text-btn-text rounded-full font-medium hover:bg-btn-hover transition-colors"
-        >
-          {t("trade")}
-        </Link>
+        <WalletMultiButton
+          style={{
+            height: "36px",
+            borderRadius: "9999px",
+            fontSize: "14px",
+            fontWeight: 500,
+            padding: "0 20px",
+          }}
+        />
       </div>
     </header>
   );
