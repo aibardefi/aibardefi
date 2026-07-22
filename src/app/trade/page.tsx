@@ -3,6 +3,7 @@ import { PriceChart } from "@/components/trade/PriceChart";
 import { OrderBook } from "@/components/trade/OrderBook";
 import { TradeForm } from "@/components/trade/TradeForm";
 import { RecentTrades } from "@/components/trade/RecentTrades";
+import { AccountPanel } from "@/components/trade/AccountPanel";
 import { MobileTradeView } from "@/components/trade/MobileTradeView";
 
 export default function TradePage() {
@@ -50,7 +51,10 @@ export default function TradePage() {
           <TradeForm />
         </div>
 
-        <div className="bg-bg-secondary min-h-0 overflow-hidden">
+        <div className="bg-bg-secondary min-h-0 overflow-y-auto">
+          <div className="border-b border-border">
+            <AccountPanel />
+          </div>
           <RecentTrades />
         </div>
       </div>

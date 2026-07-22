@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/Header";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { LanguageProvider } from "@/i18n/LanguageContext";
+import SolanaProviderDynamic from "@/providers/SolanaProviderDynamic";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,8 +39,10 @@ export default function RootLayout({
       <body className="min-h-screen flex flex-col bg-bg-primary text-text-primary">
         <ThemeProvider>
           <LanguageProvider>
-            <Header />
-            <main className="flex-1 flex flex-col">{children}</main>
+            <SolanaProviderDynamic>
+              <Header />
+              <main className="flex-1 flex flex-col">{children}</main>
+            </SolanaProviderDynamic>
           </LanguageProvider>
         </ThemeProvider>
       </body>

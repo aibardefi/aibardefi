@@ -1,0 +1,241 @@
+{
+  "version": "0.1.0",
+  "name": "orderbook",
+  "instructions": [
+    {
+      "name": "initializeMarket",
+      "accounts": [
+        { "name": "market", "isMut": true, "isSigner": false },
+        { "name": "quoteVault", "isMut": true, "isSigner": false },
+        { "name": "quoteMint", "isMut": false, "isSigner": false },
+        { "name": "authority", "isMut": true, "isSigner": true },
+        { "name": "systemProgram", "isMut": false, "isSigner": false },
+        { "name": "tokenProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "marketIndex", "type": "u16" },
+        { "name": "tickSize", "type": "u64" },
+        { "name": "minOrderSize", "type": "u64" },
+        { "name": "maxLeverage", "type": "u8" }
+      ]
+    },
+    {
+      "name": "deposit",
+      "accounts": [
+        { "name": "market", "isMut": true, "isSigner": false },
+        { "name": "userAccount", "isMut": true, "isSigner": false },
+        { "name": "quoteVault", "isMut": true, "isSigner": false },
+        { "name": "userTokenAccount", "isMut": true, "isSigner": false },
+        { "name": "owner", "isMut": true, "isSigner": true },
+        { "name": "tokenProgram", "isMut": false, "isSigner": false },
+        { "name": "systemProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "amount", "type": "u64" }
+      ]
+    },
+    {
+      "name": "withdraw",
+      "accounts": [
+        { "name": "market", "isMut": true, "isSigner": false },
+        { "name": "userAccount", "isMut": true, "isSigner": false },
+        { "name": "quoteVault", "isMut": true, "isSigner": false },
+        { "name": "userTokenAccount", "isMut": true, "isSigner": false },
+        { "name": "owner", "isMut": true, "isSigner": true },
+        { "name": "tokenProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "amount", "type": "u64" }
+      ]
+    },
+    {
+      "name": "placeOrder",
+      "accounts": [
+        { "name": "market", "isMut": true, "isSigner": false },
+        { "name": "userAccount", "isMut": true, "isSigner": false },
+        { "name": "owner", "isMut": false, "isSigner": true }
+      ],
+      "args": [
+        { "name": "side", "type": { "defined": "Side" } },
+        { "name": "price", "type": "u64" },
+        { "name": "size", "type": "u64" },
+        { "name": "orderType", "type": { "defined": "OrderType" } },
+        { "name": "leverage", "type": "u8" }
+      ]
+    },
+    {
+      "name": "cancelOrder",
+      "accounts": [
+        { "name": "market", "isMut": true, "isSigner": false },
+        { "name": "userAccount", "isMut": true, "isSigner": false },
+        { "name": "owner", "isMut": false, "isSigner": true }
+      ],
+      "args": [
+        { "name": "orderId", "type": "u64" }
+      ]
+    },
+    {
+      "name": "settle",
+      "accounts": [
+        { "name": "market", "isMut": true, "isSigner": false },
+        { "name": "userAccount", "isMut": true, "isSigner": false },
+        { "name": "owner", "isMut": false, "isSigner": true }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Market",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "authority", "type": "publicKey" },
+          { "name": "marketIndex", "type": "u16" },
+          { "name": "tickSize", "type": "u64" },
+          { "name": "minOrderSize", "type": "u64" },
+          { "name": "maxLeverage", "type": "u8" },
+          { "name": "quoteMint", "type": "publicKey" },
+          { "name": "nextOrderId", "type": "u64" },
+          { "name": "bestBid", "type": "u64" },
+          { "name": "bestAsk", "type": "u64" },
+          { "name": "lastTradePrice", "type": "u64" },
+          { "name": "totalVolume", "type": "u128" },
+          { "name": "orderCount", "type": "u16" },
+          { "name": "bump", "type": "u8" },
+          { "name": "vaultBump", "type": "u8" },
+          { "name": "orders", "type": { "array": [{ "defined": "Order" }, 128] } }
+        ]
+      }
+    },
+    {
+      "name": "UserAccount",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "owner", "type": "publicKey" },
+          { "name": "balance", "type": "u64" },
+          { "name": "lockedMargin", "type": "u64" },
+          { "name": "realizedPnl", "type": "i64" },
+          { "name": "bump", "type": "u8" }
+        ]
+      }
+    }
+  ],
+  "types": [
+    {
+      "name": "Order",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "id", "type": "u64" },
+          { "name": "owner", "type": "publicKey" },
+          { "name": "side", "type": "u8" },
+          { "name": "orderType", "type": "u8" },
+          { "name": "price", "type": "u64" },
+          { "name": "size", "type": "u64" },
+          { "name": "filled", "type": "u64" },
+          { "name": "leverage", "type": "u8" },
+          { "name": "timestamp", "type": "i64" },
+          { "name": "active", "type": "bool" }
+        ]
+      }
+    },
+    {
+      "name": "Side",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          { "name": "Long" },
+          { "name": "Short" }
+        ]
+      }
+    },
+    {
+      "name": "OrderType",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          { "name": "Limit" },
+          { "name": "Market" }
+        ]
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "OrderPlacedEvent",
+      "fields": [
+        { "name": "marketIndex", "type": "u16", "index": false },
+        { "name": "orderId", "type": "u64", "index": false },
+        { "name": "owner", "type": "publicKey", "index": false },
+        { "name": "side", "type": "u8", "index": false },
+        { "name": "price", "type": "u64", "index": false },
+        { "name": "size", "type": "u64", "index": false },
+        { "name": "orderType", "type": "u8", "index": false },
+        { "name": "leverage", "type": "u8", "index": false }
+      ]
+    },
+    {
+      "name": "OrderMatchedEvent",
+      "fields": [
+        { "name": "marketIndex", "type": "u16", "index": false },
+        { "name": "makerOrderId", "type": "u64", "index": false },
+        { "name": "takerOrderId", "type": "u64", "index": false },
+        { "name": "maker", "type": "publicKey", "index": false },
+        { "name": "taker", "type": "publicKey", "index": false },
+        { "name": "price", "type": "u64", "index": false },
+        { "name": "size", "type": "u64", "index": false }
+      ]
+    },
+    {
+      "name": "OrderCancelledEvent",
+      "fields": [
+        { "name": "marketIndex", "type": "u16", "index": false },
+        { "name": "orderId", "type": "u64", "index": false },
+        { "name": "owner", "type": "publicKey", "index": false }
+      ]
+    },
+    {
+      "name": "DepositEvent",
+      "fields": [
+        { "name": "owner", "type": "publicKey", "index": false },
+        { "name": "amount", "type": "u64", "index": false }
+      ]
+    },
+    {
+      "name": "WithdrawEvent",
+      "fields": [
+        { "name": "owner", "type": "publicKey", "index": false },
+        { "name": "amount", "type": "u64", "index": false }
+      ]
+    },
+    {
+      "name": "SettleEvent",
+      "fields": [
+        { "name": "owner", "type": "publicKey", "index": false },
+        { "name": "orderId", "type": "u64", "index": false },
+        { "name": "marginUnlocked", "type": "u64", "index": false }
+      ]
+    }
+  ],
+  "errors": [
+    { "code": 6000, "name": "InvalidLeverage", "msg": "Invalid leverage: must be between 1 and max leverage" },
+    { "code": 6001, "name": "OrderTooSmall", "msg": "Order size below minimum" },
+    { "code": 6002, "name": "InvalidTickSize", "msg": "Price must be aligned to tick size" },
+    { "code": 6003, "name": "InsufficientMargin", "msg": "Insufficient margin for this order" },
+    { "code": 6004, "name": "OrderNotFound", "msg": "Order not found" },
+    { "code": 6005, "name": "Unauthorized", "msg": "Unauthorized: not the order owner" },
+    { "code": 6006, "name": "MarketFull", "msg": "Market is full, cannot place more orders" },
+    { "code": 6007, "name": "InsufficientBalance", "msg": "Insufficient balance for withdrawal" },
+    { "code": 6008, "name": "MathOverflow", "msg": "Arithmetic overflow" },
+    { "code": 6009, "name": "MarketAlreadyInitialized", "msg": "Market already initialized" },
+    { "code": 6010, "name": "NoMatchableOrders", "msg": "No orders to match" },
+    { "code": 6011, "name": "NoLiquidity", "msg": "No liquidity available for market order" },
+    { "code": 6012, "name": "InvalidMint", "msg": "Invalid quote mint" },
+    { "code": 6013, "name": "NothingToSettle", "msg": "Nothing to settle" }
+  ],
+  "metadata": {
+    "address": "h82pJGF9p7kpzb6eU326EFZf2cDnimbTFVeJtx1qtBm"
+  }
+}
