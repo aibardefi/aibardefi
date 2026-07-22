@@ -31,7 +31,7 @@ export default function SolanaProvider({
 
   return (
     <ConnectionProvider endpoint={RPC_URL}>
-      <WalletProvider wallets={wallets} autoConnect>
+      <WalletProvider wallets={wallets}>
         <WalletModalProvider>{children}</WalletModalProvider>
       </WalletProvider>
     </ConnectionProvider>
