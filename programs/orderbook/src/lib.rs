@@ -19,7 +19,9 @@ pub mod orderbook {
         min_order_size: u64,
         max_leverage: u8,
     ) -> Result<()> {
-        instructions::initialize_market::handle_initialize_market(ctx, market_index, tick_size, min_order_size, max_leverage)
+        instructions::initialize_market::handle_initialize_market(
+            ctx, market_index, tick_size, min_order_size, max_leverage,
+        )
     }
 
     pub fn deposit(ctx: Context<Deposit>, amount: u64) -> Result<()> {
@@ -45,8 +47,8 @@ pub mod orderbook {
         instructions::cancel_order::handle_cancel_order(ctx, order_id)
     }
 
-    pub fn crank_match(ctx: Context<CrankMatch>) -> Result<()> {
-        instructions::crank_match::handle_crank_match(ctx)
+    pub fn settle(ctx: Context<Settle>) -> Result<()> {
+        instructions::settle::handle_settle(ctx)
     }
 }
 

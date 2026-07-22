@@ -24,4 +24,10 @@ pub enum OrderbookError {
     MarketAlreadyInitialized,
     #[msg("No orders to match")]
     NoMatchableOrders,
+    #[msg("No liquidity available for market order")]
+    NoLiquidity,
+    #[msg("Invalid quote mint")]
+    InvalidMint,
+    #[msg("Nothing to settle")]
+    NothingToSettle,
 }
