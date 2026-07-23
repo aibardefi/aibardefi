@@ -25,6 +25,8 @@ export function Header() {
   const [showLangMenu, setShowLangMenu] = useState(false);
   const isTradeActive = pathname.startsWith("/trade");
 
+  if (pathname.startsWith("/sb")) return null;
+
   return (
     <header className="h-14 lg:h-16 bg-bg-secondary border-b border-border flex items-center px-4 lg:px-8 shrink-0">
       <Link href="/" className="flex items-center mr-4 lg:mr-12 shrink-0">
