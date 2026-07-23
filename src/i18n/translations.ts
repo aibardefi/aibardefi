@@ -192,9 +192,23 @@ const en = {
   // SB Header
   sbDashboard: "Dashboard",
   sbBorrow: "Borrow",
+  sbTreasury: "Treasury",
   sbConnectWallet: "Connect Wallet",
   sbConnecting: "Connecting…",
   sbWalletRequired: "Connect your wallet to continue",
+
+  // SB Treasury
+  sbTreasuryTitle: "Treasury",
+  sbTreasurySub: "Real-time on-chain transparency. Every SB token is accounted for.",
+  sbTotalSupplyLabel: "Total Supply",
+  sbBorrowed: "Borrowed",
+  sbRemaining: "Remaining",
+  sbAcceptedCollateral: "Accepted Collateral",
+  sbProtocolParams: "Protocol Parameters",
+  sbMaxLtv: "Max Initial LTV",
+  sbLiqPenalty: "Liquidation Penalty",
+  sbChain: "Chain",
+  sbLiveOnChain: "Live on-chain data",
 };
 
 const ru: typeof en = {
@@ -374,9 +388,23 @@ const ru: typeof en = {
   // SB Header
   sbDashboard: "Панель",
   sbBorrow: "Займ",
+  sbTreasury: "Казначейство",
   sbConnectWallet: "Подключить кошелёк",
   sbConnecting: "Подключение…",
   sbWalletRequired: "Подключите кошелёк, чтобы продолжить",
+
+  // SB Treasury
+  sbTreasuryTitle: "Казначейство",
+  sbTreasurySub: "Прозрачность в реальном времени. Каждый SB токен учтён на блокчейне.",
+  sbTotalSupplyLabel: "Общая эмиссия",
+  sbBorrowed: "Занято",
+  sbRemaining: "Остаток",
+  sbAcceptedCollateral: "Принимаемый залог",
+  sbProtocolParams: "Параметры протокола",
+  sbMaxLtv: "Макс. начальный LTV",
+  sbLiqPenalty: "Штраф ликвидации",
+  sbChain: "Сеть",
+  sbLiveOnChain: "Данные из блокчейна",
 };
 
 const kk: typeof en = {
@@ -556,9 +584,23 @@ const kk: typeof en = {
   // SB Header
   sbDashboard: "Панель",
   sbBorrow: "Қарыз",
+  sbTreasury: "Қазына",
   sbConnectWallet: "Әмиянды қосу",
   sbConnecting: "Қосылуда…",
   sbWalletRequired: "Жалғастыру үшін әмияныңызды қосыңыз",
+
+  // SB Treasury
+  sbTreasuryTitle: "Қазына",
+  sbTreasurySub: "Нақты уақыттағы мөлдірлік. Әр SB токен блокчейнде есептелген.",
+  sbTotalSupplyLabel: "Жалпы эмиссия",
+  sbBorrowed: "Қарызға алынған",
+  sbRemaining: "Қалдық",
+  sbAcceptedCollateral: "Қабылданатын кепіл",
+  sbProtocolParams: "Хаттама параметрлері",
+  sbMaxLtv: "Макс. бастапқы LTV",
+  sbLiqPenalty: "Ликвидация айыппұлы",
+  sbChain: "Желі",
+  sbLiveOnChain: "Блокчейн деректері",
 };
 
 export const translations: Record<Language, typeof en> = { en, ru, kk };

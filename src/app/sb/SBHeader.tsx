@@ -22,6 +22,7 @@ export function SBHeader() {
   const NAV_LINKS = [
     { href: "/sb/dashboard", label: t("sbDashboard") },
     { href: "/sb/borrow", label: t("sbBorrow") },
+    { href: "/sb/treasury", label: t("sbTreasury") },
   ];
 
   return (
