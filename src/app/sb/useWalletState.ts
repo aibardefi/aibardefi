@@ -1,13 +1,27 @@
 "use client";
 
-import { useMemo, useState, useCallback } from "react";
-import { useAccount, useConnect, useDisconnect } from "wagmi";
+import { useMemo, useCallback } from "react";
+import { useAccount, useConnect, useDisconnect, useBalance, useSwitchChain, useChainId } from "wagmi";
 import { injected } from "wagmi/connectors";
+import { formatUnits } from "viem";
+import { robinhoodChain } from "@/lib/sb/chain";
+import { useSbBalance } from "@/lib/sb/useContractActions";
 
 export function useWalletState() {
   const { address, isConnected, isConnecting } = useAccount();
   const { connect } = useConnect();
   const { disconnect } = useDisconnect();
+  const chainId = useChainId();
+  const { switchChain } = useSwitchChain();
+
+  const { data: ethBalance } = useBalance({
+    address,
+    query: { enabled: !!address },
+  });
+
+  const sbBalance = useSbBalance();
+
+  const isWrongChain = isConnected && chainId !== robinhoodChain.id;
 
   const shortAddress = useMemo(() => {
     if (!address) return null;
@@ -18,6 +32,10 @@ export function useWalletState() {
     connect({ connector: injected() });
   }, [connect]);
 
+  const switchToRobinhood = useCallback(() => {
+    switchChain({ chainId: robinhoodChain.id });
+  }, [switchChain]);
+
   return {
     address,
     connected: isConnected,
@@ -25,29 +43,11 @@ export function useWalletState() {
     shortAddress,
     connectWallet,
     disconnect,
+    isWrongChain,
+    switchToRobinhood,
+    ethBalance: ethBalance ? formatUnits(ethBalance.value, ethBalance.decimals) : "0",
+    ethSymbol: ethBalance?.symbol ?? "ETH",
+    sbBalance,
+    chainName: robinhoodChain.name,
   };
-}
-
-export function useTxSimulation() {
-  const [txState, setTxState] = useState<
-    "idle" | "signing" | "confirming" | "success" | "error"
-  >("idle");
-  const [txMessage, setTxMessage] = useState("");
-
-  const simulateTx = useCallback(async (description: string) => {
-    setTxState("signing");
-    setTxMessage(description);
-    await new Promise((r) => setTimeout(r, 1200));
-    setTxState("confirming");
-    await new Promise((r) => setTimeout(r, 1500));
-    setTxState("success");
-    setTimeout(() => setTxState("idle"), 3000);
-  }, []);
-
-  const resetTx = useCallback(() => {
-    setTxState("idle");
-    setTxMessage("");
-  }, []);
-
-  return { txState, txMessage, simulateTx, resetTx };
 }
