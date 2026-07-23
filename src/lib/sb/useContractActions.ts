@@ -4,7 +4,7 @@ import { useState, useCallback } from "react";
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { parseUnits, formatUnits } from "viem";
 import type { Address } from "viem";
-import { COLLATERAL_VAULT_ABI, ERC20_ABI, SB_TOKEN_ABI } from "./abis";
+import { COLLATERAL_VAULT_ABI, ERC20_ABI, SB_TOKEN_ABI, PRICE_ORACLE_ABI } from "./abis";
 import { CONTRACTS, COLLATERAL_TOKEN_ADDRESSES, DEPLOYED } from "./contracts";
 
 const SB_DECIMALS = 18;
@@ -201,6 +201,57 @@ export function useTokenBalance(tokenSymbol: string) {
   });
 
   return balance ? formatUnits(balance, TOKEN_DECIMALS) : "0";
+}
+
+export function useTokenPrice(tokenSymbol: string) {
+  const tokenAddress = COLLATERAL_TOKEN_ADDRESSES[tokenSymbol];
+
+  const { data } = useReadContract({
+    address: CONTRACTS.priceOracle,
+    abi: PRICE_ORACLE_ABI,
+    functionName: "getPrice",
+    args: tokenAddress ? [tokenAddress] : undefined,
+    query: { enabled: DEPLOYED && !!tokenAddress },
+  });
+
+  if (!data) return null;
+  const [price] = data;
+  return Number(formatUnits(price, 6));
+}
+
+export function useSbPrice() {
+  const { data } = useReadContract({
+    address: CONTRACTS.priceOracle,
+    abi: PRICE_ORACLE_ABI,
+    functionName: "getPrice",
+    args: [CONTRACTS.sbToken],
+    query: { enabled: DEPLOYED },
+  });
+
+  if (!data) return null;
+  const [price] = data;
+  return Number(formatUnits(price, 6));
+}
+
+export function useVaultParams() {
+  const { data: maxLtv } = useReadContract({
+    address: CONTRACTS.collateralVault,
+    abi: COLLATERAL_VAULT_ABI,
+    functionName: "MAX_LTV",
+    query: { enabled: DEPLOYED },
+  });
+
+  const { data: liqThreshold } = useReadContract({
+    address: CONTRACTS.collateralVault,
+    abi: COLLATERAL_VAULT_ABI,
+    functionName: "LIQUIDATION_THRESHOLD",
+    query: { enabled: DEPLOYED },
+  });
+
+  return {
+    maxLtv: maxLtv ? Number(maxLtv) / 100 : 80,
+    liqThreshold: liqThreshold ? Number(liqThreshold) / 100 : 90,
+  };
 }
 
 export function useSbBalance() {

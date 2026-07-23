@@ -3,15 +3,20 @@
 import { useState, useMemo } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { COLLATERAL_TOKENS, MOCK_SB_PRICE } from "@/lib/sb/constants";
-import { useWalletState, useTxSimulation } from "../useWalletState";
+import { useWalletState } from "../useWalletState";
+import { useLockAndBorrow, useTokenBalance, useSbPrice, useVaultParams } from "@/lib/sb/useContractActions";
+import { DEPLOYED } from "@/lib/sb/contracts";
 
 type TokenSymbol = (typeof COLLATERAL_TOKENS)[number]["symbol"];
 
 export default function BorrowPage() {
   const { t } = useLanguage();
   const { connected, connectWallet } = useWalletState();
-  const { txState, simulateTx } = useTxSimulation();
+  const lockAndBorrow = useLockAndBorrow();
   const [selectedToken, setSelectedToken] = useState<TokenSymbol>("CC");
+  const walletBalance = useTokenBalance(selectedToken);
+  const livePrice = useSbPrice();
+  const vaultParams = useVaultParams();
   const [collateralAmount, setCollateralAmount] = useState("");
   const [sbAmount, setSbAmount] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
@@ -26,15 +31,17 @@ export default function BorrowPage() {
     return amt * token.price;
   }, [collateralAmount, token.price]);
 
+  const sbPrice = livePrice ?? MOCK_SB_PRICE;
+
   const sbValue = useMemo(() => {
     const amt = parseFloat(sbAmount) || 0;
-    return amt * MOCK_SB_PRICE;
-  }, [sbAmount]);
+    return amt * sbPrice;
+  }, [sbAmount, sbPrice]);
 
   const maxSb = useMemo(() => {
     if (collateralValue <= 0) return 0;
-    return Math.floor((collateralValue * 0.85) / MOCK_SB_PRICE);
-  }, [collateralValue]);
+    return Math.floor((collateralValue * (vaultParams.maxLtv / 100) * 0.95) / sbPrice);
+  }, [collateralValue, sbPrice, vaultParams.maxLtv]);
 
   const ltv = useMemo(() => {
     if (collateralValue <= 0 || !sbAmount) return 0;
@@ -45,8 +52,8 @@ export default function BorrowPage() {
     const amt = parseFloat(collateralAmount) || 0;
     const sb = parseFloat(sbAmount) || 0;
     if (amt <= 0 || sb <= 0) return 0;
-    return (sb * MOCK_SB_PRICE) / (amt * 0.9);
-  }, [collateralAmount, sbAmount]);
+    return (sb * sbPrice) / (amt * (vaultParams.liqThreshold / 100));
+  }, [collateralAmount, sbAmount, sbPrice, vaultParams.liqThreshold]);
 
   function ltvBarColor(): string {
     if (ltv < 70) return "var(--sb-green)";
@@ -55,8 +62,12 @@ export default function BorrowPage() {
   }
 
   function handleCollateralMax() {
-    const mockBalance: Record<string, number> = { CC: 100000, HOOD: 50000, MM: 200000 };
-    setCollateralAmount(String(mockBalance[selectedToken] ?? 0));
+    if (DEPLOYED && Number(walletBalance) > 0) {
+      setCollateralAmount(walletBalance);
+    } else {
+      const mockBalance: Record<string, number> = { CC: 100000, HOOD: 50000, MM: 200000 };
+      setCollateralAmount(String(mockBalance[selectedToken] ?? 0));
+    }
   }
 
   function handleSbMax() {
@@ -502,7 +513,7 @@ export default function BorrowPage() {
               />
               <SummaryRow
                 label={t("sbLiqThreshold")}
-                value="90%"
+                value={`${vaultParams.liqThreshold}%`}
               />
               <SummaryRow
                 label={t("sbLiqPrice")}
@@ -531,22 +542,28 @@ export default function BorrowPage() {
                 width: "100%",
                 padding: "14px 24px",
                 fontSize: 15,
-                opacity: ltv > 0 && ltv < 90 && txState === "idle" ? 1 : 0.4,
+                opacity: ltv > 0 && ltv < vaultParams.liqThreshold && lockAndBorrow.status === "idle" ? 1 : 0.4,
                 cursor:
-                  ltv > 0 && ltv < 90 && txState === "idle"
+                  ltv > 0 && ltv < vaultParams.liqThreshold && lockAndBorrow.status === "idle"
                     ? "pointer"
                     : "not-allowed",
               }}
-              disabled={ltv <= 0 || ltv >= 90 || txState !== "idle"}
-              onClick={() => simulateTx(t("sbLockBtn"))}
+              disabled={ltv <= 0 || ltv >= vaultParams.liqThreshold || lockAndBorrow.status !== "idle"}
+              onClick={() => {
+                if (DEPLOYED) {
+                  lockAndBorrow.execute(selectedToken, collateralAmount, sbAmount);
+                }
+              }}
             >
-              {txState === "signing"
+              {lockAndBorrow.status === "approving"
                 ? t("sbConnecting")
-                : txState === "confirming"
+                : lockAndBorrow.status === "locking"
                   ? t("sbConnecting")
-                  : txState === "success"
+                  : lockAndBorrow.status === "success"
                     ? "✓"
-                    : t("sbLockBtn")}
+                    : lockAndBorrow.status === "error"
+                      ? lockAndBorrow.error ?? "Error"
+                      : t("sbLockBtn")}
             </button>
           ) : (
             <button

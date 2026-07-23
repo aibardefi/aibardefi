@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { useLanguage } from "@/i18n/LanguageContext";
-import { MOCK_POSITIONS, MOCK_SB_PRICE, SB_TOTAL_SUPPLY } from "@/lib/sb/constants";
+import { MOCK_POSITIONS, MOCK_SB_PRICE, SB_TOTAL_SUPPLY, COLLATERAL_TOKENS } from "@/lib/sb/constants";
+import { useTreasuryData, useUserPositions, usePositionData, useSbPrice } from "@/lib/sb/useContractActions";
+import { DEPLOYED } from "@/lib/sb/contracts";
 import type { TranslationKey } from "@/i18n/translations";
 
 function computeLtv(amount: number, price: number, debt: number): number {
@@ -23,22 +25,93 @@ function healthKey(ltv: number): { key: TranslationKey; color: string } {
   return { key: "sbAtRisk", color: "var(--sb-red)" };
 }
 
-const totalCollateral = MOCK_POSITIONS.reduce((sum, p) => sum + p.amount * p.price, 0);
-const totalDebt = MOCK_POSITIONS.reduce((sum, p) => sum + p.debt, 0);
-const totalDebtUsd = totalDebt * MOCK_SB_PRICE;
-const avgLtv = 62.4;
-const treasuryBorrowed = 108_000_000;
-const treasuryAvailable = SB_TOTAL_SUPPLY - treasuryBorrowed;
-const treasuryPct = (treasuryBorrowed / SB_TOTAL_SUPPLY) * 100;
+function PositionRow({ positionId }: { positionId: number }) {
+  const { t } = useLanguage();
+  const position = usePositionData(positionId);
+  if (!position || !position.active) return null;
+
+  const tokenMeta = COLLATERAL_TOKENS.find(
+    (tk) => tk.symbol === Object.entries({ CC: true, HOOD: true, MM: true }).find(() => true)?.[0]
+  );
+  const ltv = position.ltv;
+  const health = healthKey(ltv);
+  const tokenColor = "#888";
+
+  return (
+    <tr className="sb-table-row">
+      <td style={{ padding: "14px 20px" }}>
+        <Link
+          href={`/sb/position/${positionId}`}
+          style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", color: "inherit" }}
+        >
+          <div
+            style={{
+              width: 32, height: 32, borderRadius: 8, backgroundColor: tokenColor,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: 11, fontWeight: 700, color: "#000", flexShrink: 0,
+            }}
+          >
+            #{positionId}
+          </div>
+          <div>
+            <p style={{ fontWeight: 500, color: "var(--text-primary)" }}>
+              Position #{positionId}
+            </p>
+            <p style={{ fontSize: 12, color: "var(--text-tertiary)" }}>
+              {Number(position.collateralAmount).toLocaleString()} tokens
+            </p>
+          </div>
+        </Link>
+      </td>
+      <td style={{ padding: "14px 20px", color: "var(--text-primary)" }}>
+        {Number(position.collateralAmount).toLocaleString()}
+      </td>
+      <td style={{ padding: "14px 20px", color: "var(--text-primary)" }}>
+        {Number(position.debtAmount).toLocaleString()} SB
+      </td>
+      <td style={{ padding: "14px 20px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <div style={{ width: 48, height: 6, borderRadius: 3, backgroundColor: "var(--bg-tertiary)", overflow: "hidden" }}>
+            <div style={{ width: `${Math.min(ltv, 100)}%`, height: "100%", borderRadius: 3, backgroundColor: ltvColor(ltv) }} />
+          </div>
+          <span style={{ color: ltvColor(ltv), fontWeight: 500 }}>{ltv.toFixed(1)}%</span>
+        </div>
+      </td>
+      <td style={{ padding: "14px 20px" }}>
+        <span style={{
+          display: "inline-block", padding: "3px 10px", borderRadius: 9999, fontSize: 12, fontWeight: 500,
+          backgroundColor: `color-mix(in srgb, ${health.color} 15%, transparent)`, color: health.color,
+        }}>
+          {t(health.key)}
+        </span>
+      </td>
+    </tr>
+  );
+}
 
 export default function DashboardPage() {
   const { t } = useLanguage();
+  const treasury = useTreasuryData();
+  const { positionIds } = useUserPositions();
+  const livePrice = useSbPrice();
+
+  const sbPrice = livePrice ?? MOCK_SB_PRICE;
+  const positions = MOCK_POSITIONS;
+  const totalCollateral = positions.reduce((sum, p) => sum + p.amount * p.price, 0);
+  const totalDebt = positions.reduce((sum, p) => sum + p.debt, 0);
+  const totalDebtUsd = totalDebt * sbPrice;
+  const avgLtv = 62.4;
+
+  const treasuryBorrowed = treasury.totalDebt ? Number(treasury.totalDebt) : 108_000_000;
+  const treasuryTotal = treasury.sbTotalSupply ? Number(treasury.sbTotalSupply) : SB_TOTAL_SUPPLY;
+  const treasuryAvailable = treasuryTotal - treasuryBorrowed;
+  const treasuryPct = (treasuryBorrowed / treasuryTotal) * 100;
 
   const STAT_CARDS = [
     {
       label: t("sbYourCollateral"),
       value: `$${totalCollateral.toLocaleString()}`,
-      sub: t("sbPositionsCount", { n: String(MOCK_POSITIONS.length) }),
+      sub: t("sbPositionsCount", { n: String(DEPLOYED && positionIds.length > 0 ? positionIds.length : positions.length) }),
     },
     {
       label: t("sbTotalDebt"),
@@ -53,7 +126,7 @@ export default function DashboardPage() {
     },
     {
       label: t("sbSbPrice"),
-      value: `$${MOCK_SB_PRICE}`,
+      value: `$${sbPrice}`,
       sub: "+3.8%",
       subColor: "var(--sb-green)",
     },

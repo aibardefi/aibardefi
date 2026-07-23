@@ -5,7 +5,9 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { MOCK_POSITIONS, MOCK_SB_PRICE, COLLATERAL_TOKENS } from "@/lib/sb/constants";
-import { useWalletState, useTxSimulation } from "../../useWalletState";
+import { useWalletState } from "../../useWalletState";
+import { usePositionData, useRepayAndUnlock, useSbPrice, useVaultParams } from "@/lib/sb/useContractActions";
+import { DEPLOYED } from "@/lib/sb/contracts";
 import type { TranslationKey } from "@/i18n/translations";
 
 function ltvColor(ltv: number): string {
@@ -28,12 +30,27 @@ export default function PositionDetail() {
   const positionId = Number(String(params.id));
   const { t, lang } = useLanguage();
   const { connected, connectWallet } = useWalletState();
-  const { txState, simulateTx } = useTxSimulation();
+  const repayAndUnlock = useRepayAndUnlock();
+  const livePosition = usePositionData(positionId);
+  const livePrice = useSbPrice();
+  const vaultParams = useVaultParams();
 
-  const position = useMemo(
-    () => MOCK_POSITIONS.find((p) => p.id === positionId) ?? MOCK_POSITIONS[0],
-    [positionId]
-  );
+  const sbPrice = livePrice ?? MOCK_SB_PRICE;
+
+  const position = useMemo(() => {
+    if (DEPLOYED && livePosition) {
+      return {
+        id: positionId,
+        token: "CC",
+        name: "Position",
+        amount: Number(livePosition.collateralAmount),
+        price: 0.025,
+        debt: Number(livePosition.debtAmount),
+        openedAt: new Date(livePosition.openedAt * 1000).toISOString().split("T")[0],
+      };
+    }
+    return MOCK_POSITIONS.find((p) => p.id === positionId) ?? MOCK_POSITIONS[0];
+  }, [positionId, livePosition]);
 
   const tokenInfo = useMemo(
     () => COLLATERAL_TOKENS.find((tk) => tk.symbol === position.token) ?? COLLATERAL_TOKENS[0],
@@ -41,10 +58,10 @@ export default function PositionDetail() {
   );
 
   const collateralValue = position.amount * position.price;
-  const debtValue = position.debt * MOCK_SB_PRICE;
-  const ltv = (debtValue / collateralValue) * 100;
-  const liquidationPrice = (position.debt * MOCK_SB_PRICE) / (position.amount * 0.9);
-  const safetyMargin = 90 - ltv;
+  const debtValue = position.debt * sbPrice;
+  const ltv = collateralValue > 0 ? (debtValue / collateralValue) * 100 : (DEPLOYED && livePosition ? livePosition.ltv : 0);
+  const liquidationPrice = position.amount > 0 ? (position.debt * sbPrice) / (position.amount * (vaultParams.liqThreshold / 100)) : 0;
+  const safetyMargin = vaultParams.liqThreshold - ltv;
   const health = healthKey(ltv);
   const gaugeOffset = GAUGE_CIRCUMFERENCE * (1 - ltv / 100);
 
@@ -354,13 +371,25 @@ export default function PositionDetail() {
                 width: "100%",
                 padding: "14px 24px",
                 fontSize: 15,
-                opacity: txState === "idle" ? 1 : 0.6,
-                cursor: txState === "idle" ? "pointer" : "not-allowed",
+                opacity: repayAndUnlock.status === "idle" ? 1 : 0.6,
+                cursor: repayAndUnlock.status === "idle" ? "pointer" : "not-allowed",
               }}
-              disabled={txState !== "idle"}
-              onClick={() => simulateTx(t("sbRepayUnlock"))}
+              disabled={repayAndUnlock.status !== "idle"}
+              onClick={() => {
+                if (DEPLOYED) {
+                  repayAndUnlock.execute(positionId, String(position.debt));
+                }
+              }}
             >
-              {txState === "success" ? "✓" : t("sbRepayUnlock")}
+              {repayAndUnlock.status === "approving"
+                ? t("sbConnecting")
+                : repayAndUnlock.status === "repaying"
+                  ? t("sbConnecting")
+                  : repayAndUnlock.status === "success"
+                    ? "✓"
+                    : repayAndUnlock.status === "error"
+                      ? repayAndUnlock.error ?? "Error"
+                      : t("sbRepayUnlock")}
             </button>
           ) : (
             <button

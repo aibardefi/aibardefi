@@ -1,17 +1,21 @@
 "use client";
 
 import { useLanguage } from "@/i18n/LanguageContext";
-import { useTreasuryData } from "@/lib/sb/useContractActions";
+import { useTreasuryData, useSbPrice, useVaultParams } from "@/lib/sb/useContractActions";
 import { MOCK_SB_PRICE, SB_TOTAL_SUPPLY, COLLATERAL_TOKENS } from "@/lib/sb/constants";
 
 export default function TreasuryPage() {
   const { t } = useLanguage();
   const treasury = useTreasuryData();
+  const livePrice = useSbPrice();
+  const vaultParams = useVaultParams();
 
-  const treasuryBorrowed = 108_000_000;
-  const treasuryAvailable = SB_TOTAL_SUPPLY - treasuryBorrowed;
-  const treasuryPct = (treasuryBorrowed / SB_TOTAL_SUPPLY) * 100;
-  const treasuryValueUsd = treasuryAvailable * MOCK_SB_PRICE;
+  const sbPrice = livePrice ?? MOCK_SB_PRICE;
+  const totalSupply = treasury.sbTotalSupply ? Number(treasury.sbTotalSupply) : SB_TOTAL_SUPPLY;
+  const treasuryBorrowed = treasury.totalDebt ? Number(treasury.totalDebt) : 108_000_000;
+  const treasuryAvailable = treasury.treasuryBalance ? Number(treasury.treasuryBalance) : (totalSupply - treasuryBorrowed);
+  const treasuryPct = (treasuryBorrowed / totalSupply) * 100;
+  const treasuryValueUsd = treasuryAvailable * sbPrice;
 
   return (
     <div
@@ -80,7 +84,7 @@ export default function TreasuryPage() {
             {t("sbTotalSupplyLabel")}
           </p>
           <p style={{ fontSize: 24, fontWeight: 600, color: "var(--text-primary)", fontVariantNumeric: "tabular-nums" }}>
-            1,000,000,000
+            {totalSupply.toLocaleString()}
           </p>
           <p style={{ fontSize: 12, color: "var(--text-secondary)", marginTop: 2 }}>SB</p>
         </div>
@@ -113,7 +117,7 @@ export default function TreasuryPage() {
             {t("sbSbPrice")}
           </p>
           <p style={{ fontSize: 24, fontWeight: 600, color: "var(--text-primary)", fontVariantNumeric: "tabular-nums" }}>
-            ${MOCK_SB_PRICE}
+            ${sbPrice}
           </p>
           <p style={{ fontSize: 12, color: "var(--sb-green)", marginTop: 2 }}>+3.8%</p>
         </div>
@@ -204,8 +208,8 @@ export default function TreasuryPage() {
         </h2>
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           {[
-            { label: t("sbMaxLtv"), value: "80%" },
-            { label: t("sbLiqThreshold"), value: "90%" },
+            { label: t("sbMaxLtv"), value: `${vaultParams.maxLtv}%` },
+            { label: t("sbLiqThreshold"), value: `${vaultParams.liqThreshold}%` },
             { label: t("sbLiqPenalty"), value: "5%" },
             { label: t("sbInterest"), value: "0%", color: "var(--sb-green)" },
             { label: t("sbProtocolFee"), value: "0%", color: "var(--sb-green)" },
