@@ -34,6 +34,13 @@ yarn-error.log*
 .env*
 !.env.example
 
+# compiled contract artifacts (keep only the 4 main ones)
+artifacts/*
+!artifacts/SBToken.json
+!artifacts/PriceOracle.json
+!artifacts/CollateralVault.json
+!artifacts/MockERC20.json
+
 # vercel
 .vercel
 
