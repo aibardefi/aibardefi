@@ -2,18 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import dynamic from "next/dynamic";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useTheme } from "@/components/ThemeProvider";
+import { useWalletState } from "./useWalletState";
 import type { Language } from "@/i18n/translations";
-
-const WalletMultiButton = dynamic(
-  () =>
-    import("@solana/wallet-adapter-react-ui").then(
-      (mod) => mod.WalletMultiButton
-    ),
-  { ssr: false }
-);
 
 const SB_LANGUAGES: { code: Language; label: string }[] = [
   { code: "en", label: "EN" },
@@ -24,6 +16,8 @@ export function SBHeader() {
   const pathname = usePathname();
   const { t, lang, setLang } = useLanguage();
   const { theme, toggle } = useTheme();
+  const { connected, connecting, shortAddress, connectWallet, disconnect } =
+    useWalletState();
 
   const NAV_LINKS = [
     { href: "/sb/dashboard", label: t("sbDashboard") },
@@ -112,7 +106,14 @@ export function SBHeader() {
         ))}
       </nav>
 
-      <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 8 }}>
+      <div
+        style={{
+          marginLeft: "auto",
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+        }}
+      >
         <div
           style={{
             display: "flex",
@@ -132,7 +133,8 @@ export function SBHeader() {
                 fontFamily: "inherit",
                 border: "none",
                 cursor: "pointer",
-                background: lang === l.code ? "var(--sb-accent)" : "transparent",
+                background:
+                  lang === l.code ? "var(--sb-accent)" : "transparent",
                 color: lang === l.code ? "#000" : "var(--text-secondary)",
                 transition: "background 0.15s, color 0.15s",
               }}
@@ -160,7 +162,16 @@ export function SBHeader() {
           }}
         >
           {theme === "dark" ? (
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <circle cx="12" cy="12" r="5" />
               <line x1="12" y1="1" x2="12" y2="3" />
               <line x1="12" y1="21" x2="12" y2="23" />
@@ -172,21 +183,73 @@ export function SBHeader() {
               <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
             </svg>
           ) : (
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
             </svg>
           )}
         </button>
 
-        <WalletMultiButton
-          style={{
-            height: 36,
-            borderRadius: 9999,
-            fontSize: 14,
-            fontWeight: 500,
-            padding: "0 20px",
-          }}
-        />
+        {connected ? (
+          <button
+            onClick={() => disconnect()}
+            style={{
+              height: 36,
+              borderRadius: 9999,
+              fontSize: 13,
+              fontWeight: 500,
+              padding: "0 16px",
+              background: "var(--bg-tertiary)",
+              border: "1px solid var(--border-color)",
+              color: "var(--text-primary)",
+              cursor: "pointer",
+              fontFamily: "inherit",
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+              transition: "border-color 0.15s",
+            }}
+          >
+            <div
+              style={{
+                width: 8,
+                height: 8,
+                borderRadius: 4,
+                backgroundColor: "var(--sb-green)",
+              }}
+            />
+            {shortAddress}
+          </button>
+        ) : (
+          <button
+            onClick={connectWallet}
+            disabled={connecting}
+            style={{
+              height: 36,
+              borderRadius: 9999,
+              fontSize: 13,
+              fontWeight: 600,
+              padding: "0 20px",
+              background: "var(--sb-accent)",
+              border: "none",
+              color: "#000",
+              cursor: connecting ? "wait" : "pointer",
+              fontFamily: "inherit",
+              opacity: connecting ? 0.7 : 1,
+              transition: "opacity 0.15s",
+            }}
+          >
+            {connecting ? t("sbConnecting") : t("sbConnectWallet")}
+          </button>
+        )}
       </div>
     </header>
   );

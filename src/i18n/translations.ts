@@ -173,7 +173,7 @@ const en = {
   sbProtocolFee: "Protocol Fee",
   sbLockBtn: "Lock Collateral & Receive SB",
   sbRiskTitle: "Understand the risks",
-  sbRiskText: "Positions with LTV at or above 90% are liquidated. Both collateral and SB prices can move, affecting your LTV. Repaying requires gas fees on Solana. Always maintain a safety margin.",
+  sbRiskText: "Positions with LTV at or above 90% are liquidated. Both collateral and SB prices can move, affecting your LTV. Repaying requires gas fees on Robinhood Chain. Always maintain a safety margin.",
 
   // SB Position
   sbBackDashboard: "Back to Dashboard",
@@ -192,6 +192,9 @@ const en = {
   // SB Header
   sbDashboard: "Dashboard",
   sbBorrow: "Borrow",
+  sbConnectWallet: "Connect Wallet",
+  sbConnecting: "Connecting…",
+  sbWalletRequired: "Connect your wallet to continue",
 };
 
 const ru: typeof en = {
@@ -352,7 +355,7 @@ const ru: typeof en = {
   sbProtocolFee: "Комиссия протокола",
   sbLockBtn: "Заблокировать залог и получить SB",
   sbRiskTitle: "Ознакомьтесь с рисками",
-  sbRiskText: "Позиции с LTV 90% и выше подлежат ликвидации. Цены залога и SB могут меняться, влияя на ваш LTV. Для возврата необходима комиссия за газ в Solana. Всегда поддерживайте запас прочности.",
+  sbRiskText: "Позиции с LTV 90% и выше подлежат ликвидации. Цены залога и SB могут меняться, влияя на ваш LTV. Для возврата необходима комиссия за газ в Robinhood Chain. Всегда поддерживайте запас прочности.",
 
   // SB Position
   sbBackDashboard: "Назад к панели",
@@ -371,6 +374,9 @@ const ru: typeof en = {
   // SB Header
   sbDashboard: "Панель",
   sbBorrow: "Займ",
+  sbConnectWallet: "Подключить кошелёк",
+  sbConnecting: "Подключение…",
+  sbWalletRequired: "Подключите кошелёк, чтобы продолжить",
 };
 
 const kk: typeof en = {
@@ -531,7 +537,7 @@ const kk: typeof en = {
   sbProtocolFee: "Хаттама комиссиясы",
   sbLockBtn: "Кепілді құлыптау және SB алу",
   sbRiskTitle: "Тәуекелдерді түсініңіз",
-  sbRiskText: "LTV 90% және одан жоғары позициялар ликвидацияланады. Кепіл мен SB бағалары өзгеруі мүмкін. Қайтару үшін Solana-да газ комиссиясы қажет. Әрқашан қауіпсіздік маржасын сақтаңыз.",
+  sbRiskText: "LTV 90% және одан жоғары позициялар ликвидацияланады. Кепіл мен SB бағалары өзгеруі мүмкін. Қайтару үшін Robinhood Chain-де газ комиссиясы қажет. Әрқашан қауіпсіздік маржасын сақтаңыз.",
 
   // SB Position
   sbBackDashboard: "Панельге оралу",
@@ -550,6 +556,9 @@ const kk: typeof en = {
   // SB Header
   sbDashboard: "Панель",
   sbBorrow: "Қарыз",
+  sbConnectWallet: "Әмиянды қосу",
+  sbConnecting: "Қосылуда…",
+  sbWalletRequired: "Жалғастыру үшін әмияныңызды қосыңыз",
 };
 
 export const translations: Record<Language, typeof en> = { en, ru, kk };

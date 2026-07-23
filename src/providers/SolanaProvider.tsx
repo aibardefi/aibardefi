@@ -12,7 +12,7 @@ import {
 } from "@solana/wallet-adapter-wallets";
 import { RPC_URL } from "@/lib/constants";
 
-import "@solana/wallet-adapter-react-ui/styles.css";
+// CSS imported in globals.css
 
 if (typeof window !== "undefined") {
   const { Buffer } = require("buffer");

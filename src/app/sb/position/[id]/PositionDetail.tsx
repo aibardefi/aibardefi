@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { MOCK_POSITIONS, MOCK_SB_PRICE, COLLATERAL_TOKENS } from "@/lib/sb/constants";
+import { useWalletState, useTxSimulation } from "../../useWalletState";
 import type { TranslationKey } from "@/i18n/translations";
 
 function ltvColor(ltv: number): string {
@@ -26,6 +27,8 @@ export default function PositionDetail() {
   const params = useParams();
   const positionId = Number(String(params.id));
   const { t, lang } = useLanguage();
+  const { connected, connectWallet } = useWalletState();
+  const { txState, simulateTx } = useTxSimulation();
 
   const position = useMemo(
     () => MOCK_POSITIONS.find((p) => p.id === positionId) ?? MOCK_POSITIONS[0],
@@ -344,12 +347,30 @@ export default function PositionDetail() {
               margin: "8px 0",
             }}
           />
-          <button
-            className="sb-btn-green"
-            style={{ width: "100%", padding: "14px 24px", fontSize: 15 }}
-          >
-            {t("sbRepayUnlock")}
-          </button>
+          {connected ? (
+            <button
+              className="sb-btn-green"
+              style={{
+                width: "100%",
+                padding: "14px 24px",
+                fontSize: 15,
+                opacity: txState === "idle" ? 1 : 0.6,
+                cursor: txState === "idle" ? "pointer" : "not-allowed",
+              }}
+              disabled={txState !== "idle"}
+              onClick={() => simulateTx(t("sbRepayUnlock"))}
+            >
+              {txState === "success" ? "✓" : t("sbRepayUnlock")}
+            </button>
+          ) : (
+            <button
+              className="sb-btn-primary"
+              style={{ width: "100%", padding: "14px 24px", fontSize: 15 }}
+              onClick={connectWallet}
+            >
+              {t("sbConnectWallet")}
+            </button>
+          )}
         </div>
       </div>
     </div>

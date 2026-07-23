@@ -3,11 +3,14 @@
 import { useState, useMemo } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { COLLATERAL_TOKENS, MOCK_SB_PRICE } from "@/lib/sb/constants";
+import { useWalletState, useTxSimulation } from "../useWalletState";
 
 type TokenSymbol = (typeof COLLATERAL_TOKENS)[number]["symbol"];
 
 export default function BorrowPage() {
   const { t } = useLanguage();
+  const { connected, connectWallet } = useWalletState();
+  const { txState, simulateTx } = useTxSimulation();
   const [selectedToken, setSelectedToken] = useState<TokenSymbol>("CC");
   const [collateralAmount, setCollateralAmount] = useState("");
   const [sbAmount, setSbAmount] = useState("");
@@ -521,19 +524,43 @@ export default function BorrowPage() {
             </div>
           </div>
 
-          <button
-            className="sb-btn-primary"
-            style={{
-              width: "100%",
-              padding: "14px 24px",
-              fontSize: 15,
-              opacity: ltv > 0 && ltv < 90 ? 1 : 0.4,
-              cursor: ltv > 0 && ltv < 90 ? "pointer" : "not-allowed",
-            }}
-            disabled={ltv <= 0 || ltv >= 90}
-          >
-            {t("sbLockBtn")}
-          </button>
+          {connected ? (
+            <button
+              className="sb-btn-primary"
+              style={{
+                width: "100%",
+                padding: "14px 24px",
+                fontSize: 15,
+                opacity: ltv > 0 && ltv < 90 && txState === "idle" ? 1 : 0.4,
+                cursor:
+                  ltv > 0 && ltv < 90 && txState === "idle"
+                    ? "pointer"
+                    : "not-allowed",
+              }}
+              disabled={ltv <= 0 || ltv >= 90 || txState !== "idle"}
+              onClick={() => simulateTx(t("sbLockBtn"))}
+            >
+              {txState === "signing"
+                ? t("sbConnecting")
+                : txState === "confirming"
+                  ? t("sbConnecting")
+                  : txState === "success"
+                    ? "✓"
+                    : t("sbLockBtn")}
+            </button>
+          ) : (
+            <button
+              className="sb-btn-primary"
+              style={{
+                width: "100%",
+                padding: "14px 24px",
+                fontSize: 15,
+              }}
+              onClick={connectWallet}
+            >
+              {t("sbConnectWallet")}
+            </button>
+          )}
 
           <div
             style={{

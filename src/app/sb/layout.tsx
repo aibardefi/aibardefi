@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SBHeader } from "./SBHeader";
+import { SBWalletProvider } from "./SBWalletProvider";
 
 export const metadata: Metadata = {
   title: "SB Token",
@@ -114,18 +115,20 @@ export default function SBLayout({
           color: var(--text-primary);
         }
       `}</style>
-      <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
-        <SBHeader />
-        <div
-          style={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          {children}
+      <SBWalletProvider>
+        <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+          <SBHeader />
+          <div
+            style={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            {children}
+          </div>
         </div>
-      </div>
+      </SBWalletProvider>
     </>
   );
 }
