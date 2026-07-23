@@ -216,7 +216,7 @@ export function useTokenPrice(tokenSymbol: string) {
 
   if (!data) return null;
   const [price] = data;
-  return Number(formatUnits(price, 6));
+  return Number(formatUnits(price, 8));
 }
 
 export function useSbPrice() {
@@ -230,7 +230,7 @@ export function useSbPrice() {
 
   if (!data) return null;
   const [price] = data;
-  return Number(formatUnits(price, 6));
+  return Number(formatUnits(price, 8));
 }
 
 export function useVaultParams() {
