@@ -12,7 +12,7 @@ const client = createPublicClient({
 const transferEvent = parseAbi(['event Transfer(address indexed from, address indexed to, uint256 value)']);
 
 const JUN_18 = new Date('2026-06-18T00:00:00Z').getTime() / 1000;
-const JUL_02 = new Date('2026-07-02T00:00:00Z').getTime() / 1000;
+const JUL_08 = new Date('2026-07-08T00:00:00Z').getTime() / 1000;
 
 async function findBlockByTimestamp(targetTs) {
   const latest = await client.getBlock({ blockTag: 'latest' });
@@ -72,7 +72,7 @@ async function getLogsInChunks(address, event, fromBlock, toBlock, chunkSize = 1
 }
 
 async function main() {
-  console.log('=== CASHCAT Pre-Launch Analysis (Jun 18 - Jul 1 ONLY) ===\n');
+  console.log('=== CASHCAT Pre-Tweet Analysis (Jun 18 - Jul 8 morning) ===\n');
   console.log('Connecting to Robinhood Chain...');
 
   const latestBlock = await client.getBlock({ blockTag: 'latest' });
@@ -83,7 +83,7 @@ async function main() {
   console.log(`  Jun 18 = block ~${blockStart}`);
 
   console.log('Finding block for Jul 2...');
-  const blockEnd = await findBlockByTimestamp(JUL_02);
+  const blockEnd = await findBlockByTimestamp(JUL_08);
   console.log(`  Jul 2 = block ~${blockEnd}`);
   console.log(`  Range: ${blockEnd - blockStart} blocks to scan\n`);
 
@@ -150,7 +150,7 @@ async function main() {
 
   // Print results
   console.log('==========================================');
-  console.log('  PRE-LAUNCH BUYERS (Jun 18 - Jul 1)');
+  console.log('  BUYERS BEFORE VLAD TWEET (Jun 18 - Jul 8)');
   console.log('==========================================\n');
   console.log(`Unique wallets that bought: ${walletList.filter(w => w.buys > 0).length}`);
   console.log(`Unique wallets that sold: ${walletList.filter(w => w.sells > 0).length}`);
