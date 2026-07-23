@@ -1,7 +1,6 @@
 const { createPublicClient, http, parseAbi, formatUnits } = require('viem');
 
 const CASHCAT = '0x020bfC650A365f8BB26819deAAbF3E21291018b4';
-const POOL = '0x0bd7d308f8e1639fab988df18a8011f41eacad73';
 const RPC = 'https://rpc.mainnet.chain.robinhood.com';
 
 const client = createPublicClient({
@@ -12,7 +11,7 @@ const client = createPublicClient({
 const transferEvent = parseAbi(['event Transfer(address indexed from, address indexed to, uint256 value)']);
 
 const JUN_18 = new Date('2026-06-18T00:00:00Z').getTime() / 1000;
-const JUL_08 = new Date('2026-07-08T00:00:00Z').getTime() / 1000;
+const JUL_09 = new Date('2026-07-09T00:00:00Z').getTime() / 1000; // end of Jul 8
 
 async function findBlockByTimestamp(targetTs) {
   const latest = await client.getBlock({ blockTag: 'latest' });
@@ -72,40 +71,98 @@ async function getLogsInChunks(address, event, fromBlock, toBlock, chunkSize = 1
 }
 
 async function main() {
-  console.log('=== CASHCAT Pre-Tweet Analysis (Jun 18 - Jul 8 morning) ===\n');
+  console.log('=== CASHCAT Pre-Tweet Analysis (Jun 18 - Jul 8 end of day) ===\n');
   console.log('Connecting to Robinhood Chain...');
 
   const latestBlock = await client.getBlock({ blockTag: 'latest' });
   console.log(`Latest block: ${latestBlock.number}\n`);
 
-  console.log('Finding block for Jun 18...');
+  console.log('Finding block for Jun 18 00:00 UTC...');
   const blockStart = await findBlockByTimestamp(JUN_18);
-  console.log(`  Jun 18 = block ~${blockStart}`);
+  console.log(`  Jun 18 start = block ~${blockStart}`);
 
-  console.log('Finding block for Jul 2...');
-  const blockEnd = await findBlockByTimestamp(JUL_08);
-  console.log(`  Jul 2 = block ~${blockEnd}`);
+  console.log('Finding block for Jul 9 00:00 UTC (end of Jul 8)...');
+  const blockEnd = await findBlockByTimestamp(JUL_09);
+  console.log(`  Jul 9 start = block ~${blockEnd}`);
   console.log(`  Range: ${blockEnd - blockStart} blocks to scan\n`);
 
-  console.log('Fetching CASHCAT transfers (Jun 18 - Jul 1)...');
+  console.log('Fetching ALL CASHCAT transfers (Jun 18 - Jul 8)...');
   const transfers = await getLogsInChunks(CASHCAT, transferEvent, blockStart, blockEnd);
   console.log(`Total transfer events: ${transfers.length}\n`);
 
-  // Buys = transfers FROM the pool TO a wallet
+  // Step 1: Auto-detect trading contract(s)
+  console.log('--- DETECTING TRADING CONTRACTS ---\n');
+
+  const fromCounts = {};
+  const toCounts = {};
+
+  for (const log of transfers) {
+    const from = log.args.from ? log.args.from.toLowerCase() : 'unknown';
+    const to = log.args.to ? log.args.to.toLowerCase() : 'unknown';
+    fromCounts[from] = (fromCounts[from] || 0) + 1;
+    toCounts[to] = (toCounts[to] || 0) + 1;
+  }
+
+  const topFrom = Object.entries(fromCounts).sort((a, b) => b[1] - a[1]).slice(0, 10);
+  const topTo = Object.entries(toCounts).sort((a, b) => b[1] - a[1]).slice(0, 10);
+
+  console.log('Top 10 "FROM" addresses (tokens sent from):');
+  for (const [addr, count] of topFrom) {
+    console.log(`  ${addr} => ${count} transfers`);
+  }
+
+  console.log('\nTop 10 "TO" addresses (tokens sent to):');
+  for (const [addr, count] of topTo) {
+    console.log(`  ${addr} => ${count} transfers`);
+  }
+
+  // The pool/trading contract is the address that appears frequently in BOTH from and to
+  // (sends tokens to buyers, receives tokens from sellers)
+  const allAddresses = new Set([...Object.keys(fromCounts), ...Object.keys(toCounts)]);
+  const bothWays = [];
+  for (const addr of allAddresses) {
+    const f = fromCounts[addr] || 0;
+    const t = toCounts[addr] || 0;
+    if (f > 10 && t > 10) {
+      bothWays.push({ address: addr, fromCount: f, toCount: t, total: f + t });
+    }
+  }
+  bothWays.sort((a, b) => b.total - a.total);
+
+  console.log('\nContracts with BOTH sends and receives (likely trading pools):');
+  for (const entry of bothWays.slice(0, 10)) {
+    console.log(`  ${entry.address} => sends: ${entry.fromCount}, receives: ${entry.toCount}, total: ${entry.total}`);
+  }
+
+  // Use the top contract as the pool
+  const POOL = bothWays.length > 0 ? bothWays[0].address : null;
+
+  if (!POOL) {
+    // Fallback: use the single most common "from" address as pool
+    const fallbackPool = topFrom[0] ? topFrom[0][0] : null;
+    if (!fallbackPool) {
+      console.log('\nERROR: Could not detect any trading contract. No pool-based analysis possible.');
+      return;
+    }
+    console.log(`\nUsing fallback pool (top sender): ${fallbackPool}`);
+  }
+
+  console.log(`\n*** DETECTED POOL: ${POOL} ***\n`);
+
+  // Step 2: Filter buys and sells using detected pool
   const buys = transfers.filter(log =>
-    log.args.from && log.args.from.toLowerCase() === POOL.toLowerCase()
+    log.args.from && log.args.from.toLowerCase() === POOL
   );
 
-  // Sells = transfers TO the pool FROM a wallet
   const sells = transfers.filter(log =>
-    log.args.to && log.args.to.toLowerCase() === POOL.toLowerCase()
+    log.args.to && log.args.to.toLowerCase() === POOL
   );
 
-  console.log(`Pool buys: ${buys.length}`);
-  console.log(`Pool sells: ${sells.length}`);
-  console.log(`Other transfers (wallet-to-wallet, LP, etc): ${transfers.length - buys.length - sells.length}\n`);
+  console.log(`Pool buys (tokens FROM pool TO wallet): ${buys.length}`);
+  console.log(`Pool sells (tokens FROM wallet TO pool): ${sells.length}`);
+  console.log(`Other transfers: ${transfers.length - buys.length - sells.length}\n`);
 
-  // Analyze wallets
+  // Step 3: Analyze wallets
   const wallets = {};
 
   for (const log of buys) {
@@ -152,6 +209,7 @@ async function main() {
   console.log('==========================================');
   console.log('  BUYERS BEFORE VLAD TWEET (Jun 18 - Jul 8)');
   console.log('==========================================\n');
+  console.log(`Detected pool: ${POOL}`);
   console.log(`Unique wallets that bought: ${walletList.filter(w => w.buys > 0).length}`);
   console.log(`Unique wallets that sold: ${walletList.filter(w => w.sells > 0).length}`);
   console.log(`Total CASHCAT bought from pool: ${totalBought.toLocaleString()}`);
@@ -183,47 +241,50 @@ async function main() {
   const dailyData = {};
   const allBlocks = [...new Set(buys.map(b => Number(b.blockNumber)))].sort((a, b) => a - b);
 
-  // Sample blocks for date mapping
-  const step = Math.max(1, Math.floor(allBlocks.length / 30));
-  const sampleSet = new Set();
-  for (let i = 0; i < allBlocks.length; i += step) sampleSet.add(allBlocks[i]);
-  sampleSet.add(allBlocks[0]);
-  sampleSet.add(allBlocks[allBlocks.length - 1]);
+  if (allBlocks.length > 0) {
+    const step = Math.max(1, Math.floor(allBlocks.length / 30));
+    const sampleSet = new Set();
+    for (let i = 0; i < allBlocks.length; i += step) sampleSet.add(allBlocks[i]);
+    sampleSet.add(allBlocks[0]);
+    sampleSet.add(allBlocks[allBlocks.length - 1]);
 
-  const blockDateMap = {};
-  for (const bn of sampleSet) {
-    try {
-      const block = await client.getBlock({ blockNumber: BigInt(bn) });
-      blockDateMap[bn] = new Date(Number(block.timestamp) * 1000).toISOString().split('T')[0];
-    } catch (e) {}
-  }
-
-  const sortedSamples = Object.keys(blockDateMap).map(Number).sort((a, b) => a - b);
-
-  function getDateForBlock(bn) {
-    let closest = sortedSamples[0], minDist = Math.abs(bn - closest);
-    for (const s of sortedSamples) {
-      if (Math.abs(bn - s) < minDist) { closest = s; minDist = Math.abs(bn - s); }
+    const blockDateMap = {};
+    for (const bn of sampleSet) {
+      try {
+        const block = await client.getBlock({ blockNumber: BigInt(bn) });
+        blockDateMap[bn] = new Date(Number(block.timestamp) * 1000).toISOString().split('T')[0];
+      } catch (e) {}
     }
-    return blockDateMap[closest];
-  }
 
-  for (const log of buys) {
-    const bn = Number(log.blockNumber);
-    const amount = Number(formatUnits(log.args.value, 18));
-    const addr = log.args.to.toLowerCase();
-    const date = getDateForBlock(bn);
-    if (!dailyData[date]) dailyData[date] = { txs: 0, tokens: 0, wallets: new Set() };
-    dailyData[date].txs++;
-    dailyData[date].tokens += amount;
-    dailyData[date].wallets.add(addr);
-  }
+    const sortedSamples = Object.keys(blockDateMap).map(Number).sort((a, b) => a - b);
 
-  console.log('Date       | Buy Txs | Unique Wallets | CASHCAT Bought');
-  console.log('-----------|---------|----------------|-------------------');
-  for (const date of Object.keys(dailyData).sort()) {
-    const d = dailyData[date];
-    console.log(`${date} | ${String(d.txs).padStart(7)} | ${String(d.wallets.size).padStart(14)} | ${d.tokens.toLocaleString()}`);
+    function getDateForBlock(bn) {
+      let closest = sortedSamples[0], minDist = Math.abs(bn - closest);
+      for (const s of sortedSamples) {
+        if (Math.abs(bn - s) < minDist) { closest = s; minDist = Math.abs(bn - s); }
+      }
+      return blockDateMap[closest];
+    }
+
+    for (const log of buys) {
+      const bn = Number(log.blockNumber);
+      const amount = Number(formatUnits(log.args.value, 18));
+      const addr = log.args.to.toLowerCase();
+      const date = getDateForBlock(bn);
+      if (!dailyData[date]) dailyData[date] = { txs: 0, tokens: 0, wallets: new Set() };
+      dailyData[date].txs++;
+      dailyData[date].tokens += amount;
+      dailyData[date].wallets.add(addr);
+    }
+
+    console.log('Date       | Buy Txs | Unique Wallets | CASHCAT Bought');
+    console.log('-----------|---------|----------------|-------------------');
+    for (const date of Object.keys(dailyData).sort()) {
+      const d = dailyData[date];
+      console.log(`${date} | ${String(d.txs).padStart(7)} | ${String(d.wallets.size).padStart(14)} | ${d.tokens.toLocaleString()}`);
+    }
+  } else {
+    console.log('No buy data for daily breakdown.');
   }
 
   console.log('\n\nDone!');
