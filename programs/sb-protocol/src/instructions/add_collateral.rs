@@ -52,7 +52,7 @@ pub struct AddCollateral<'info> {
     pub rent: Sysvar<'info, Rent>,
 }
 
-pub fn handler(
+pub fn handle_add_collateral(
     ctx: Context<AddCollateral>,
     max_initial_ltv_bps: u16,
     liquidation_threshold_bps: u16,

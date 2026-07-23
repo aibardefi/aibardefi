@@ -22,7 +22,7 @@ pub struct UpdateCollateralConfig<'info> {
     pub collateral_config: Account<'info, CollateralConfig>,
 }
 
-pub fn handler(
+pub fn handle_update_collateral_config(
     ctx: Context<UpdateCollateralConfig>,
     max_initial_ltv_bps: u16,
     liquidation_threshold_bps: u16,

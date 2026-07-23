@@ -4,9 +4,11 @@ skip-lint = false
 
 [programs.localnet]
 orderbook = "h82pJGF9p7kpzb6eU326EFZf2cDnimbTFVeJtx1qtBm"
+sb-protocol = "SBProt1111111111111111111111111111111111111"
 
 [programs.devnet]
 orderbook = "h82pJGF9p7kpzb6eU326EFZf2cDnimbTFVeJtx1qtBm"
+sb-protocol = "SBProt1111111111111111111111111111111111111"
 
 [registry]
 url = "https://api.apr.dev"

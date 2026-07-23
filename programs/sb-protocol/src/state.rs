@@ -1,5 +1,7 @@
 use anchor_lang::prelude::*;
 
+use crate::errors::ErrorCode;
+
 pub const PROTOCOL_SEED: &[u8] = b"protocol";
 pub const COLLATERAL_CONFIG_SEED: &[u8] = b"collateral";
 pub const POSITION_SEED: &[u8] = b"position";
@@ -80,4 +82,34 @@ pub struct PriceFeed {
 
 impl PriceFeed {
     pub const SIZE: usize = 8 + 32 + 8 + 8 + 8 + 32 + 8 + 2 + 8 + 1;
+
+    pub fn validate(&self, current_time: i64) -> Result<()> {
+        require!(self.price > 0, ErrorCode::InvalidPrice);
+
+        let age = current_time
+            .checked_sub(self.last_update)
+            .ok_or(ErrorCode::MathOverflow)?;
+        require!(age <= PRICE_STALENESS_THRESHOLD, ErrorCode::PriceStale);
+
+        if self.twap_price > 0 {
+            let deviation = if self.price > self.twap_price {
+                self.price.checked_sub(self.twap_price).ok_or(ErrorCode::MathOverflow)?
+            } else {
+                self.twap_price.checked_sub(self.price).ok_or(ErrorCode::MathOverflow)?
+            };
+
+            let deviation_bps = (deviation as u128)
+                .checked_mul(BPS_DENOMINATOR as u128)
+                .ok_or(ErrorCode::MathOverflow)?
+                .checked_div(self.twap_price as u128)
+                .ok_or(ErrorCode::MathOverflow)? as u64;
+
+            require!(
+                deviation_bps <= self.max_deviation_bps as u64,
+                ErrorCode::PriceDeviationTooHigh
+            );
+        }
+
+        Ok(())
+    }
 }

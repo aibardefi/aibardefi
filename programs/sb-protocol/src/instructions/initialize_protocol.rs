@@ -41,7 +41,7 @@ pub struct InitializeProtocol<'info> {
     pub rent: Sysvar<'info, Rent>,
 }
 
-pub fn handler(
+pub fn handle_initialize_protocol(
     ctx: Context<InitializeProtocol>,
     utilization_cap_bps: u16,
     treasury_reserve_bps: u16,
