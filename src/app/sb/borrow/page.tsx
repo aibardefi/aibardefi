@@ -1,11 +1,13 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useLanguage } from "@/i18n/LanguageContext";
 import { COLLATERAL_TOKENS, MOCK_SB_PRICE } from "@/lib/sb/constants";
 
 type TokenSymbol = (typeof COLLATERAL_TOKENS)[number]["symbol"];
 
 export default function BorrowPage() {
+  const { t } = useLanguage();
   const [selectedToken, setSelectedToken] = useState<TokenSymbol>("CC");
   const [collateralAmount, setCollateralAmount] = useState("");
   const [sbAmount, setSbAmount] = useState("");
@@ -79,10 +81,10 @@ export default function BorrowPage() {
             marginBottom: 6,
           }}
         >
-          Borrow SB
+          {t("sbBorrowTitle")}
         </h1>
         <p style={{ fontSize: 14, color: "var(--text-secondary)" }}>
-          Lock collateral, receive SB tokens. Zero interest. Repay anytime.
+          {t("sbBorrowSub")}
         </p>
       </div>
 
@@ -105,7 +107,7 @@ export default function BorrowPage() {
                 marginBottom: 8,
               }}
             >
-              Collateral Token
+              {t("sbCollateralToken")}
             </label>
             <div style={{ position: "relative" }}>
               <button
@@ -264,7 +266,7 @@ export default function BorrowPage() {
                   color: "var(--text-secondary)",
                 }}
               >
-                Collateral Amount
+                {t("sbCollateralAmount")}
               </label>
               <button
                 onClick={handleCollateralMax}
@@ -319,7 +321,7 @@ export default function BorrowPage() {
                   color: "var(--text-secondary)",
                 }}
               >
-                SB Amount to Borrow
+                {t("sbSbAmountBorrow")}
               </label>
               <button
                 onClick={handleSbMax}
@@ -385,7 +387,7 @@ export default function BorrowPage() {
                 marginBottom: 12,
               }}
             >
-              Loan-to-Value
+              {t("sbLoanToValue")}
             </p>
             <div style={{ position: "relative" }}>
               <div
@@ -417,7 +419,7 @@ export default function BorrowPage() {
                     backgroundColor: "var(--sb-red)",
                     borderRadius: 1,
                   }}
-                  title="Liquidation at 90%"
+                  title={t("sbLiquidationAt")}
                 />
               </div>
               <div
@@ -438,7 +440,7 @@ export default function BorrowPage() {
                   {ltv > 0 ? `${ltv.toFixed(1)}%` : "--"}
                 </span>
                 <span style={{ fontSize: 12, color: "var(--text-tertiary)" }}>
-                  Liquidation: 90%
+                  {t("sbLiquidationAt")}
                 </span>
               </div>
             </div>
@@ -455,11 +457,11 @@ export default function BorrowPage() {
                 marginBottom: 16,
               }}
             >
-              Summary
+              {t("sbSummary")}
             </h3>
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               <SummaryRow
-                label="Collateral Value"
+                label={t("sbCollateralValue")}
                 value={
                   collateralValue > 0
                     ? `$${collateralValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
@@ -467,7 +469,7 @@ export default function BorrowPage() {
                 }
               />
               <SummaryRow
-                label="You Receive"
+                label={t("sbYouReceive")}
                 value={
                   sbAmount && parseFloat(sbAmount) > 0
                     ? `${parseFloat(sbAmount).toLocaleString()} SB`
@@ -476,7 +478,7 @@ export default function BorrowPage() {
                 valueColor="var(--sb-accent)"
               />
               <SummaryRow
-                label="To Repay"
+                label={t("sbToRepay")}
                 value={
                   sbAmount && parseFloat(sbAmount) > 0
                     ? `${parseFloat(sbAmount).toLocaleString()} SB`
@@ -491,16 +493,16 @@ export default function BorrowPage() {
                 }}
               />
               <SummaryRow
-                label="Initial LTV"
+                label={t("sbInitialLtv")}
                 value={ltv > 0 ? `${ltv.toFixed(1)}%` : "--"}
                 valueColor={ltv > 0 ? ltvBarColor() : undefined}
               />
               <SummaryRow
-                label="Liquidation Threshold"
+                label={t("sbLiqThreshold")}
                 value="90%"
               />
               <SummaryRow
-                label="Liquidation Price"
+                label={t("sbLiqPrice")}
                 value={
                   liquidationPrice > 0
                     ? `$${liquidationPrice.toFixed(4)}`
@@ -514,8 +516,8 @@ export default function BorrowPage() {
                   margin: "4px 0",
                 }}
               />
-              <SummaryRow label="Interest" value="0%" valueColor="var(--sb-green)" />
-              <SummaryRow label="Protocol Fee" value="0%" valueColor="var(--sb-green)" />
+              <SummaryRow label={t("sbInterest")} value="0%" valueColor="var(--sb-green)" />
+              <SummaryRow label={t("sbProtocolFee")} value="0%" valueColor="var(--sb-green)" />
             </div>
           </div>
 
@@ -530,7 +532,7 @@ export default function BorrowPage() {
             }}
             disabled={ltv <= 0 || ltv >= 90}
           >
-            Lock Collateral & Receive SB
+            {t("sbLockBtn")}
           </button>
 
           <div
@@ -566,7 +568,7 @@ export default function BorrowPage() {
                     marginBottom: 4,
                   }}
                 >
-                  Understand the risks
+                  {t("sbRiskTitle")}
                 </p>
                 <p
                   style={{
@@ -575,10 +577,7 @@ export default function BorrowPage() {
                     lineHeight: 1.6,
                   }}
                 >
-                  Positions with LTV at or above 90% are liquidated. Both
-                  collateral and SB prices can move, affecting your LTV.
-                  Repaying requires gas fees on Solana. Always maintain a
-                  safety margin.
+                  {t("sbRiskText")}
                 </p>
               </div>
             </div>

@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useLanguage } from "@/i18n/LanguageContext";
 import { MOCK_POSITIONS, MOCK_SB_PRICE, SB_TOTAL_SUPPLY } from "@/lib/sb/constants";
+import type { TranslationKey } from "@/i18n/translations";
 
 function computeLtv(amount: number, price: number, debt: number): number {
   const collateralValue = amount * price;
@@ -15,10 +17,10 @@ function ltvColor(ltv: number): string {
   return "var(--sb-red)";
 }
 
-function healthLabel(ltv: number): { text: string; color: string } {
-  if (ltv < 70) return { text: "Healthy", color: "var(--sb-green)" };
-  if (ltv < 85) return { text: "Caution", color: "var(--sb-yellow)" };
-  return { text: "At Risk", color: "var(--sb-red)" };
+function healthKey(ltv: number): { key: TranslationKey; color: string } {
+  if (ltv < 70) return { key: "sbHealthy", color: "var(--sb-green)" };
+  if (ltv < 85) return { key: "sbCaution", color: "var(--sb-yellow)" };
+  return { key: "sbAtRisk", color: "var(--sb-red)" };
 }
 
 const totalCollateral = MOCK_POSITIONS.reduce((sum, p) => sum + p.amount * p.price, 0);
@@ -29,32 +31,42 @@ const treasuryBorrowed = 108_000_000;
 const treasuryAvailable = SB_TOTAL_SUPPLY - treasuryBorrowed;
 const treasuryPct = (treasuryBorrowed / SB_TOTAL_SUPPLY) * 100;
 
-const STAT_CARDS = [
-  {
-    label: "Your Collateral",
-    value: `$${totalCollateral.toLocaleString()}`,
-    sub: `${MOCK_POSITIONS.length} positions`,
-  },
-  {
-    label: "Total Debt",
-    value: `${totalDebt.toLocaleString()} SB`,
-    sub: `$${totalDebtUsd.toLocaleString()}`,
-  },
-  {
-    label: "Average LTV",
-    value: `${avgLtv}%`,
-    sub: null,
-    color: "var(--sb-green)",
-  },
-  {
-    label: "SB Price",
-    value: `$${MOCK_SB_PRICE}`,
-    sub: "+3.8%",
-    subColor: "var(--sb-green)",
-  },
-];
-
 export default function DashboardPage() {
+  const { t } = useLanguage();
+
+  const STAT_CARDS = [
+    {
+      label: t("sbYourCollateral"),
+      value: `$${totalCollateral.toLocaleString()}`,
+      sub: t("sbPositionsCount", { n: String(MOCK_POSITIONS.length) }),
+    },
+    {
+      label: t("sbTotalDebt"),
+      value: `${totalDebt.toLocaleString()} SB`,
+      sub: `$${totalDebtUsd.toLocaleString()}`,
+    },
+    {
+      label: t("sbAverageLtv"),
+      value: `${avgLtv}%`,
+      sub: null,
+      color: "var(--sb-green)",
+    },
+    {
+      label: t("sbSbPrice"),
+      value: `$${MOCK_SB_PRICE}`,
+      sub: "+3.8%",
+      subColor: "var(--sb-green)",
+    },
+  ];
+
+  const TABLE_HEADERS = [
+    t("sbAsset"),
+    t("sbCollateralValue"),
+    t("sbDebt"),
+    t("sbLtv"),
+    t("sbHealth"),
+  ];
+
   return (
     <div
       style={{
@@ -114,7 +126,7 @@ export default function DashboardPage() {
           }}
         >
           <p style={{ fontSize: 14, fontWeight: 500, color: "var(--text-primary)" }}>
-            Treasury Utilization
+            {t("sbTreasuryUtil")}
           </p>
           <p
             style={{
@@ -153,7 +165,7 @@ export default function DashboardPage() {
             fontVariantNumeric: "tabular-nums",
           }}
         >
-          {treasuryPct.toFixed(1)}% utilized
+          {treasuryPct.toFixed(1)}% {t("sbUtilized")}
         </p>
       </div>
 
@@ -174,7 +186,7 @@ export default function DashboardPage() {
               color: "var(--text-primary)",
             }}
           >
-            Positions
+            {t("sbPositions")}
           </h2>
           <Link href="/sb/borrow" className="sb-btn-outline" style={{ padding: "8px 16px", fontSize: 13 }}>
             <svg
@@ -190,7 +202,7 @@ export default function DashboardPage() {
               <line x1="12" y1="5" x2="12" y2="19" />
               <line x1="5" y1="12" x2="19" y2="12" />
             </svg>
-            New Position
+            {t("sbNewPosition")}
           </Link>
         </div>
 
@@ -209,32 +221,30 @@ export default function DashboardPage() {
                   borderBottom: "1px solid var(--border-color)",
                 }}
               >
-                {["Asset", "Collateral Value", "Debt", "LTV", "Health"].map(
-                  (col) => (
-                    <th
-                      key={col}
-                      style={{
-                        padding: "10px 20px",
-                        textAlign: "left",
-                        fontSize: 12,
-                        fontWeight: 500,
-                        color: "var(--text-tertiary)",
-                        textTransform: "uppercase",
-                        letterSpacing: "0.04em",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {col}
-                    </th>
-                  )
-                )}
+                {TABLE_HEADERS.map((col) => (
+                  <th
+                    key={col}
+                    style={{
+                      padding: "10px 20px",
+                      textAlign: "left",
+                      fontSize: 12,
+                      fontWeight: 500,
+                      color: "var(--text-tertiary)",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.04em",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {col}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
               {MOCK_POSITIONS.map((pos) => {
                 const collateralValue = pos.amount * pos.price;
                 const ltv = computeLtv(pos.amount, pos.price, pos.debt);
-                const health = healthLabel(ltv);
+                const health = healthKey(ltv);
                 const tokenInfo = {
                   CC: { color: "#E5A435" },
                   HOOD: { color: "#60A5FA" },
@@ -324,7 +334,7 @@ export default function DashboardPage() {
                           color: health.color,
                         }}
                       >
-                        {health.text}
+                        {t(health.key)}
                       </span>
                     </td>
                   </tr>

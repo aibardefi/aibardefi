@@ -3,7 +3,9 @@
 import { useMemo } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { useLanguage } from "@/i18n/LanguageContext";
 import { MOCK_POSITIONS, MOCK_SB_PRICE, COLLATERAL_TOKENS } from "@/lib/sb/constants";
+import type { TranslationKey } from "@/i18n/translations";
 
 function ltvColor(ltv: number): string {
   if (ltv < 70) return "var(--sb-green)";
@@ -11,19 +13,10 @@ function ltvColor(ltv: number): string {
   return "var(--sb-red)";
 }
 
-function healthLabel(ltv: number): { text: string; color: string } {
-  if (ltv < 70) return { text: "Healthy", color: "var(--sb-green)" };
-  if (ltv < 85) return { text: "Caution", color: "var(--sb-yellow)" };
-  return { text: "At Risk", color: "var(--sb-red)" };
-}
-
-function formatDate(dateStr: string): string {
-  const d = new Date(dateStr + "T00:00:00");
-  return d.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
+function healthKey(ltv: number): { key: TranslationKey; color: string } {
+  if (ltv < 70) return { key: "sbHealthy", color: "var(--sb-green)" };
+  if (ltv < 85) return { key: "sbCaution", color: "var(--sb-yellow)" };
+  return { key: "sbAtRisk", color: "var(--sb-red)" };
 }
 
 const GAUGE_RADIUS = 52;
@@ -32,6 +25,7 @@ const GAUGE_CIRCUMFERENCE = 2 * Math.PI * GAUGE_RADIUS;
 export default function PositionDetail() {
   const params = useParams();
   const positionId = Number(String(params.id));
+  const { t, lang } = useLanguage();
 
   const position = useMemo(
     () => MOCK_POSITIONS.find((p) => p.id === positionId) ?? MOCK_POSITIONS[0],
@@ -39,7 +33,7 @@ export default function PositionDetail() {
   );
 
   const tokenInfo = useMemo(
-    () => COLLATERAL_TOKENS.find((t) => t.symbol === position.token) ?? COLLATERAL_TOKENS[0],
+    () => COLLATERAL_TOKENS.find((tk) => tk.symbol === position.token) ?? COLLATERAL_TOKENS[0],
     [position.token]
   );
 
@@ -48,8 +42,15 @@ export default function PositionDetail() {
   const ltv = (debtValue / collateralValue) * 100;
   const liquidationPrice = (position.debt * MOCK_SB_PRICE) / (position.amount * 0.9);
   const safetyMargin = 90 - ltv;
-  const health = healthLabel(ltv);
+  const health = healthKey(ltv);
   const gaugeOffset = GAUGE_CIRCUMFERENCE * (1 - ltv / 100);
+
+  const locale = lang === "ru" ? "ru-RU" : "en-US";
+  const formattedDate = new Date(position.openedAt + "T00:00:00").toLocaleDateString(locale, {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
 
   return (
     <div
@@ -74,7 +75,7 @@ export default function PositionDetail() {
         >
           <polyline points="15 18 9 12 15 6" />
         </svg>
-        Back to Dashboard
+        {t("sbBackDashboard")}
       </Link>
 
       <div
@@ -112,10 +113,10 @@ export default function PositionDetail() {
                 color: "var(--text-primary)",
               }}
             >
-              {position.name} Position
+              {position.name} {t("sbPosition")}
             </h1>
             <p style={{ fontSize: 13, color: "var(--text-tertiary)" }}>
-              Opened {formatDate(position.openedAt)}
+              {t("sbOpened")} {formattedDate}
             </p>
           </div>
         </div>
@@ -130,7 +131,7 @@ export default function PositionDetail() {
             color: health.color,
           }}
         >
-          {health.text}
+          {t(health.key)}
         </span>
       </div>
 
@@ -202,12 +203,12 @@ export default function PositionDetail() {
           }}
         >
           {[
-            { label: "Healthy", range: "<70%", color: "var(--sb-green)" },
-            { label: "Caution", range: "70-85%", color: "var(--sb-yellow)" },
-            { label: "Liquidation", range: ">=90%", color: "var(--sb-red)" },
+            { key: "sbHealthy" as const, range: "<70%", color: "var(--sb-green)" },
+            { key: "sbCaution" as const, range: "70-85%", color: "var(--sb-yellow)" },
+            { key: "sbLiqThreshold" as const, range: ">=90%", color: "var(--sb-red)" },
           ].map((item) => (
             <div
-              key={item.label}
+              key={item.key}
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -224,7 +225,7 @@ export default function PositionDetail() {
                   backgroundColor: item.color,
                 }}
               />
-              {item.label} {item.range}
+              {t(item.key)} {item.range}
             </div>
           ))}
         </div>
@@ -239,24 +240,24 @@ export default function PositionDetail() {
         }}
       >
         <InfoCard
-          label="Collateral Locked"
+          label={t("sbCollateralLocked")}
           value={`${position.amount.toLocaleString()} ${position.token}`}
           sub={`$${collateralValue.toLocaleString()}`}
         />
         <InfoCard
-          label="Debt Owed"
+          label={t("sbDebtOwed")}
           value={`${position.debt.toLocaleString()} SB`}
           sub={`$${debtValue.toLocaleString()}`}
         />
         <InfoCard
-          label="Liquidation Price"
+          label={t("sbLiqPrice")}
           value={`$${liquidationPrice.toFixed(4)}`}
-          sub={`per ${position.token}`}
+          sub={`${t("sbPer")} ${position.token}`}
         />
         <InfoCard
-          label="Safety Margin"
+          label={t("sbSafetyMargin")}
           value={`${safetyMargin.toFixed(0)}%`}
-          sub="from liquidation"
+          sub={t("sbFromLiq")}
           valueColor={safetyMargin > 20 ? "var(--sb-green)" : "var(--sb-yellow)"}
         />
       </div>
@@ -270,7 +271,7 @@ export default function PositionDetail() {
             marginBottom: 20,
           }}
         >
-          Repay & Unlock
+          {t("sbRepayUnlock")}
         </h3>
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           <div
@@ -281,7 +282,7 @@ export default function PositionDetail() {
             }}
           >
             <span style={{ fontSize: 14, color: "var(--text-secondary)" }}>
-              Amount to Repay
+              {t("sbAmountRepay")}
             </span>
             <span
               style={{
@@ -302,7 +303,7 @@ export default function PositionDetail() {
             }}
           >
             <span style={{ fontSize: 14, color: "var(--text-secondary)" }}>
-              You Receive Back
+              {t("sbReceiveBack")}
             </span>
             <span
               style={{
@@ -323,7 +324,7 @@ export default function PositionDetail() {
             }}
           >
             <span style={{ fontSize: 14, color: "var(--text-secondary)" }}>
-              Interest Charged
+              {t("sbInterestCharged")}
             </span>
             <span
               style={{
@@ -347,7 +348,7 @@ export default function PositionDetail() {
             className="sb-btn-green"
             style={{ width: "100%", padding: "14px 24px", fontSize: 15 }}
           >
-            Repay & Unlock
+            {t("sbRepayUnlock")}
           </button>
         </div>
       </div>
