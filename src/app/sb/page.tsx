@@ -183,7 +183,7 @@ export default function SBLandingPage() {
           style={{
             maxWidth: 960,
             margin: "0 auto",
-            padding: "32px 24px",
+            padding: "48px 32px",
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
             gap: 24,
@@ -202,10 +202,11 @@ export default function SBLandingPage() {
               </p>
               <p
                 style={{
-                  fontSize: 24,
-                  fontWeight: 600,
+                  fontSize: 28,
+                  fontWeight: 700,
                   color: "var(--text-primary)",
                   fontVariantNumeric: "tabular-nums",
+                  letterSpacing: "-0.01em",
                 }}
               >
                 {stat.value}

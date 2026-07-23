@@ -79,25 +79,26 @@ export default function BorrowPage() {
   return (
     <div
       style={{
-        maxWidth: 960,
+        maxWidth: 1120,
         margin: "0 auto",
-        padding: "32px 24px",
+        padding: "40px 32px",
         width: "100%",
         boxSizing: "border-box",
       }}
     >
-      <div style={{ marginBottom: 32 }}>
+      <div style={{ marginBottom: 40 }}>
         <h1
           style={{
-            fontSize: 24,
-            fontWeight: 600,
+            fontSize: 28,
+            fontWeight: 700,
             color: "var(--text-primary)",
-            marginBottom: 6,
+            marginBottom: 8,
+            letterSpacing: "-0.01em",
           }}
         >
           {t("sbBorrowTitle")}
         </h1>
-        <p style={{ fontSize: 14, color: "var(--text-secondary)" }}>
+        <p style={{ fontSize: 15, color: "var(--text-secondary)", lineHeight: 1.5 }}>
           {t("sbBorrowSub")}
         </p>
       </div>
@@ -143,14 +144,14 @@ export default function BorrowPage() {
               >
                 <div
                   style={{
-                    width: 24,
-                    height: 24,
-                    borderRadius: 6,
+                    width: 32,
+                    height: 32,
+                    borderRadius: "50%",
                     backgroundColor: token.color,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    fontSize: 10,
+                    fontSize: 11,
                     fontWeight: 700,
                     color: "#000",
                     flexShrink: 0,
@@ -158,12 +159,12 @@ export default function BorrowPage() {
                 >
                   {token.icon}
                 </div>
-                <span style={{ flex: 1, textAlign: "left" }}>
+                <span style={{ flex: 1, textAlign: "left", fontSize: 15, fontWeight: 500 }}>
                   {token.name}
                 </span>
                 <span
                   style={{
-                    fontSize: 12,
+                    fontSize: 13,
                     color: "var(--text-tertiary)",
                     fontVariantNumeric: "tabular-nums",
                   }}
@@ -230,26 +231,26 @@ export default function BorrowPage() {
                       >
                         <div
                           style={{
-                            width: 24,
-                            height: 24,
-                            borderRadius: 6,
+                            width: 32,
+                            height: 32,
+                            borderRadius: "50%",
                             backgroundColor: t.color,
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            fontSize: 10,
+                            fontSize: 11,
                             fontWeight: 700,
                             color: "#000",
                           }}
                         >
                           {t.icon}
                         </div>
-                        <span style={{ flex: 1, textAlign: "left" }}>
+                        <span style={{ flex: 1, textAlign: "left", fontSize: 15 }}>
                           {t.name}
                         </span>
                         <span
                           style={{
-                            fontSize: 12,
+                            fontSize: 13,
                             color: "var(--text-tertiary)",
                             fontVariantNumeric: "tabular-nums",
                           }}
@@ -465,10 +466,10 @@ export default function BorrowPage() {
           <div className="sb-card">
             <h3
               style={{
-                fontSize: 15,
+                fontSize: 18,
                 fontWeight: 600,
                 color: "var(--text-primary)",
-                marginBottom: 16,
+                marginBottom: 20,
               }}
             >
               {t("sbSummary")}
@@ -649,13 +650,13 @@ function SummaryRow({
         alignItems: "center",
       }}
     >
-      <span style={{ fontSize: 13, color: "var(--text-secondary)" }}>
+      <span style={{ fontSize: 15, color: "var(--text-secondary)" }}>
         {label}
       </span>
       <span
         style={{
-          fontSize: 13,
-          fontWeight: 500,
+          fontSize: 15,
+          fontWeight: 600,
           color: valueColor ?? "var(--text-primary)",
           fontVariantNumeric: "tabular-nums",
         }}

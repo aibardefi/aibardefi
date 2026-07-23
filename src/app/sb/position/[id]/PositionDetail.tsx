@@ -75,9 +75,9 @@ export default function PositionDetail() {
   return (
     <div
       style={{
-        maxWidth: 720,
+        maxWidth: 900,
         margin: "0 auto",
-        padding: "32px 24px",
+        padding: "40px 32px",
         width: "100%",
         boxSizing: "border-box",
       }}
@@ -128,9 +128,10 @@ export default function PositionDetail() {
           <div>
             <h1
               style={{
-                fontSize: 22,
-                fontWeight: 600,
+                fontSize: 28,
+                fontWeight: 700,
                 color: "var(--text-primary)",
+                letterSpacing: "-0.01em",
               }}
             >
               {position.name} {t("sbPosition")}
@@ -285,7 +286,7 @@ export default function PositionDetail() {
       <div className="sb-card">
         <h3
           style={{
-            fontSize: 16,
+            fontSize: 18,
             fontWeight: 600,
             color: "var(--text-primary)",
             marginBottom: 20,
@@ -301,13 +302,13 @@ export default function PositionDetail() {
               alignItems: "center",
             }}
           >
-            <span style={{ fontSize: 14, color: "var(--text-secondary)" }}>
+            <span style={{ fontSize: 15, color: "var(--text-secondary)" }}>
               {t("sbAmountRepay")}
             </span>
             <span
               style={{
-                fontSize: 14,
-                fontWeight: 500,
+                fontSize: 15,
+                fontWeight: 600,
                 color: "var(--text-primary)",
                 fontVariantNumeric: "tabular-nums",
               }}
@@ -322,13 +323,13 @@ export default function PositionDetail() {
               alignItems: "center",
             }}
           >
-            <span style={{ fontSize: 14, color: "var(--text-secondary)" }}>
+            <span style={{ fontSize: 15, color: "var(--text-secondary)" }}>
               {t("sbReceiveBack")}
             </span>
             <span
               style={{
-                fontSize: 14,
-                fontWeight: 500,
+                fontSize: 15,
+                fontWeight: 600,
                 color: "var(--sb-accent)",
                 fontVariantNumeric: "tabular-nums",
               }}
@@ -343,13 +344,13 @@ export default function PositionDetail() {
               alignItems: "center",
             }}
           >
-            <span style={{ fontSize: 14, color: "var(--text-secondary)" }}>
+            <span style={{ fontSize: 15, color: "var(--text-secondary)" }}>
               {t("sbInterestCharged")}
             </span>
             <span
               style={{
-                fontSize: 14,
-                fontWeight: 500,
+                fontSize: 15,
+                fontWeight: 600,
                 color: "var(--sb-green)",
                 fontVariantNumeric: "tabular-nums",
               }}
@@ -433,10 +434,11 @@ function InfoCard({
       </p>
       <p
         style={{
-          fontSize: 18,
-          fontWeight: 600,
+          fontSize: 24,
+          fontWeight: 700,
           color: valueColor ?? "var(--text-primary)",
           fontVariantNumeric: "tabular-nums",
+          letterSpacing: "-0.01em",
         }}
       >
         {value}

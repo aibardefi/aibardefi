@@ -7,10 +7,10 @@ import { useTreasuryData, useUserPositions, usePositionData, useSbPrice } from "
 import { DEPLOYED } from "@/lib/sb/contracts";
 import type { TranslationKey } from "@/i18n/translations";
 
-function computeLtv(amount: number, price: number, debt: number): number {
+function computeLtv(amount: number, price: number, debt: number, sbPrice: number): number {
   const collateralValue = amount * price;
   if (collateralValue === 0) return 0;
-  return ((debt * MOCK_SB_PRICE) / collateralValue) * 100;
+  return ((debt * sbPrice) / collateralValue) * 100;
 }
 
 function ltvColor(ltv: number): string {
@@ -23,70 +23,6 @@ function healthKey(ltv: number): { key: TranslationKey; color: string } {
   if (ltv < 70) return { key: "sbHealthy", color: "var(--sb-green)" };
   if (ltv < 85) return { key: "sbCaution", color: "var(--sb-yellow)" };
   return { key: "sbAtRisk", color: "var(--sb-red)" };
-}
-
-function PositionRow({ positionId }: { positionId: number }) {
-  const { t } = useLanguage();
-  const position = usePositionData(positionId);
-  if (!position || !position.active) return null;
-
-  const tokenMeta = COLLATERAL_TOKENS.find(
-    (tk) => tk.symbol === Object.entries({ CC: true, HOOD: true, MM: true }).find(() => true)?.[0]
-  );
-  const ltv = position.ltv;
-  const health = healthKey(ltv);
-  const tokenColor = "#888";
-
-  return (
-    <tr className="sb-table-row">
-      <td style={{ padding: "14px 20px" }}>
-        <Link
-          href={`/sb/position/${positionId}`}
-          style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", color: "inherit" }}
-        >
-          <div
-            style={{
-              width: 32, height: 32, borderRadius: 8, backgroundColor: tokenColor,
-              display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: 11, fontWeight: 700, color: "#000", flexShrink: 0,
-            }}
-          >
-            #{positionId}
-          </div>
-          <div>
-            <p style={{ fontWeight: 500, color: "var(--text-primary)" }}>
-              Position #{positionId}
-            </p>
-            <p style={{ fontSize: 12, color: "var(--text-tertiary)" }}>
-              {Number(position.collateralAmount).toLocaleString()} tokens
-            </p>
-          </div>
-        </Link>
-      </td>
-      <td style={{ padding: "14px 20px", color: "var(--text-primary)" }}>
-        {Number(position.collateralAmount).toLocaleString()}
-      </td>
-      <td style={{ padding: "14px 20px", color: "var(--text-primary)" }}>
-        {Number(position.debtAmount).toLocaleString()} SB
-      </td>
-      <td style={{ padding: "14px 20px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <div style={{ width: 48, height: 6, borderRadius: 3, backgroundColor: "var(--bg-tertiary)", overflow: "hidden" }}>
-            <div style={{ width: `${Math.min(ltv, 100)}%`, height: "100%", borderRadius: 3, backgroundColor: ltvColor(ltv) }} />
-          </div>
-          <span style={{ color: ltvColor(ltv), fontWeight: 500 }}>{ltv.toFixed(1)}%</span>
-        </div>
-      </td>
-      <td style={{ padding: "14px 20px" }}>
-        <span style={{
-          display: "inline-block", padding: "3px 10px", borderRadius: 9999, fontSize: 12, fontWeight: 500,
-          backgroundColor: `color-mix(in srgb, ${health.color} 15%, transparent)`, color: health.color,
-        }}>
-          {t(health.key)}
-        </span>
-      </td>
-    </tr>
-  );
 }
 
 export default function DashboardPage() {
@@ -104,7 +40,6 @@ export default function DashboardPage() {
 
   const treasuryBorrowed = treasury.totalDebt ? Number(treasury.totalDebt) : 108_000_000;
   const treasuryTotal = treasury.sbTotalSupply ? Number(treasury.sbTotalSupply) : SB_TOTAL_SUPPLY;
-  const treasuryAvailable = treasuryTotal - treasuryBorrowed;
   const treasuryPct = (treasuryBorrowed / treasuryTotal) * 100;
 
   const STAT_CARDS = [
@@ -143,9 +78,9 @@ export default function DashboardPage() {
   return (
     <div
       style={{
-        maxWidth: 1040,
+        maxWidth: 1120,
         margin: "0 auto",
-        padding: "32px 24px",
+        padding: "40px 32px",
         width: "100%",
         boxSizing: "border-box",
       }}
@@ -153,22 +88,23 @@ export default function DashboardPage() {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
           gap: 16,
-          marginBottom: 24,
+          marginBottom: 32,
         }}
       >
         {STAT_CARDS.map((stat) => (
           <div key={stat.label} className="sb-card">
-            <p style={{ fontSize: 13, color: "var(--text-secondary)", marginBottom: 6 }}>
+            <p style={{ fontSize: 12, color: "var(--text-tertiary)", marginBottom: 10 }}>
               {stat.label}
             </p>
             <p
               style={{
-                fontSize: 24,
-                fontWeight: 600,
+                fontSize: 28,
+                fontWeight: 700,
                 color: stat.color ?? "var(--text-primary)",
                 fontVariantNumeric: "tabular-nums",
+                letterSpacing: "-0.01em",
               }}
             >
               {stat.value}
@@ -178,7 +114,7 @@ export default function DashboardPage() {
                 style={{
                   fontSize: 13,
                   color: stat.subColor ?? "var(--text-secondary)",
-                  marginTop: 2,
+                  marginTop: 4,
                   fontVariantNumeric: "tabular-nums",
                 }}
               >
@@ -189,21 +125,21 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      <div className="sb-card" style={{ marginBottom: 24 }}>
+      <div className="sb-card" style={{ marginBottom: 32 }}>
         <div
           style={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            marginBottom: 12,
+            marginBottom: 16,
           }}
         >
-          <p style={{ fontSize: 14, fontWeight: 500, color: "var(--text-primary)" }}>
+          <p style={{ fontSize: 15, fontWeight: 600, color: "var(--text-primary)" }}>
             {t("sbTreasuryUtil")}
           </p>
           <p
             style={{
-              fontSize: 13,
+              fontSize: 14,
               color: "var(--text-secondary)",
               fontVariantNumeric: "tabular-nums",
             }}
@@ -214,8 +150,8 @@ export default function DashboardPage() {
         <div
           style={{
             width: "100%",
-            height: 8,
-            borderRadius: 4,
+            height: 10,
+            borderRadius: 5,
             backgroundColor: "var(--bg-tertiary)",
             overflow: "hidden",
           }}
@@ -224,7 +160,7 @@ export default function DashboardPage() {
             style={{
               width: `${treasuryPct}%`,
               height: "100%",
-              borderRadius: 4,
+              borderRadius: 5,
               backgroundColor: "var(--sb-accent)",
               transition: "width 0.3s ease",
             }}
@@ -232,9 +168,9 @@ export default function DashboardPage() {
         </div>
         <p
           style={{
-            fontSize: 12,
+            fontSize: 13,
             color: "var(--text-tertiary)",
-            marginTop: 6,
+            marginTop: 8,
             fontVariantNumeric: "tabular-nums",
           }}
         >
@@ -248,20 +184,20 @@ export default function DashboardPage() {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            padding: "16px 20px",
+            padding: "20px 24px",
             borderBottom: "1px solid var(--border-color)",
           }}
         >
           <h2
             style={{
-              fontSize: 16,
+              fontSize: 18,
               fontWeight: 600,
               color: "var(--text-primary)",
             }}
           >
             {t("sbPositions")}
           </h2>
-          <Link href="/sb/borrow" className="sb-btn-outline" style={{ padding: "8px 16px", fontSize: 13 }}>
+          <Link href="/sb/borrow" className="sb-btn-outline" style={{ padding: "8px 18px", fontSize: 13 }}>
             <svg
               width="14"
               height="14"
@@ -284,7 +220,7 @@ export default function DashboardPage() {
             style={{
               width: "100%",
               borderCollapse: "collapse",
-              fontSize: 14,
+              fontSize: 15,
               fontVariantNumeric: "tabular-nums",
             }}
           >
@@ -298,13 +234,11 @@ export default function DashboardPage() {
                   <th
                     key={col}
                     style={{
-                      padding: "10px 20px",
+                      padding: "14px 24px",
                       textAlign: "left",
-                      fontSize: 12,
+                      fontSize: 13,
                       fontWeight: 500,
                       color: "var(--text-tertiary)",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.04em",
                       whiteSpace: "nowrap",
                     }}
                   >
@@ -316,7 +250,7 @@ export default function DashboardPage() {
             <tbody>
               {MOCK_POSITIONS.map((pos) => {
                 const collateralValue = pos.amount * pos.price;
-                const ltv = computeLtv(pos.amount, pos.price, pos.debt);
+                const ltv = computeLtv(pos.amount, pos.price, pos.debt, sbPrice);
                 const health = healthKey(ltv);
                 const tokenInfo = {
                   CC: { color: "#E5A435" },
@@ -325,28 +259,32 @@ export default function DashboardPage() {
                 }[pos.token] ?? { color: "#888" };
 
                 return (
-                  <tr key={pos.id} className="sb-table-row">
-                    <td style={{ padding: "14px 20px" }}>
+                  <tr
+                    key={pos.id}
+                    className="sb-table-row"
+                    style={{ borderBottom: "1px solid var(--border-color)" }}
+                  >
+                    <td style={{ padding: "18px 24px" }}>
                       <Link
                         href={`/sb/position/${pos.id}`}
                         style={{
                           display: "flex",
                           alignItems: "center",
-                          gap: 10,
+                          gap: 12,
                           textDecoration: "none",
                           color: "inherit",
                         }}
                       >
                         <div
                           style={{
-                            width: 32,
-                            height: 32,
-                            borderRadius: 8,
+                            width: 38,
+                            height: 38,
+                            borderRadius: "50%",
                             backgroundColor: tokenInfo.color,
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            fontSize: 11,
+                            fontSize: 12,
                             fontWeight: 700,
                             color: "#000",
                             flexShrink: 0,
@@ -355,53 +293,43 @@ export default function DashboardPage() {
                           {pos.token}
                         </div>
                         <div>
-                          <p style={{ fontWeight: 500, color: "var(--text-primary)" }}>
+                          <p style={{ fontWeight: 500, fontSize: 15, color: "var(--text-primary)" }}>
                             {pos.name}
                           </p>
-                          <p style={{ fontSize: 12, color: "var(--text-tertiary)" }}>
-                            {pos.amount.toLocaleString()} {pos.token}
+                          <p style={{ fontSize: 13, color: "var(--text-tertiary)", marginTop: 2 }}>
+                            {pos.token}
                           </p>
                         </div>
                       </Link>
                     </td>
-                    <td style={{ padding: "14px 20px", color: "var(--text-primary)" }}>
-                      ${collateralValue.toLocaleString()}
+                    <td style={{ padding: "18px 24px" }}>
+                      <p style={{ fontWeight: 500, color: "var(--text-primary)", fontSize: 15 }}>
+                        {pos.amount.toLocaleString()}
+                      </p>
+                      <p style={{ fontSize: 13, color: "var(--text-tertiary)", marginTop: 2 }}>
+                        ${collateralValue.toLocaleString()}
+                      </p>
                     </td>
-                    <td style={{ padding: "14px 20px", color: "var(--text-primary)" }}>
-                      {pos.debt.toLocaleString()} SB
+                    <td style={{ padding: "18px 24px" }}>
+                      <p style={{ fontWeight: 500, color: "var(--text-primary)", fontSize: 15 }}>
+                        {pos.debt.toLocaleString()} SB
+                      </p>
+                      <p style={{ fontSize: 13, color: "var(--text-tertiary)", marginTop: 2 }}>
+                        ${(pos.debt * sbPrice).toLocaleString()}
+                      </p>
                     </td>
-                    <td style={{ padding: "14px 20px" }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                        <div
-                          style={{
-                            width: 48,
-                            height: 6,
-                            borderRadius: 3,
-                            backgroundColor: "var(--bg-tertiary)",
-                            overflow: "hidden",
-                          }}
-                        >
-                          <div
-                            style={{
-                              width: `${Math.min(ltv, 100)}%`,
-                              height: "100%",
-                              borderRadius: 3,
-                              backgroundColor: ltvColor(ltv),
-                            }}
-                          />
-                        </div>
-                        <span style={{ color: ltvColor(ltv), fontWeight: 500 }}>
-                          {ltv.toFixed(1)}%
-                        </span>
-                      </div>
+                    <td style={{ padding: "18px 24px" }}>
+                      <span style={{ color: ltvColor(ltv), fontWeight: 600, fontSize: 15 }}>
+                        {ltv.toFixed(1)}%
+                      </span>
                     </td>
-                    <td style={{ padding: "14px 20px" }}>
+                    <td style={{ padding: "18px 24px" }}>
                       <span
                         style={{
                           display: "inline-block",
-                          padding: "3px 10px",
+                          padding: "4px 12px",
                           borderRadius: 9999,
-                          fontSize: 12,
+                          fontSize: 13,
                           fontWeight: 500,
                           backgroundColor: `color-mix(in srgb, ${health.color} 15%, transparent)`,
                           color: health.color,

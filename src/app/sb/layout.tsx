@@ -19,7 +19,7 @@ export default function SBLayout({
           background: var(--bg-secondary);
           border: 1px solid var(--border-color);
           border-radius: 12px;
-          padding: 20px;
+          padding: 24px;
         }
         .sb-btn-primary {
           display: inline-flex;
