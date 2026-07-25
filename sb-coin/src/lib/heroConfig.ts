@@ -31,7 +31,7 @@ export type Coin = {
 export const COINS: Coin[] = [
   {
     id: "cashcat",
-    src: "/assets/coins/coin-cashcat.webp",
+    src: "/assets/coin-cashcat.webp",
     alt: "CashCat memecoin",
     x: 47.7,
     y: 24.6,
@@ -43,7 +43,7 @@ export const COINS: Coin[] = [
   },
   {
     id: "cashdog",
-    src: "/assets/coins/coin-cashdog.webp",
+    src: "/assets/coin-cashdog.webp",
     alt: "CashDog memecoin",
     x: 44.5,
     y: 41.4,
@@ -55,7 +55,7 @@ export const COINS: Coin[] = [
   },
   {
     id: "littlejohn",
-    src: "/assets/coins/coin-littlejohn.webp",
+    src: "/assets/coin-littlejohn.webp",
     alt: "Little John memecoin",
     x: 48.3,
     y: 59.1,
@@ -67,7 +67,7 @@ export const COINS: Coin[] = [
   },
   {
     id: "tendies",
-    src: "/assets/coins/coin-tendies.webp",
+    src: "/assets/coin-tendies.webp",
     alt: "Tendies memecoin",
     x: 88.3,
     y: 24.2,
@@ -79,7 +79,7 @@ export const COINS: Coin[] = [
   },
   {
     id: "ansemcat",
-    src: "/assets/coins/coin-ansemcat.webp",
+    src: "/assets/coin-ansemcat.webp",
     alt: "Ansem Cat memecoin",
     x: 91.8,
     y: 46.3,
