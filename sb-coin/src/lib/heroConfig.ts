@@ -12,11 +12,16 @@ export type Coin = {
   /** Path under /public. Filenames match the supplied assets exactly. */
   src: string;
   alt: string;
-  /** Centre point, as % of the stage. */
+  /** Centre point on desktop, as % of the stage. */
   x: number;
   y: number;
-  /** Diameter, as % of stage width. */
+  /** Diameter on desktop, as % of stage width. */
   size: number;
+  /**
+   * Below `lg` the stage is square with the bear centred, so the reference
+   * arrangement is re-hung around him rather than squashed.
+   */
+  mobile: { x: number; y: number; size: number };
   /** Float cycle length in seconds. */
   duration: number;
   /** Float start offset in seconds. */
@@ -36,6 +41,7 @@ export const COINS: Coin[] = [
     x: 57.3,
     y: 25.0,
     size: 8.4,
+    mobile: { x: 34, y: 20, size: 15 },
     duration: 3.4,
     delay: 0,
     amplitude: 1.5,
@@ -48,6 +54,7 @@ export const COINS: Coin[] = [
     x: 52.5,
     y: 43.0,
     size: 8.8,
+    mobile: { x: 19, y: 41, size: 16 },
     duration: 4.1,
     delay: 0.55,
     amplitude: 1.8,
@@ -60,6 +67,7 @@ export const COINS: Coin[] = [
     x: 54.5,
     y: 62.0,
     size: 9.0,
+    mobile: { x: 22, y: 60, size: 15 },
     duration: 3.8,
     delay: 1.1,
     amplitude: 1.6,
@@ -72,6 +80,7 @@ export const COINS: Coin[] = [
     x: 85.5,
     y: 26.0,
     size: 8.4,
+    mobile: { x: 67, y: 19, size: 15 },
     duration: 4.4,
     delay: 0.3,
     amplitude: 1.7,
@@ -84,6 +93,7 @@ export const COINS: Coin[] = [
     x: 88.5,
     y: 46.0,
     size: 8.8,
+    mobile: { x: 82, y: 42, size: 16 },
     duration: 3.6,
     delay: 0.85,
     amplitude: 1.9,
@@ -106,6 +116,8 @@ export const BEAR = {
   bottom: -6,
   /** Box width as % of stage width. */
   width: 24,
+  /** Centred and larger on the square mobile stage. */
+  mobile: { x: 50, width: 44, bottom: -4 },
   /** Intrinsic pixel size of bear.webp, for next/image sizing. */
   intrinsic: { width: 1024, height: 1536 },
 } as const;

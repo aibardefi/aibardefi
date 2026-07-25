@@ -73,13 +73,18 @@ export function BearMascot({ pulseKey, showMemePower, medallionRef }: Props) {
   return (
     <div
       ref={boxRef}
-      className="pointer-events-none absolute"
-      style={{
-        left: `${BEAR.x}%`,
-        bottom: `${BEAR.bottom}%`,
-        width: `${BEAR.width}%`,
-        transform: "translateX(-50%)",
-      }}
+      className="bear-pos pointer-events-none absolute"
+      style={
+        {
+          "--bx": `${BEAR.x}%`,
+          "--bw": `${BEAR.width}%`,
+          "--bb": `${BEAR.bottom}%`,
+          "--mbx": `${BEAR.mobile.x}%`,
+          "--mbw": `${BEAR.mobile.width}%`,
+          "--mbb": `${BEAR.mobile.bottom}%`,
+          transform: "translateX(-50%)",
+        } as React.CSSProperties
+      }
     >
       {/* Outer wrapper owns the feed pulse; inner owns breathing. Sharing one
           scale value would make the two animations fight. */}

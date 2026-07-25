@@ -62,16 +62,21 @@ export function FloatingCoin({ coin, hidden, onFeed }: Props) {
       whileHover={{ scale: 1.08 }}
       whileTap={{ scale: 0.98 }}
       transition={{ type: "spring", stiffness: 320, damping: 22 }}
-      className="pointer-events-auto absolute cursor-pointer rounded-full focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-navy"
-      style={{
-        left: `${coin.x}%`,
-        top: `${coin.y}%`,
-        width: `${coin.size}%`,
-        aspectRatio: "1 / 1",
-        transform: "translate(-50%, -50%)",
-        opacity: hidden ? 0 : 1,
-        visibility: hidden ? "hidden" : "visible",
-      }}
+      className="coin-pos pointer-events-auto absolute cursor-pointer rounded-full focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-navy"
+      style={
+        {
+          "--x": `${coin.x}%`,
+          "--y": `${coin.y}%`,
+          "--sz": `${coin.size}%`,
+          "--mx": `${coin.mobile.x}%`,
+          "--my": `${coin.mobile.y}%`,
+          "--msz": `${coin.mobile.size}%`,
+          aspectRatio: "1 / 1",
+          transform: "translate(-50%, -50%)",
+          opacity: hidden ? 0 : 1,
+          visibility: hidden ? "hidden" : "visible",
+        } as React.CSSProperties
+      }
     >
       {/* Glow is a blurred sibling animating opacity. Animating a drop-shadow
           filter instead would repaint on every frame. */}

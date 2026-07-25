@@ -60,6 +60,34 @@ html {
   }
 }
 
+/*
+ * Bear and coins read their position from CSS variables so a single media
+ * query swaps the whole arrangement for mobile without duplicating markup.
+ * Desktop values are the defaults; below `lg` the mobile set takes over.
+ */
+.bear-pos {
+  left: var(--bx);
+  width: var(--bw);
+  bottom: var(--bb);
+}
+.coin-pos {
+  left: var(--x);
+  top: var(--y);
+  width: var(--sz);
+}
+@media (max-width: 1023px) {
+  .bear-pos {
+    left: var(--mbx);
+    width: var(--mbw);
+    bottom: var(--mbb);
+  }
+  .coin-pos {
+    left: var(--mx);
+    top: var(--my);
+    width: var(--msz);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
