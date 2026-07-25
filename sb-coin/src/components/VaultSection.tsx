@@ -22,9 +22,9 @@ const INSIDE = [
 ];
 
 const TRAVEL = [
-  { src: "/assets/coin-cashdog.webp", zoom: 212, d: "0.35s", sx: 30.5, sy: 63.5, tsz: 3.6, msx: 8, msy: 34, mtsz: 8 },
-  { src: "/assets/coin-cashcat.webp", zoom: 190, d: "0.7s", sx: 36, sy: 60, tsz: 3.9, msx: 15, msy: 31, mtsz: 8.5 },
-  { src: "/assets/coin-littlejohn.webp", zoom: 182, d: "1.05s", sx: 42.3, sy: 57.5, tsz: 4.2, msx: 22, msy: 29, mtsz: 9 },
+  { src: "/assets/coin-cashdog.webp", zoom: 212, d: "0.35s", sx: 30.5, sy: 63.5, tsz: 3.6, msx: 8, msy: 34, mtsz: 8, trail: "rgba(150,205,45,.85)" },
+  { src: "/assets/coin-cashcat.webp", zoom: 190, d: "0.7s", sx: 36, sy: 60, tsz: 3.9, msx: 15, msy: 31, mtsz: 8.5, trail: "rgba(190,198,206,.8)" },
+  { src: "/assets/coin-littlejohn.webp", zoom: 182, d: "1.05s", sx: 42.3, sy: 57.5, tsz: 4.2, msx: 22, msy: 29, mtsz: 9, trail: "rgba(212,168,42,.85)" },
 ];
 
 export function VaultSection() {
@@ -114,6 +114,7 @@ export function VaultSection() {
                   "--mgy": "30%",
                   "--d": c.d,
                   "--zoom": `${c.zoom}%`,
+                  "--trail": c.trail,
                 } as React.CSSProperties
               }
             >
@@ -123,6 +124,8 @@ export function VaultSection() {
 
           {/* The glowing $SB coin that leaves the vault. */}
           <span className="sbout" aria-hidden>
+            <span className="sbbeam" />
+            <span className="sbburst" />
             <span className="halo" />
             <span className="disc">
               {hasSbCoin ? (
@@ -176,25 +179,26 @@ export function VaultSection() {
               </div>
             </motion.div>
           </div>
-        </div>
 
-        <div className="v-cue relative z-20 px-5 pt-4 pb-10 sm:px-8">
-          <button
-            type="button"
-            onClick={scrollNext}
-            aria-label="See what powers $SB — scroll to the next section"
-            className="inline-flex cursor-pointer items-center gap-2.5 text-[11px] font-bold uppercase tracking-[0.22em] text-navy/85 transition-colors hover:text-navy lg:text-[13px]"
-          >
-            See What Powers $SB
-            <motion.span
-              aria-hidden
-              animate={reduced ? undefined : { y: [0, 5, 0] }}
-              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-              className="text-base leading-none"
+          {/* Cue sits above the vault, like FEED THE BEAR sits above the bear. */}
+          <div className="v-cue">
+            <button
+              type="button"
+              onClick={scrollNext}
+              aria-label="See what powers $SB — scroll to the next section"
+              className="inline-flex cursor-pointer items-center gap-2.5 whitespace-nowrap text-[11px] font-bold uppercase tracking-[0.22em] text-navy/85 transition-colors hover:text-navy lg:text-[13px]"
             >
-              ↓
-            </motion.span>
-          </button>
+              See What Powers $SB
+              <motion.span
+                aria-hidden
+                animate={reduced ? undefined : { y: [0, 5, 0] }}
+                transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+                className="text-base leading-none"
+              >
+                ↓
+              </motion.span>
+            </button>
+          </div>
         </div>
       </section>
 

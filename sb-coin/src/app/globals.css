@@ -122,6 +122,14 @@ html {
 }
 
 /* ---------- Section 2: the vault ---------- */
+.v-cue {
+  position: absolute;
+  z-index: 20;
+  left: 50%;
+  top: 8%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
 .v-stage {
   position: relative;
   width: 100%;
@@ -153,22 +161,28 @@ html {
   position: absolute;
   left: 55.6%;
   top: 57%;
-  width: 46%;
+  width: 52%;
   aspect-ratio: 1 / 1;
   transform: translate(-50%, -50%);
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    rgba(255, 214, 110, 0.55) 0%,
-    rgba(255, 214, 110, 0.22) 45%,
+    rgba(120, 230, 200, 0.5) 0%,
+    rgba(255, 214, 110, 0.4) 38%,
     rgba(255, 214, 110, 0) 70%
   );
   opacity: 0;
   transition: opacity 0.9s ease 0.1s;
   pointer-events: none;
+  mix-blend-mode: screen;
 }
 .play .vault-glow {
   opacity: 1;
+  animation: vglow 2.4s ease-in-out 1.2s infinite;
+}
+@keyframes vglow {
+  0%, 100% { opacity: 0.65; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.14); }
 }
 .icoin {
   position: absolute;
@@ -201,11 +215,35 @@ html {
   aspect-ratio: 1 / 1;
   transform: translate(-50%, -50%);
   transition:
-    left 0.95s cubic-bezier(0.55, 0, 0.75, 0.5) var(--d),
-    top 0.95s cubic-bezier(0.55, 0, 0.75, 0.5) var(--d),
-    width 0.95s ease var(--d),
-    opacity 0.2s ease calc(var(--d) + 0.8s);
+    left 0.8s cubic-bezier(0.6, 0, 0.85, 0.35) var(--d),
+    top 0.8s cubic-bezier(0.6, 0, 0.85, 0.35) var(--d),
+    width 0.8s ease var(--d),
+    opacity 0.18s ease calc(var(--d) + 0.68s);
   pointer-events: none;
+}
+.tcoin::after {
+  content: "";
+  position: absolute;
+  right: 35%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 320%;
+  height: 60%;
+  border-radius: 50%;
+  background: linear-gradient(to left, var(--trail), transparent 78%);
+  filter: blur(7px);
+  opacity: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+.play .tcoin::after {
+  animation: trail 0.95s ease var(--d) forwards;
+}
+@keyframes trail {
+  0% { opacity: 0; }
+  22% { opacity: 0.95; }
+  72% { opacity: 0.55; }
+  100% { opacity: 0; }
 }
 .tcoin img {
   position: absolute;
@@ -228,15 +266,60 @@ html {
   top: 30%;
   width: 13%;
   aspect-ratio: 1 / 1;
-  transform: translate(-50%, -50%) translateX(-46%);
+  transform: translate(-50%, -50%);
   opacity: 0;
-  transition:
-    transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 2.25s,
-    opacity 0.5s ease 2.25s;
+  pointer-events: none;
 }
 .play .sbout {
-  transform: translate(-50%, -50%) translateX(0);
-  opacity: 1;
+  animation:
+    sbout 1.05s cubic-bezier(0.2, 1.5, 0.4, 1) 2.35s backwards,
+    sbfloat 3s ease-in-out 3.4s infinite;
+}
+@keyframes sbout {
+  0% { opacity: 0; transform: translate(-50%, -50%) translateX(-70%) scale(0.2); }
+  45% { opacity: 1; }
+  72% { transform: translate(-50%, -50%) translateX(8%) scale(1.18); }
+  100% { opacity: 1; transform: translate(-50%, -50%) translateX(0) scale(1); }
+}
+@keyframes sbfloat {
+  0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+  50% { transform: translate(-50%, -50%) translateY(-6px); }
+}
+.sbbeam {
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  width: 260%;
+  height: 34%;
+  transform: translateY(-50%);
+  background: linear-gradient(to left, rgba(255, 208, 64, 0.9), rgba(255, 208, 64, 0) 85%);
+  filter: blur(4px);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+}
+.play .sbbeam {
+  animation: beam 1.1s ease 2.35s backwards;
+}
+@keyframes beam {
+  0% { opacity: 0; transform: translateY(-50%) scaleX(0.2); }
+  45% { opacity: 1; transform: translateY(-50%) scaleX(1); }
+  100% { opacity: 0; transform: translateY(-50%) scaleX(1); }
+}
+.sbburst {
+  position: absolute;
+  inset: -30%;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 214, 110, 0.9);
+  opacity: 0;
+  pointer-events: none;
+}
+.play .sbburst {
+  animation: burst 0.7s ease-out 2.55s backwards;
+}
+@keyframes burst {
+  0% { opacity: 0.95; transform: scale(0.3); }
+  100% { opacity: 0; transform: scale(1.9); }
 }
 .sbout .disc {
   position: absolute;
@@ -251,28 +334,22 @@ html {
 }
 .sbout .halo {
   position: absolute;
-  inset: -55%;
+  inset: -75%;
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    rgba(255, 208, 64, 0.85) 0%,
-    rgba(255, 184, 28, 0.35) 45%,
+    rgba(255, 235, 150, 0.95) 0%,
+    rgba(255, 200, 50, 0.5) 40%,
     rgba(255, 184, 28, 0) 72%
   );
+  mix-blend-mode: screen;
 }
 .play .sbout .halo {
-  animation: sbpulse 2s ease-in-out 2.9s infinite;
+  animation: sbpulse 1.8s ease-in-out 3s infinite;
 }
 @keyframes sbpulse {
-  0%,
-  100% {
-    opacity: 0.75;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.12);
-  }
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.28); }
 }
 .bear2 {
   position: absolute;
@@ -306,18 +383,9 @@ html {
   animation: medglow2 0.8s ease-out 2.9s backwards;
 }
 @keyframes medglow2 {
-  0% {
-    opacity: 0;
-    transform: scale(1);
-  }
-  45% {
-    opacity: 1;
-    transform: scale(1.35);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(1);
-  }
+  0% { opacity: 0; transform: scale(1); }
+  40% { opacity: 1; transform: scale(1.6); }
+  100% { opacity: 0; transform: scale(1); }
 }
 
 @media (min-width: 1024px) {
@@ -364,11 +432,9 @@ html {
     bottom: 13%;
   }
   .v-cue {
-    position: absolute;
-    left: 4.5%;
-    bottom: 9%;
-    padding: 0;
-    z-index: 20;
+    left: 48%;
+    top: 16%;
+    bottom: auto;
   }
 }
 
