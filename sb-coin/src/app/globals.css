@@ -663,3 +663,183 @@ html {
     animation-delay: 0s;
   }
 }
+
+/* ---------- Page 4: Meme Yard ---------- */
+#yard {
+  position: relative;
+  width: 100%;
+  min-height: 100svh;
+  background: var(--cream);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.y-copy {
+  position: relative;
+  z-index: 20;
+  padding: 96px 20px 0;
+}
+.y-copy h2 {
+  text-wrap: balance;
+}
+.y-join {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 22px;
+  border-radius: 9999px;
+  padding: 14px 30px;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #fff;
+  background: var(--orange);
+  text-decoration: none;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s, filter 0.2s;
+}
+.y-join:hover {
+  transform: scale(1.06) translateY(-2px);
+  box-shadow: 0 12px 30px -8px rgba(244, 88, 30, 0.7);
+  filter: brightness(1.06);
+}
+.y-join:active {
+  transform: scale(1.01);
+}
+.y-social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-top: 20px;
+}
+.y-social a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--navy);
+  opacity: 0.78;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+.y-social a:hover {
+  opacity: 1;
+}
+.y-social svg {
+  width: 15px;
+  height: 15px;
+  fill: currentColor;
+}
+.y-stage {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  aspect-ratio: 1672/941;
+  margin-top: 6px;
+}
+.p4c {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.p4a {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  animation-duration: var(--dur);
+  animation-delay: var(--delay);
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+.p4a > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  user-select: none;
+}
+.p4crop {
+  overflow: hidden;
+}
+.p4crop > img {
+  height: auto;
+}
+.a-bob { animation-name: p4bob; }
+.a-bounce { animation-name: p4bounce; }
+.a-wobble { animation-name: p4wobble; }
+.a-wiggle { animation-name: p4wiggle; }
+.a-sway { animation-name: p4sway; }
+.a-peck { animation-name: p4peck; }
+.a-bass { animation-name: p4bass; }
+.a-flag { animation-name: p4flag; }
+.a-king { animation-name: p4king; }
+@keyframes p4bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5%); } }
+@keyframes p4bounce { 0%, 100% { transform: translateY(0) scaleY(1); } 45%, 55% { transform: translateY(-8%) scaleY(1.03); } }
+@keyframes p4wobble { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+@keyframes p4wiggle { 0%, 100% { transform: rotate(-5deg); } 25% { transform: rotate(5deg); } 50% { transform: rotate(-3deg); } 75% { transform: rotate(4deg); } }
+@keyframes p4sway { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } }
+@keyframes p4peck { 0%, 55%, 100% { transform: translateY(0) rotate(0); } 70% { transform: translateY(6%) rotate(7deg); } 85% { transform: translateY(0) rotate(0); } }
+@keyframes p4bass { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
+@keyframes p4flag { 0%, 100% { transform: rotate(-2deg) skewY(-1.5deg); } 50% { transform: rotate(2deg) skewY(1.5deg); } }
+@keyframes p4king { 0%, 60%, 100% { transform: rotate(0) scale(1); } 68% { transform: rotate(-1.3deg) scale(1.012); } 76% { transform: rotate(1deg) scale(1.012); } 84% { transform: rotate(0) scale(1); } }
+.king-med {
+  position: absolute;
+  left: 49%;
+  top: 47%;
+  width: 10%;
+  aspect-ratio: 1 / 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 214, 90, 0.85), rgba(255, 184, 28, 0) 68%);
+  mix-blend-mode: screen;
+  animation: kingglow 3.5s ease-in-out infinite;
+}
+@keyframes kingglow { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.9; } }
+.p4shine {
+  position: absolute;
+  left: 40%;
+  top: 46%;
+  width: 30%;
+  height: 11%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) rotate(-18deg);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), transparent);
+  opacity: 0;
+  animation: shine 5s ease-in-out 1s infinite;
+  mix-blend-mode: screen;
+}
+@keyframes shine { 0%, 82%, 100% { opacity: 0; } 86% { opacity: 0.9; } 92% { opacity: 0; } }
+.p4sparkle {
+  position: absolute;
+  left: 60%;
+  top: 32%;
+  width: 8%;
+  aspect-ratio: 1 / 1;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.95), transparent 60%);
+  opacity: 0;
+  animation: sparkle 3.6s ease-in-out 0.5s infinite;
+}
+@keyframes sparkle { 0%, 72%, 100% { opacity: 0; transform: scale(0.4); } 82% { opacity: 1; transform: scale(1); } }
+@media (min-width: 1024px) {
+  .y-copy {
+    position: absolute;
+    left: 4.5%;
+    top: 23%;
+    max-width: 46%;
+    padding: 0;
+    z-index: 20;
+  }
+  .y-stage {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: calc(100svh * (1672 / 941));
+    aspect-ratio: 1672 / 941;
+    margin: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .p4a, .king-med, .p4shine, .p4sparkle { animation: none; }
+}
