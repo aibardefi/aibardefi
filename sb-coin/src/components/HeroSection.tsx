@@ -43,16 +43,20 @@ export function HeroSection() {
       if (flights.some((f) => f.coin.id === coin.id)) return;
       const to = medallionRef.current?.getBoundingClientRect();
       if (!to) return;
+      // Measure the zoomed image, not the button, so the flying clone matches
+      // what's on screen pixel for pixel.
+      const img = el.querySelector("img");
+      const fromEl: Element = img ?? el;
 
       // Reduced motion keeps the interaction working — the coin simply
       // disappears and the medallion reacts, with no flight across the screen.
       if (reduced) {
-        setFlights((f) => [...f, { coin, from: el.getBoundingClientRect(), to }]);
+        setFlights((f) => [...f, { coin, from: fromEl.getBoundingClientRect(), to }]);
         setTimeout(() => arrive(coin.id), 120);
         return;
       }
 
-      setFlights((f) => [...f, { coin, from: el.getBoundingClientRect(), to }]);
+      setFlights((f) => [...f, { coin, from: fromEl.getBoundingClientRect(), to }]);
     },
     [flights, reduced, arrive]
   );
@@ -62,7 +66,9 @@ export function HeroSection() {
   return (
     <>
       <section className="relative flex min-h-[100svh] w-full flex-col overflow-hidden bg-cream lg:block">
-        <div aria-hidden className="absolute inset-0">
+        {/* Mobile keeps the full-bleed courtyard; desktop swaps it for the
+            scenery vignette inside the stage (per the client mock). */}
+        <div aria-hidden className="absolute inset-0 lg:hidden">
           <Image
             src="/assets/background.webp"
             alt=""
@@ -75,8 +81,8 @@ export function HeroSection() {
 
         <Header />
 
-        <div className="relative z-20 px-5 pt-10 sm:px-8 lg:absolute lg:top-1/2 lg:left-[3.5%] lg:max-w-[46%] lg:-translate-y-[54%] lg:px-0 lg:pt-0">
-          <h1 className="text-[clamp(2.25rem,10.5vw,3.5rem)] leading-[1.02] font-extrabold tracking-[-0.02em] text-navy uppercase lg:text-[clamp(3rem,5.6vw,6rem)]">
+        <div className="relative z-20 px-5 pt-10 sm:px-8 lg:absolute lg:top-1/2 lg:left-[4.5%] lg:max-w-[46%] lg:-translate-y-[54%] lg:px-0 lg:pt-0">
+          <h1 className="text-[clamp(2.25rem,10.5vw,3.5rem)] leading-[1.02] font-extrabold tracking-[-0.02em] text-navy uppercase lg:text-[clamp(2.75rem,10svh,6.75rem)]">
             Lock <span className="text-orange">Memes.</span>
             <br />
             Borrow $SB.
@@ -85,6 +91,16 @@ export function HeroSection() {
 
         {/* Stage keeps the bear and coins locked to the courtyard behind them. */}
         <div className="hero-stage relative z-10 mt-4 lg:mt-0">
+          <div aria-hidden className="scenery hidden lg:block">
+            <Image
+              src="/assets/background.webp"
+              alt=""
+              width={1672}
+              height={941}
+              priority
+              className="h-auto w-full select-none"
+            />
+          </div>
           {DOTS.map((d, i) => (
             <span
               key={i}
@@ -117,7 +133,7 @@ export function HeroSection() {
           />
         </div>
 
-        <div className="relative z-20 px-5 pt-6 pb-10 sm:px-8 lg:absolute lg:bottom-[12%] lg:left-[3.5%] lg:px-0 lg:pt-0 lg:pb-0">
+        <div className="relative z-20 px-5 pt-6 pb-10 sm:px-8 lg:absolute lg:bottom-[12%] lg:left-[4.5%] lg:px-0 lg:pt-0 lg:pb-0">
           <ScrollPrompt />
         </div>
 

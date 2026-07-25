@@ -38,16 +38,17 @@ html {
  * the viewport, overflows on whichever axis is tighter, and never distorts.
  * Percentage positions inside it therefore track the background exactly.
  *
- * Anchored to the BOTTOM, not centred: on viewports wider than the art's
- * 1672/941 the overflow is vertical, and bottom-anchoring crops empty sky
- * instead of pushing the bear's feet below the fold.
+ * Sized by HEIGHT, bottom-anchored and centred: narrower windows crop the
+ * scene's sides, wider windows leave side gaps that the full-bleed background
+ * fills. The bear and coins therefore never scale with window width — they
+ * hold the reference composition, feet on the plaza, at any viewport.
  */
 .hero-stage {
   position: absolute;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: max(100%, calc(100svh * (1672 / 941)));
+  width: calc(100svh * (1672 / 941));
   aspect-ratio: 1672 / 941;
   pointer-events: none;
 }
@@ -62,6 +63,27 @@ html {
     width: 100%;
     aspect-ratio: 1 / 1;
   }
+}
+
+/*
+ * Desktop scenery: the courtyard art shrunk into the bottom-right of the
+ * scene (per the client mock), edges faded into the cream so it reads as a
+ * vignette rather than a full-bleed backdrop.
+ */
+.scenery {
+  position: absolute;
+  right: 0;
+  bottom: -4%;
+  width: 68%;
+  pointer-events: none;
+}
+.scenery::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to right, var(--cream), rgba(246, 237, 223, 0) 18%),
+    linear-gradient(to bottom, var(--cream), rgba(246, 237, 223, 0) 25%);
 }
 
 /*

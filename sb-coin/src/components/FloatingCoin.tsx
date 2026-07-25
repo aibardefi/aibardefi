@@ -71,6 +71,7 @@ export function FloatingCoin({ coin, hidden, onFeed }: Props) {
           "--mx": `${coin.mobile.x}%`,
           "--my": `${coin.mobile.y}%`,
           "--msz": `${coin.mobile.size}%`,
+          "--zoom": `${coin.zoom}%`,
           aspectRatio: "1 / 1",
           transform: "translate(-50%, -50%)",
           opacity: hidden ? 0 : 1,
@@ -85,12 +86,14 @@ export function FloatingCoin({ coin, hidden, onFeed }: Props) {
         className="absolute -inset-[18%] rounded-full blur-[16px] transition-opacity duration-300"
         style={{ background: coin.glow, opacity: hovered ? 0.7 : 0 }}
       />
+      {/* Zoomed past the button so the canvas's transparent padding doesn't
+          shrink the visible coin — `size` stays the true diameter. */}
       <Image
         src={coin.src}
         alt={coin.alt}
         width={1536}
         height={1024}
-        className="relative h-full w-full select-none object-contain"
+        className="absolute top-1/2 left-1/2 h-auto w-[var(--zoom)] max-w-none -translate-x-1/2 -translate-y-1/2 select-none"
       />
     </motion.button>
   );

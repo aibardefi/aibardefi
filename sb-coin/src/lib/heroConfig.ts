@@ -15,8 +15,14 @@ export type Coin = {
   /** Centre point on desktop, as % of the stage. */
   x: number;
   y: number;
-  /** Diameter on desktop, as % of stage width. */
+  /** VISIBLE coin diameter on desktop, as % of stage width. */
   size: number;
+  /**
+   * The 1536x1024 canvases carry ~50% transparent padding, so the image is
+   * scaled to (100 / content-width-fraction)% of the button to make `size`
+   * mean the visible coin, not the padded canvas.
+   */
+  zoom: number;
   /**
    * Below `lg` the stage is square with the bear centred, so the reference
    * arrangement is re-hung around him rather than squashed.
@@ -38,10 +44,11 @@ export const COINS: Coin[] = [
     id: "cashcat",
     src: "/assets/coin-cashcat.webp",
     alt: "CashCat memecoin",
-    x: 57.3,
-    y: 25.0,
-    size: 8.4,
-    mobile: { x: 34, y: 20, size: 15 },
+    x: 59.0,
+    y: 35.0,
+    size: 5.5,
+    zoom: 190,
+    mobile: { x: 34, y: 20, size: 8 },
     duration: 3.4,
     delay: 0,
     amplitude: 1.5,
@@ -51,10 +58,11 @@ export const COINS: Coin[] = [
     id: "cashdog",
     src: "/assets/coin-cashdog.webp",
     alt: "CashDog memecoin",
-    x: 52.5,
-    y: 43.0,
-    size: 8.8,
-    mobile: { x: 19, y: 41, size: 16 },
+    x: 55.6,
+    y: 49.8,
+    size: 5.6,
+    zoom: 212,
+    mobile: { x: 19, y: 41, size: 8.5 },
     duration: 4.1,
     delay: 0.55,
     amplitude: 1.8,
@@ -64,10 +72,11 @@ export const COINS: Coin[] = [
     id: "littlejohn",
     src: "/assets/coin-littlejohn.webp",
     alt: "Little John memecoin",
-    x: 54.5,
-    y: 62.0,
-    size: 9.0,
-    mobile: { x: 22, y: 60, size: 15 },
+    x: 56.6,
+    y: 67.2,
+    size: 5.4,
+    zoom: 182,
+    mobile: { x: 22, y: 60, size: 8 },
     duration: 3.8,
     delay: 1.1,
     amplitude: 1.6,
@@ -77,10 +86,11 @@ export const COINS: Coin[] = [
     id: "tendies",
     src: "/assets/coin-tendies.webp",
     alt: "Tendies memecoin",
-    x: 85.5,
-    y: 26.0,
-    size: 8.4,
-    mobile: { x: 67, y: 19, size: 15 },
+    x: 87.4,
+    y: 37.3,
+    size: 5.5,
+    zoom: 202,
+    mobile: { x: 67, y: 19, size: 8 },
     duration: 4.4,
     delay: 0.3,
     amplitude: 1.7,
@@ -90,10 +100,11 @@ export const COINS: Coin[] = [
     id: "ansemcat",
     src: "/assets/coin-ansemcat.webp",
     alt: "Ansem Cat memecoin",
-    x: 88.5,
-    y: 46.0,
-    size: 8.8,
-    mobile: { x: 82, y: 42, size: 16 },
+    x: 90.5,
+    y: 55.9,
+    size: 5.4,
+    zoom: 234,
+    mobile: { x: 82, y: 42, size: 8.5 },
     duration: 3.6,
     delay: 0.85,
     amplitude: 1.9,
@@ -107,15 +118,15 @@ export const COINS: Coin[] = [
  */
 export const BEAR = {
   /** Centre of the bear box, as % of stage width. */
-  x: 70.6,
+  x: 72.8,
   /**
    * Distance from stage bottom to the box bottom, as % of stage height.
-   * Negative because bear.webp carries ~21% empty space below the soles;
-   * letting that overhang the stage bottom plants his feet on the paving.
+   * Slightly positive so his soles sit on the mock's lower plaza line
+   * (bear.webp has ~21% empty canvas below the soles).
    */
-  bottom: -6,
+  bottom: 2.8,
   /** Box width as % of stage width. */
-  width: 24,
+  width: 20.3,
   /** Centred and larger on the square mobile stage. */
   mobile: { x: 50, width: 44, bottom: -4 },
   /** Intrinsic pixel size of bear.webp, for next/image sizing. */
@@ -157,17 +168,16 @@ export const EYES = {
 
 /** Decorative dots from the reference. Positions are % of the stage. */
 export const DOTS = [
-  { x: 64.2, y: 15.4, r: 5, color: "var(--dot-red)" },
-  { x: 75.1, y: 12.9, r: 4, color: "var(--dot-green)" },
-  { x: 88.9, y: 16.5, r: 4, color: "var(--dot-green)" },
-  { x: 51.6, y: 22.5, r: 5, color: "var(--dot-orange)" },
-  { x: 95.5, y: 26.5, r: 4, color: "var(--dot-blue)" },
-  { x: 43.5, y: 33.0, r: 5, color: "var(--dot-blue)" },
-  { x: 57.9, y: 30.6, r: 4, color: "var(--dot-red)" },
-  { x: 93.4, y: 37.0, r: 5, color: "var(--dot-yellow)" },
-  { x: 41.6, y: 50.5, r: 4, color: "var(--dot-yellow)" },
-  { x: 55.2, y: 55.5, r: 4, color: "var(--dot-blue)" },
-  { x: 89.5, y: 57.5, r: 5, color: "var(--dot-red)" },
+  { x: 66.2, y: 25.9, r: 4, color: "var(--dot-green)" },
+  { x: 74.4, y: 25.6, r: 4, color: "var(--dot-red)" },
+  { x: 82.4, y: 27.6, r: 4, color: "var(--dot-green)" },
+  { x: 54.3, y: 29.4, r: 4, color: "var(--dot-orange)" },
+  { x: 94.9, y: 25.9, r: 4, color: "var(--dot-yellow)" },
+  { x: 94.8, y: 44.6, r: 5, color: "var(--dot-red)" },
+  { x: 51.7, y: 44.2, r: 4, color: "var(--dot-blue)" },
+  { x: 55.4, y: 58.1, r: 4, color: "var(--dot-yellow)" },
+  { x: 86.5, y: 62.0, r: 4, color: "var(--dot-blue)" },
+  { x: 70.9, y: 20.5, r: 3, color: "var(--dot-blue)" },
 ] as const;
 
 /** Placeholder destinations until the real ones exist. */
