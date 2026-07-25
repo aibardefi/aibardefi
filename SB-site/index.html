@@ -289,8 +289,8 @@ h1 .line:nth-child(2){
   border:4px solid rgba(33,33,33,.72);
   border-radius:50%;
   background:
-    radial-gradient(circle at 34% 18%,rgba(255,255,255,.55),transparent 16%),
-    linear-gradient(180deg,#ffdc55 0%,#f4b72b 100%);
+    radial-gradient(circle at 34% 18%,rgba(255,255,255,.4),transparent 16%),
+    linear-gradient(180deg,#A0724A 0%,#8B5E3C 100%);
   box-shadow:0 12px 26px rgba(33,33,33,.24);
 }
 
@@ -302,9 +302,7 @@ h1 .line:nth-child(2){
   height:31%;
   border:4px solid var(--ink);
   border-radius:48% 48% 18% 18%;
-  background:
-    repeating-linear-gradient(90deg,#151515 0 12px,#2a2a2a 12px 21px),
-    #151515;
+  background:#7A5232;
   transform:rotate(-5deg);
   box-shadow:0 6px 0 rgba(33,33,33,.2);
 }
@@ -318,7 +316,7 @@ h1 .line:nth-child(2){
   height:22px;
   border:4px solid var(--ink);
   border-radius:999px;
-  background:var(--lime);
+  background:#C4936A;
 }
 
 .photo-shades{
@@ -329,8 +327,8 @@ h1 .line:nth-child(2){
   height:20%;
   border:4px solid var(--ink);
   border-radius:16px 16px 28px 28px;
-  background:linear-gradient(180deg,#111,#020202);
-  box-shadow:inset 0 8px 0 rgba(255,255,255,.12);
+  background:#1a1a1a;
+  box-shadow:inset 0 8px 0 rgba(255,255,255,.15);
 }
 
 .photo-shades:before{
@@ -347,18 +345,24 @@ h1 .line:nth-child(2){
 .photo-mouth{
   position:absolute;
   left:35%;
-  top:63%;
+  top:60%;
   width:30%;
-  height:14%;
-  color:var(--ink);
-  font-family:var(--round);
-  font-size:clamp(1.1rem,2.4vw,2rem);
-  font-weight:900;
-  line-height:1;
+  height:18%;
+  border:4px solid var(--ink);
+  border-radius:0 0 40% 40%;
+  background:#C4936A;
 }
 
 .photo-mouth:before{
-  content:"∿∿∿";
+  content:"";
+  position:absolute;
+  left:50%;
+  top:8px;
+  transform:translateX(-50%);
+  width:18px;
+  height:14px;
+  border-radius:50% 50% 40% 40%;
+  background:var(--ink);
 }
 
 .photo-collar{
@@ -369,7 +373,7 @@ h1 .line:nth-child(2){
   height:18%;
   border:4px solid var(--ink);
   border-radius:0 0 42px 42px;
-  background:#173a2d;
+  background:#1a3a2d;
 }
 
 .photo-collar:before,.photo-collar:after{
@@ -765,7 +769,7 @@ h1 .line:nth-child(2){
   height:188px;
   border:4px solid var(--ink);
   border-radius:50%;
-  background:radial-gradient(circle at 34% 18%, rgba(255,255,255,.5), transparent 15%),var(--yellow);
+  background:radial-gradient(circle at 34% 18%, rgba(255,255,255,.35), transparent 15%),#8B5E3C;box-shadow:0 8px 0 rgba(33,33,33,.2),-52px -62px 0 0 #8B5E3C, -52px -62px 0 4px var(--ink),52px -62px 0 0 #8B5E3C, 52px -62px 0 4px var(--ink);
   box-shadow:0 8px 0 rgba(33,33,33,.2);
   animation:mascotBob 3.2s ease-in-out infinite;
 }
@@ -774,18 +778,17 @@ h1 .line:nth-child(2){
   content:"";
   position:absolute;
   top:54px;
-  width:46px;
-  height:46px;
+  width:32px;
+  height:32px;
   border:4px solid var(--ink);
   border-radius:50%;
-  background:
-    radial-gradient(circle at 50% 50%,var(--yellow) 0 13%,transparent 14%),
-    repeating-conic-gradient(from 20deg,var(--ink) 0 24deg,var(--yellow) 24deg 52deg);
-  animation:spin 2.4s linear infinite;
+  background:#1a1a1a;
+  animation:none;
+  box-shadow:inset 6px -3px 0 2px rgba(255,255,255,.3);
 }
 
-.mascot:before{left:38px}
-.mascot:after{right:38px;animation-direction:reverse}
+.mascot:before{left:42px}
+.mascot:after{right:42px}
 
 .glasses{
   display:none;
@@ -793,19 +796,16 @@ h1 .line:nth-child(2){
 
 .mouth{
   position:absolute;
-  left:55px;
-  top:121px;
-  width:82px;
-  height:24px;
-  border:0;
-  color:var(--ink);
-  font-family:var(--round);
-  font-size:2rem;
-  font-weight:900;
-  line-height:1;
+  left:52px;
+  top:100px;
+  width:88px;
+  height:52px;
+  border:4px solid var(--ink);
+  border-radius:0 0 40px 40px;
+  background:#C4936A;
 }
 
-.mouth:before{
+.mouth:before{content:"";position:absolute;left:50%;top:6px;transform:translateX(-50%);width:22px;height:16px;border-radius:50%;background:var(--ink);} .mouth-old:before{
   content:"∿∿∿";
 }
 
@@ -817,7 +817,7 @@ h1 .line:nth-child(2){
   height:34px;
   border:3px solid var(--ink);
   border-radius:0 0 38px 38px;
-  background:#173a2d;
+  background:#1a3a2d;
   overflow:hidden;
 }
 
@@ -1305,11 +1305,11 @@ footer .wrap{
   .rolling-sb{left:108px;bottom:112px}
   .lever{right:-20px;top:150px;transform:rotate(18deg) scale(.9)}
   .mascot{left:-10px;bottom:-20px;width:135px;height:135px}
-  .mascot:before,.mascot:after{top:38px;width:31px;height:31px}
-  .mascot:before{left:28px}
-  .mascot:after{right:28px}
+  .mascot:before,.mascot:after{top:38px;width:22px;height:22px}
+  .mascot:before{left:32px}
+  .mascot:after{right:32px}
   .glasses{display:none}
-  .mouth{left:38px;top:88px;width:62px;font-size:1.45rem}
+  .mouth{left:34px;top:72px;width:68px;height:40px}
   .collar{height:28px}
   .section{padding:66px 0}
   .rule{grid-template-columns:58px 1fr}
