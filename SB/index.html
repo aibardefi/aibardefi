@@ -1,0 +1,935 @@
+<title>SUKA BLYAT · $SB — Welcome to the Dvor</title>
+<style>
+:root{
+  --ink:#0a0614; --paper:#fff6ea;
+  --mag:#ff2ea6; --lime:#c6ff2e; --cyan:#22d8ff; --violet:#a855f7;
+  --gold:#ffc93c; --red:#ff2d55; --blue:#2f7bff; --green:#4dff7a;
+  --sans:system-ui,-apple-system,"Segoe UI",sans-serif;
+  --fat:"Trebuchet MS","Segoe UI",system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --navh:64px;
+}
+*{box-sizing:border-box}
+html{background:var(--ink);scroll-behavior:smooth}
+body{margin:0;background:var(--ink);color:var(--paper);font-family:var(--sans);
+     overflow-x:hidden;-webkit-font-smoothing:antialiased;line-height:1.5}
+.mono{font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase}
+.fat{font-family:var(--fat);font-weight:700}
+img{max-width:100%;display:block}
+
+/* ═══ NAV ═══ */
+#nav{position:fixed;inset:0 0 auto;height:var(--navh);z-index:400;display:flex;
+     align-items:center;justify-content:space-between;gap:1rem;padding:0 1rem;
+     background:linear-gradient(180deg,rgba(8,4,18,.86),rgba(8,4,18,.25) 70%,transparent);
+     backdrop-filter:blur(6px)}
+.brand{display:flex;align-items:center;gap:.55rem;flex:none;text-decoration:none;color:inherit}
+.brand svg{width:36px;height:36px;flex:none}
+.brand span{font-family:var(--fat);font-weight:700;font-size:1rem;text-transform:uppercase;
+            letter-spacing:.01em;white-space:nowrap;text-shadow:0 2px 10px #000}
+.brand b{color:var(--lime)}
+#menu{display:flex;gap:1.35rem;list-style:none;margin:0;padding:0}
+#menu a{font-family:var(--fat);font-weight:700;font-size:.82rem;text-transform:uppercase;
+        letter-spacing:.04em;color:var(--paper);text-decoration:none;padding:.35rem 0;
+        border-bottom:3px solid transparent;text-shadow:0 2px 8px #000;white-space:nowrap}
+#menu a:hover{color:var(--lime)}
+#menu a[aria-current]{border-bottom-color:var(--gold);color:#fff}
+.navr{display:flex;align-items:center;gap:.5rem;flex:none}
+.icn{width:34px;height:34px;border:1.5px solid rgba(255,246,234,.45);border-radius:9px;
+     display:grid;place-items:center;color:var(--paper);text-decoration:none;font-size:.85rem;
+     background:rgba(10,6,20,.4);transition:box-shadow .2s,border-color .2s,transform .2s}
+.icn:hover{border-color:var(--cyan);box-shadow:0 0 16px -2px var(--cyan);transform:translateY(-2px)}
+.joinpill{font-family:var(--fat);font-weight:700;font-size:.8rem;text-transform:uppercase;
+          color:#fff;text-decoration:none;padding:.5rem 1rem;border-radius:10px;
+          border:2px solid #ffb0d8;background:linear-gradient(100deg,#ff2ea6,#ff5d3a);
+          box-shadow:0 0 22px -6px var(--mag);white-space:nowrap;transition:transform .2s,box-shadow .2s}
+.joinpill:hover{transform:translateY(-2px);box-shadow:0 0 30px -4px var(--mag)}
+@media(max-width:1180px){#menu{display:none}}
+@media(max-width:620px){.icn{display:none}.brand span{font-size:.85rem}}
+
+/* ═══ page shell ═══ */
+.page{position:relative}
+.pin{position:sticky;top:0;height:100svh;overflow:hidden}
+.bgimg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:0}
+.bgfallback{position:absolute;inset:0;z-index:0}
+.bgfallback svg{width:100%;height:100%;display:block}
+.page.has-img .bgfallback{display:none}
+.scrim{position:absolute;inset:0;z-index:1;pointer-events:none}
+.layer{position:absolute;inset:var(--navh) 0 0;z-index:10;
+       padding:clamp(.75rem,2vw,1.6rem);display:flex;pointer-events:none}
+.layer > *{pointer-events:auto}
+
+/* ═══ story text box ═══ */
+.box{width:min(560px,100%);border-radius:18px;padding:clamp(.9rem,1.6vw,1.35rem) clamp(1rem,1.8vw,1.5rem);
+     background:var(--boxbg,linear-gradient(135deg,rgba(60,20,96,.66),rgba(18,8,34,.6)));
+     backdrop-filter:blur(14px) saturate(1.3);-webkit-backdrop-filter:blur(14px) saturate(1.3);
+     border:1.5px solid rgba(255,255,255,.2);
+     box-shadow:0 22px 60px -22px #000, inset 0 1px 0 rgba(255,255,255,.16)}
+.box .eyebrow{font-family:var(--mono);font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;
+              color:var(--accent,var(--lime));display:block;margin-bottom:.4rem}
+.stage{position:relative}
+.step{position:absolute;inset:0;opacity:0;transform:translateY(12px);pointer-events:none;
+      transition:opacity .38s ease,transform .38s cubic-bezier(.2,.7,.3,1)}
+.step.on{opacity:1;transform:none;position:relative;pointer-events:auto}
+.step p{margin:0 0 .45rem;font-size:clamp(.98rem,1.18vw,1.28rem);line-height:1.42;
+        text-shadow:0 2px 12px rgba(0,0,0,.6)}
+.step p:last-child{margin:0}
+.step .hit{font-family:var(--fat);font-weight:700;color:var(--accent,var(--lime));
+           font-size:clamp(1.15rem,1.75vw,1.6rem);line-height:1.16}
+.step .list{margin:.35rem 0 0;padding:0;list-style:none;font-size:clamp(.9rem,1.05vw,1.1rem);line-height:1.5}
+.step .list li{padding-left:1rem;position:relative}
+.step .list li::before{content:"›";position:absolute;left:0;color:var(--accent,var(--lime));opacity:.8}
+.step em{font-style:normal;color:var(--accent,var(--lime))}
+.pline{height:3px;border-radius:2px;background:rgba(255,255,255,.18);overflow:hidden;margin-top:.85rem}
+.pline i{display:block;height:100%;width:0;border-radius:2px;
+         background:linear-gradient(90deg,var(--accent,var(--lime)),var(--mag));transition:width .18s ease}
+
+/* ═══ shared bits ═══ */
+.brush{font-family:var(--fat);font-weight:700;text-transform:uppercase;letter-spacing:-.04em;
+       line-height:.88;margin:0;text-shadow:4px 4px 0 rgba(0,0,0,.55),0 0 30px rgba(0,0,0,.5)}
+.tagband{display:inline-block;background:linear-gradient(100deg,#7c2ad0,#a855f7);color:#fff;
+         font-family:var(--fat);font-weight:700;text-transform:uppercase;
+         padding:.28rem 1.1rem;border-radius:6px;transform:rotate(-1.2deg);
+         font-size:clamp(.75rem,1.35vw,1.05rem);box-shadow:0 6px 20px -8px #a855f7}
+.feat{display:flex;gap:.7rem;align-items:flex-start;margin-bottom:.7rem}
+.feat .ic{width:38px;height:38px;flex:none;border-radius:10px;display:grid;place-items:center;
+          font-size:1.05rem;border:2px solid var(--fc,var(--violet));background:rgba(12,6,26,.6);
+          box-shadow:0 0 16px -4px var(--fc,var(--violet))}
+.feat b{display:block;font-family:var(--fat);font-weight:700;font-size:clamp(.9rem,1.1vw,1.05rem)}
+.feat span{font-size:clamp(.76rem,.95vw,.9rem);opacity:.82}
+.chip{display:flex;align-items:center;gap:.5rem;border:2px solid var(--cc,var(--mag));
+      border-radius:999px;padding:.35rem .85rem;background:rgba(12,6,26,.55);
+      font-family:var(--fat);font-weight:700;font-size:clamp(.75rem,.95vw,.92rem);
+      box-shadow:0 0 16px -6px var(--cc,var(--mag));margin-bottom:.5rem;width:fit-content}
+.card{border:2px solid var(--kc,var(--violet));border-radius:16px;background:rgba(10,5,22,.66);
+      backdrop-filter:blur(10px);box-shadow:0 0 24px -10px var(--kc,var(--violet))}
+.statpill{border:2px solid var(--sc,var(--mag));border-radius:14px;background:rgba(10,5,22,.66);
+          backdrop-filter:blur(8px);padding:.5rem .7rem;display:flex;align-items:center;gap:.5rem;
+          box-shadow:0 0 20px -8px var(--sc,var(--mag))}
+.statpill i{font-style:normal;font-size:1.15em;color:var(--sc)}
+.statpill b{display:block;font-family:var(--fat);font-weight:700;
+            font-size:clamp(.95rem,1.5vw,1.5rem);line-height:1}
+.statpill span{display:block;font-family:var(--mono);font-size:.48rem;letter-spacing:.13em;
+               text-transform:uppercase;opacity:.72;margin-top:.1rem}
+.btn{border:2.5px solid var(--paper);border-radius:12px;padding:.62rem 1rem;color:var(--paper);
+     text-decoration:none;cursor:pointer;display:flex;align-items:center;gap:.65rem;
+     font-family:var(--fat);font-weight:700;font-size:clamp(.82rem,1.15vw,1.05rem);
+     text-transform:uppercase;transition:transform .16s,box-shadow .16s;text-align:left}
+.btn:hover,.btn:focus-visible{transform:translateY(-3px);box-shadow:0 14px 32px -12px currentColor;outline:none}
+.btn i{font-style:normal;font-size:1.2em;flex:none}
+.btn small{display:block;font-family:var(--mono);font-size:.5rem;letter-spacing:.1em;
+           text-transform:none;opacity:.82;font-weight:400;margin-top:.12rem}
+.btn.buy{background:linear-gradient(100deg,#ff2ea6,#d1106e);border-color:#ffa8d8;box-shadow:0 0 22px -8px var(--mag)}
+.btn.tg{background:linear-gradient(100deg,#2f7bff,#1550bd);border-color:#8fc0ff;box-shadow:0 0 22px -8px var(--blue)}
+.btn.x{background:linear-gradient(100deg,#26262e,#0b0b11);border-color:#8b8b99}
+.btn.enter{background:linear-gradient(100deg,var(--lime),#8fd60c);color:#111806;border-color:#e6ff8f;box-shadow:0 0 22px -8px var(--lime)}
+
+/* ═══ ticker ═══ */
+.ticker{position:absolute;left:0;right:0;bottom:0;z-index:12;display:flex;align-items:stretch;
+        background:rgba(8,4,18,.9);border-top:3px solid var(--gold);height:52px}
+.ticker .tag{flex:none;display:flex;align-items:center;gap:.5rem;padding:0 .9rem;
+             border-right:2px solid rgba(255,201,60,.4);font-family:var(--fat);font-weight:700;
+             font-size:.78rem;text-transform:uppercase;color:var(--violet);white-space:nowrap}
+.ticker .run{flex:1;overflow:hidden;display:flex;align-items:center}
+.ticker .run div{display:inline-block;white-space:nowrap;font-family:var(--fat);font-weight:700;
+                 font-size:.82rem;text-transform:uppercase;animation:roll 34s linear infinite}
+.ticker .run span{padding-right:2.2rem}
+@keyframes roll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ═══ page-specific layouts ═══ */
+#p1 .layer{align-items:center}
+#p1 .col{width:min(620px,54%);display:flex;flex-direction:column;gap:.7rem}
+@media(max-width:900px){#p1 .col{width:100%}}
+
+#p2 .layer{gap:.9rem;align-items:stretch}
+#p2 .left{width:min(360px,30%);display:flex;flex-direction:column;gap:.6rem;overflow:hidden}
+#p2 .mid{flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:60px}
+#p2 .cams{width:min(300px,24%);display:flex;flex-direction:column;gap:.55rem}
+#p2 .cam{flex:1;border-radius:12px;border:2px solid var(--mag);background:rgba(10,5,22,.6);
+         position:relative;overflow:hidden;min-height:0;display:flex;align-items:flex-end;padding:.5rem}
+#p2 .cam b{font-family:var(--fat);font-weight:700;font-size:.82rem}
+#p2 .cam .live{position:absolute;right:.5rem;bottom:.5rem;color:var(--red);font-size:.62rem;font-family:var(--mono)}
+#p2 .chyron{background:linear-gradient(90deg,#c1121f,#8a0d18);border-radius:6px;padding:.45rem .8rem;
+            font-family:var(--fat);font-weight:700;font-size:clamp(.8rem,1.3vw,1.15rem);text-transform:uppercase}
+@media(max-width:1080px){#p2 .cams{display:none}#p2 .left{width:min(400px,44%)}}
+@media(max-width:760px){#p2 .left{width:100%}#p2 .mid{display:none}}
+
+#p3 .layer{flex-direction:column;align-items:center;justify-content:space-between;text-align:center}
+#p3 .modes{display:flex;justify-content:space-between;width:100%;gap:1rem}
+#p3 .mode{width:min(280px,26%);text-align:left}
+#p3 .mode.r{text-align:right}
+#p3 .mode.r .chip{margin-left:auto;flex-direction:row-reverse}
+#p3 .slider{width:min(520px,92%);display:flex;align-items:center;gap:.6rem;
+            background:rgba(10,5,22,.6);border:2px solid rgba(255,255,255,.22);
+            border-radius:999px;padding:.4rem .9rem;backdrop-filter:blur(10px)}
+#p3 .slider input{flex:1;accent-color:var(--lime);cursor:ew-resize}
+#p3 .choose{display:flex;justify-content:space-between;width:100%;gap:1rem;align-items:center}
+@media(max-width:860px){#p3 .modes{display:none}#p3 .choose{flex-direction:column}}
+
+#p4 .layer{flex-direction:column;gap:.7rem}
+#p4 .rail{display:flex;gap:.7rem;overflow-x:auto;padding-bottom:.5rem;scroll-snap-type:x mandatory;
+          scrollbar-width:thin}
+#p4 .tcard{flex:0 0 clamp(180px,20vw,240px);scroll-snap-align:center;border-radius:14px;
+           border:2px solid var(--kc);background:rgba(10,5,22,.68);backdrop-filter:blur(8px);
+           padding:.7rem;box-shadow:0 0 24px -10px var(--kc);display:flex;flex-direction:column;gap:.4rem}
+#p4 .tcard .no{font-family:var(--mono);font-size:.6rem;color:var(--kc)}
+#p4 .tcard h4{margin:0;font-family:var(--fat);font-weight:700;font-size:.92rem;text-transform:uppercase}
+#p4 .tcard .cap{font-size:.78rem;opacity:.84;flex:1}
+#p4 .tcard .unlock{border:1.5px solid var(--kc);border-radius:8px;padding:.3rem .5rem;
+                   font-family:var(--mono);font-size:.5rem;letter-spacing:.1em;text-transform:uppercase}
+#p4 .years{display:flex;justify-content:space-around;font-family:var(--fat);font-weight:700;font-size:.8rem}
+
+#p5 .layer{flex-direction:column;justify-content:space-between}
+#p5 .revealwrap{position:absolute;inset:0;z-index:2}
+#p5 .after{position:absolute;inset:0;clip-path:inset(0 0 0 var(--split,50%))}
+#p5 .before{position:absolute;inset:0;clip-path:inset(0 calc(100% - var(--split,50%)) 0 0);filter:grayscale(.85) brightness(.6)}
+#p5 .handle{position:absolute;top:0;bottom:0;left:var(--split,50%);width:4px;
+            background:#e8fbff;box-shadow:0 0 22px 2px rgba(232,251,255,.7);z-index:6;cursor:ew-resize}
+#p5 .handle::after{content:"‹ ›";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+                   width:52px;height:52px;border-radius:50%;background:rgba(10,6,20,.72);
+                   border:2px solid #e8fbff;display:grid;place-items:center;
+                   font-family:var(--fat);font-weight:700;font-size:1.05rem;letter-spacing:-.05em}
+#p5 .lbl{position:absolute;top:12%;z-index:7;background:#0a0a0c;border-radius:6px;
+         padding:.3rem .9rem;font-family:var(--fat);font-weight:700;text-transform:uppercase;
+         font-size:clamp(.85rem,1.6vw,1.3rem)}
+
+#p6 .layer{align-items:center;justify-content:space-between;gap:1rem}
+#p6 .lcol{width:min(560px,46%);display:flex;flex-direction:column;gap:.65rem}
+#p6 .rcol{width:min(430px,32%);display:grid;grid-template-columns:1fr 1fr;gap:.55rem;align-content:center}
+#p6 .btns{display:grid;grid-template-columns:1fr 1fr;gap:.55rem}
+#p6 .ca{border:2px solid rgba(255,255,255,.28);border-radius:10px;background:rgba(10,5,22,.66);
+        padding:.5rem .7rem}
+#p6 .ca label{font-family:var(--mono);font-size:.5rem;letter-spacing:.14em;opacity:.7;display:block}
+#p6 .ca .row{display:flex;align-items:center;gap:.5rem}
+#p6 .ca code{flex:1;font-family:var(--mono);font-size:.72rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#p6 .ca button{background:none;border:0;color:var(--paper);cursor:pointer;font-size:.9rem;padding:.2rem}
+#p6 .charts{display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem}
+#p6 .chart{border:1.5px solid rgba(255,255,255,.22);border-radius:9px;background:rgba(10,5,22,.6);
+           padding:.4rem .45rem;text-decoration:none;color:var(--paper);font-size:.6rem;
+           font-family:var(--fat);font-weight:700;text-align:center;transition:border-color .2s}
+#p6 .chart:hover{border-color:var(--cyan)}
+#p6 .chart small{display:block;font-family:var(--mono);font-size:.44rem;opacity:.62;font-weight:400}
+#p6 .thanks{font-family:var(--fat);font-weight:700;font-size:clamp(.75rem,1.2vw,1rem);
+            text-transform:uppercase;text-align:right}
+#p6 .see{font-family:var(--fat);font-weight:700;text-transform:uppercase;text-align:right;
+         font-size:clamp(1.5rem,4.6vw,3.6rem);line-height:.9;letter-spacing:-.04em;
+         text-shadow:0 4px 22px #000}
+#p6 .see u{display:block;height:5px;border-radius:3px;margin-top:.25rem;
+           background:linear-gradient(90deg,var(--mag),var(--violet),var(--cyan))}
+@media(max-width:980px){#p6 .rcol{display:none}#p6 .lcol{width:100%}}
+
+#foot{position:absolute;left:0;right:0;bottom:0;z-index:13;display:flex;justify-content:space-between;
+      gap:1rem;padding:.6rem 1rem;background:rgba(8,4,18,.9);font-size:.68rem;opacity:.72;flex-wrap:wrap}
+
+/* ═══ hud ═══ */
+#hud{position:fixed;right:12px;bottom:14px;z-index:400;display:flex;align-items:center;gap:.55rem;
+     background:rgba(10,5,22,.72);border:1.5px solid rgba(255,255,255,.2);border-radius:999px;
+     padding:.3rem .7rem;backdrop-filter:blur(8px)}
+#hud .n{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em}
+#hud .bar{width:74px;height:4px;border-radius:2px;background:rgba(255,255,255,.2);overflow:hidden}
+#hud .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--mag),var(--cyan))}
+#dots{position:fixed;right:14px;top:50%;transform:translateY(-50%);z-index:400;
+      display:flex;flex-direction:column;gap:.5rem}
+#dots button{width:10px;height:10px;padding:0;border-radius:50%;cursor:pointer;background:none;
+             border:1.5px solid rgba(255,246,234,.5);transition:background .2s,transform .2s,border-color .2s}
+#dots button.on{background:var(--lime);border-color:var(--lime);transform:scale(1.5)}
+#dots button:focus-visible{outline:2px solid var(--lime);outline-offset:3px}
+@media(max-width:620px){#dots{display:none}}
+
+.hint{font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;opacity:.72}
+.live-anim{animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.6}50%{opacity:1}}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .step{transition:none}
+  .ticker .run div,.live-anim{animation:none}
+  .btn,.icn,.joinpill{transition:none}
+}
+</style>
+
+<!-- ═══ NAV ═══ -->
+<div id="nav">
+  <a class="brand" href="#p1">
+    <svg viewBox="0 0 64 64" aria-hidden="true">
+      <rect x="1" y="1" width="62" height="62" rx="14" fill="#150c24" stroke="#c6ff2e" stroke-width="2.5"/>
+      <circle cx="20" cy="22" r="8" fill="#7a5334"/><circle cx="44" cy="22" r="8" fill="#7a5334"/>
+      <rect x="15" y="20" width="34" height="30" rx="13" fill="#9a6c42"/>
+      <path d="M13 26 q19 -13 38 0 q-3 -13 -19 -13 q-16 0 -19 13 z" fill="#3f2c1c"/>
+      <circle cx="21" cy="20" r="2.6" fill="#ff2ea6"/><circle cx="32" cy="16" r="2.6" fill="#22d8ff"/>
+      <circle cx="43" cy="20" r="2.6" fill="#c6ff2e"/>
+      <path d="M24 34 l6 3 M43 34 l-6 3" stroke="#160e08" stroke-width="3" stroke-linecap="round"/>
+      <ellipse cx="32" cy="42" rx="11" ry="7" fill="#c49a68"/>
+      <ellipse cx="32" cy="39" rx="4.5" ry="3" fill="#160e08"/>
+      <rect x="34" y="44" width="4" height="4.5" fill="#ffc93c"/>
+    </svg>
+    <span>Suka Blyat · <b>$SB</b></span>
+  </a>
+
+  <ul id="menu">
+    <li><a href="#p1" aria-current="page">Story</a></li>
+    <li><a href="#p2">Comic</a></li>
+    <li><a href="#p6">Tokenomics</a></li>
+    <li><a href="#p4">Roadmap</a></li>
+    <li><a href="#p5">Dvor Map</a></li>
+    <li><a href="#p6">Merch</a></li>
+  </ul>
+
+  <div class="navr">
+    <a class="icn" href="#p6" data-cta="telegram" aria-label="Telegram">✈</a>
+    <a class="icn" href="#p6" data-cta="x" aria-label="X">𝕏</a>
+    <a class="icn" href="#p6" data-cta="discord" aria-label="Discord">◈</a>
+    <a class="joinpill" href="#p6">Join the Dvor</a>
+  </div>
+</div>
+
+<nav id="dots" aria-label="Jump to chapter"></nav>
+<div id="hud"><span class="n">1 / 6</span><span class="bar"><i></i></span></div>
+
+<!-- ══════════ 1 · WELCOME TO THE DVOR ══════════ -->
+<section class="page" id="p1" data-title="Welcome to the Dvor">
+  <div class="pin">
+    <div class="bgimg"></div>
+    <div class="bgfallback"><svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-label="Neon purple courtyard at night">
+      <defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#2a0f52"/><stop offset=".55" stop-color="#4a1470"/><stop offset="1" stop-color="#180828"/>
+      </linearGradient></defs>
+      <rect width="1600" height="900" fill="url(#g1)"/>
+      <g fill="#ffb43c" opacity=".72">
+        <rect x="80" y="120" width="64" height="50" rx="4"/><rect x="220" y="120" width="64" height="50" rx="4" opacity=".4"/>
+        <rect x="360" y="200" width="64" height="50" rx="4"/><rect x="1120" y="140" width="64" height="50" rx="4" opacity=".5"/>
+        <rect x="1260" y="220" width="64" height="50" rx="4"/><rect x="1400" y="150" width="64" height="50" rx="4" opacity=".45"/>
+      </g>
+      <rect y="620" width="1600" height="280" fill="#180a26"/>
+      <g fill="#7a3fd0" opacity=".45"><ellipse cx="300" cy="760" rx="220" ry="30"/><ellipse cx="1200" cy="800" rx="240" ry="32"/></g>
+    </svg></div>
+    <div class="scrim" style="background:linear-gradient(90deg,rgba(10,4,22,.86) 0%,rgba(10,4,22,.42) 46%,transparent 68%)"></div>
+
+    <div class="layer">
+      <div class="col">
+        <h1 class="brush" style="font-size:clamp(2.1rem,6.4vw,5.2rem)">
+          Welcome<br><span style="color:var(--lime)">to the Dvor</span>
+        </h1>
+        <p style="margin:0;font-size:clamp(.95rem,1.35vw,1.25rem);max-width:34ch">
+          A colorful concrete fairytale where legends <em style="font-style:normal;color:var(--mag)">rot</em>
+          and <em style="font-style:normal;color:var(--cyan)">rise</em>.
+        </p>
+
+        <div style="margin-top:.3rem">
+          <div class="feat" style="--fc:var(--violet)"><span class="ic">📖</span>
+            <div><b>Scroll-driven story</b><span>The legend unfolds as you scroll.</span></div></div>
+          <div class="feat" style="--fc:var(--cyan)"><span class="ic">🗺</span>
+            <div><b>Parallax Dvor</b><span>The courtyard moves with you.</span></div></div>
+          <div class="feat" style="--fc:var(--green)"><span class="ic">▶</span>
+            <div><b>Six chapters, no clicks</b><span>Cinematic chaos, hands-free.</span></div></div>
+        </div>
+
+        <div class="box" style="--accent:var(--lime);--boxbg:linear-gradient(135deg,rgba(74,20,102,.62),rgba(24,8,40,.58))">
+          <span class="eyebrow">Chapter One · The Dvor</span>
+          <div class="stage"></div>
+          <div class="pline"><i></i></div>
+        </div>
+
+        <div class="hint" style="color:var(--lime)">↓ &nbsp; Scroll down — the legend starts here</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 2 · BREAKING NEWS ══════════ -->
+<section class="page" id="p2" data-title="Breaking News">
+  <div class="pin">
+    <div class="bgimg"></div>
+    <div class="bgfallback"><svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-label="Neon news studio">
+      <rect width="1600" height="900" fill="#2a0f52"/>
+      <radialGradient id="g2" cx="50%" cy="45%" r="70%"><stop offset="0" stop-color="#5a1a9a"/><stop offset="1" stop-color="#120730"/></radialGradient>
+      <rect width="1600" height="900" fill="url(#g2)"/>
+    </svg></div>
+    <div class="scrim" style="background:linear-gradient(90deg,rgba(8,4,26,.88) 0%,rgba(8,4,26,.3) 40%,transparent 60%)"></div>
+
+    <div class="layer">
+      <div class="left">
+        <h2 class="brush" style="font-size:clamp(1.8rem,4.4vw,3.6rem);color:var(--gold)">
+          Breaking<br><span style="color:var(--mag)">News</span>
+        </h2>
+        <div class="tagband" style="background:linear-gradient(100deg,#1d6fd0,#2f9bff)">Live. Loud. Unfiltered.</div>
+
+        <div class="box" style="--accent:var(--lime);--boxbg:linear-gradient(135deg,rgba(92,20,112,.62),rgba(20,8,44,.6));width:100%">
+          <span class="eyebrow">Chapter Two · King of the Dvor</span>
+          <div class="stage"></div>
+          <div class="pline"><i></i></div>
+        </div>
+
+        <div class="card" style="--kc:var(--mag);padding:.6rem .75rem">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:.6rem">
+            <div>
+              <b class="fat" style="font-size:.85rem;color:var(--cyan)">Viewer poll</b>
+              <div style="font-size:.72rem;opacity:.78">Is he the real king?</div>
+            </div>
+            <div style="text-align:right;line-height:1.15">
+              <div><b class="fat" style="font-size:1.3rem;color:var(--green)">86%</b>
+                   <span class="mono" style="color:var(--green)">Yes</span></div>
+              <div><b class="fat" style="font-size:1.1rem;color:var(--mag)">14%</b>
+                   <span class="mono" style="color:var(--mag)">Lol no</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mid">
+        <div class="chyron">Breaking: Suka Blyat bear crowns himself King of the Dvor</div>
+        <div style="display:flex;gap:.7rem;align-items:center;margin-top:.4rem;font-size:.78rem;opacity:.85">
+          <span class="mono">03:33 AM · Dvor time</span>
+          <span class="mono live-anim" style="color:var(--red)">● Live</span>
+          <span class="mono">👁 69.4K</span>
+        </div>
+      </div>
+
+      <div class="cams">
+        <div class="mono" style="color:var(--mag)">Chaos cams</div>
+        <div class="cam"><b>King Blyat speech</b><span class="live live-anim">● Live</span></div>
+        <div class="cam" style="border-color:var(--cyan)"><b>Block 7 aftermath</b><span class="live live-anim">● Live</span></div>
+        <div class="cam" style="border-color:var(--lime)"><b>Royal toast</b><span class="live live-anim">● Live</span></div>
+      </div>
+    </div>
+
+    <div class="ticker">
+      <span class="tag">📰 Dvor feed</span>
+      <span class="run"><div>
+        <span>● Riots continue in sector 9</span><span>✦ Bear merch sales up 666%</span>
+        <span>● Mayor missing (again)</span><span>✦ New holiday: Blyat Day announced</span>
+        <span>● Riots continue in sector 9</span><span>✦ Bear merch sales up 666%</span>
+        <span>● Mayor missing (again)</span><span>✦ New holiday: Blyat Day announced</span>
+      </div></span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 3 · TWO FUTURES ══════════ -->
+<section class="page" id="p3" data-title="Two Futures">
+  <div class="pin">
+    <div class="bgimg"></div>
+    <div class="bgfallback"><svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-label="Two glowing doors">
+      <rect width="800" height="900" fill="#3a0a3e"/><rect x="800" width="800" height="900" fill="#0d2560"/>
+      <rect x="400" y="240" width="240" height="560" rx="6" fill="#5a0a1e" stroke="#ff2d55" stroke-width="9"/>
+      <rect x="960" y="240" width="240" height="560" rx="6" fill="#0a2560" stroke="#2f7bff" stroke-width="9"/>
+    </svg></div>
+    <div class="scrim" style="background:linear-gradient(180deg,rgba(8,4,20,.5) 0%,transparent 30%,rgba(8,4,20,.85) 82%)"></div>
+
+    <div class="layer">
+      <div class="modes">
+        <div class="mode">
+          <h3 class="brush" style="font-size:clamp(1.1rem,2.5vw,2rem);color:var(--mag)">Gangsta<br>mode</h3>
+          <p style="font-size:.82rem;opacity:.85;margin:.3rem 0 .6rem">Get drunk and rule nothing.</p>
+          <div class="chip" style="--cc:var(--mag)"><span>☠</span> Hardbass &amp; chaos</div>
+          <div class="chip" style="--cc:var(--red)"><span>⚡</span> Short-term highs</div>
+          <div class="chip" style="--cc:var(--violet)"><span>👻</span> No legacy</div>
+        </div>
+
+        <div style="flex:1;text-align:center;padding-top:.4rem">
+          <h2 class="brush" style="font-size:clamp(1.7rem,5vw,4.2rem)">
+            <span style="color:var(--mag)">Two</span> <span style="color:var(--gold)">Fu</span><span style="color:var(--cyan)">tures</span>
+          </h2>
+          <p style="font-size:clamp(.8rem,1.15vw,1.05rem);opacity:.9;margin:.3rem 0 0">
+            Every choice shapes your legend.<br>Where will you lead <b style="color:var(--mag)">$SB</b>?
+          </p>
+        </div>
+
+        <div class="mode r">
+          <h3 class="brush" style="font-size:clamp(1.1rem,2.5vw,2rem);color:var(--cyan)">Dagestan<br>mode</h3>
+          <p style="font-size:.82rem;opacity:.85;margin:.3rem 0 .6rem">Train. Return stronger.</p>
+          <div class="chip" style="--cc:var(--cyan)"><span>🏋</span> Discipline &amp; honor</div>
+          <div class="chip" style="--cc:var(--blue)"><span>🏔</span> Long-term legacy</div>
+          <div class="chip" style="--cc:var(--green)"><span>🏆</span> Respect earned</div>
+        </div>
+      </div>
+
+      <div class="box" style="--accent:var(--cyan);--boxbg:linear-gradient(135deg,rgba(32,14,72,.7),rgba(62,10,52,.62));width:min(660px,94%)">
+        <span class="eyebrow">Chapter Three · The night of the two doors</span>
+        <div class="stage"></div>
+        <div class="pline"><i></i></div>
+      </div>
+
+      <div style="width:100%;display:flex;flex-direction:column;align-items:center;gap:.55rem">
+        <div class="slider">
+          <span class="mono" style="color:var(--mag)">Chaos</span>
+          <input id="futureSlider" type="range" min="0" max="100" value="50" aria-label="Choose your future: chaos or discipline">
+          <span class="mono" style="color:var(--cyan)">Discipline</span>
+        </div>
+        <div class="choose">
+          <button class="btn buy" data-choose="chaos"><i>☠</i><span>Choose chaos</span></button>
+          <span class="hint" id="chooseHint">Drag the slider or pick a side</span>
+          <button class="btn tg" data-choose="discipline"><i>🏔</i><span>Choose discipline</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 4 · TRAINING ARC ══════════ ═-->
+<section class="page" id="p4" data-title="Training Arc">
+  <div class="pin">
+    <div class="bgimg"></div>
+    <div class="bgfallback"><svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-label="Neon gym at altitude">
+      <rect width="1600" height="900" fill="#2b1050"/>
+      <radialGradient id="g4" cx="50%" cy="40%" r="72%"><stop offset="0" stop-color="#6a2090"/><stop offset="1" stop-color="#180a30"/></radialGradient>
+      <rect width="1600" height="900" fill="url(#g4)"/>
+    </svg></div>
+    <div class="scrim" style="background:linear-gradient(180deg,rgba(10,4,24,.72) 0%,rgba(10,4,24,.35) 40%,rgba(10,4,24,.8) 100%)"></div>
+
+    <div class="layer">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap">
+        <div>
+          <h2 class="brush" style="font-size:clamp(1.6rem,4.2vw,3.4rem)">
+            <span style="color:var(--lime)">2–3 Years</span><br>in Dagestan
+          </h2>
+          <div class="tagband" style="margin-top:.4rem">Chapter Four · Training Arc</div>
+        </div>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+          <div class="statpill" style="--sc:var(--violet)"><i>☠</i><div><b>+1000</b><span>Discipline unlocked</span></div></div>
+          <div class="statpill" style="--sc:var(--gold)"><i>☣</i><div><b>+2000</b><span>Hardened soul</span></div></div>
+        </div>
+      </div>
+
+      <div class="box" style="--accent:var(--cyan);--boxbg:linear-gradient(135deg,rgba(42,14,90,.68),rgba(16,8,42,.62))">
+        <span class="eyebrow">Nothing soft survives · Bear becomes legend</span>
+        <div class="stage"></div>
+        <div class="pline"><i></i></div>
+      </div>
+
+      <div class="rail" id="trainRail">
+        <div class="tcard" style="--kc:var(--mag)"><span class="no">01</span><h4>Lada Deadlift</h4>
+          <span class="cap">Lift heavy. Drive heavier.</span><span class="unlock">Unlocked · Raw strength</span></div>
+        <div class="tcard" style="--kc:var(--cyan)"><span class="no">02</span><h4>Sheep Chase</h4>
+          <span class="cap">Cardio is chasing dinner.</span><span class="unlock">Unlocked · Stamina</span></div>
+        <div class="tcard" style="--kc:var(--violet)"><span class="no">03</span><h4>Wrestle Cloud</h4>
+          <span class="cap">Weather doesn't submit easy.</span><span class="unlock">Cloud defeated · Almost</span></div>
+        <div class="tcard" style="--kc:var(--mag)"><span class="no">04</span><h4>Hardbass Education</h4>
+          <span class="cap">Nokia. Hardbass. Focus.</span><span class="unlock">Unlocked · Mental fortitude</span></div>
+        <div class="tcard" style="--kc:var(--gold)"><span class="no">05</span><h4>Goat Coach</h4>
+          <span class="cap">Wisdom from the G.O.A.T.</span><span class="unlock">Unlocked · Strategy</span></div>
+        <div class="tcard" style="--kc:var(--green)"><span class="no">06</span><h4>Mountain Stand</h4>
+          <span class="cap">Top of the world. Still not soft.</span><span class="unlock">Arc complete · Bear is forged</span></div>
+      </div>
+
+      <div class="years">
+        <span style="color:var(--mag)">Year 1 · Foundation</span>
+        <span style="color:var(--cyan)">Year 2 · Evolution</span>
+        <span style="color:var(--gold)">Year 3 · Ascension</span>
+      </div>
+      <div class="hint" style="text-align:center">Legends are built, not born</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 5 · HE CAME BACK STRONGER ══════════ -->
+<section class="page" id="p5" data-title="He Came Back Stronger">
+  <div class="pin">
+    <div class="revealwrap">
+      <div class="after">
+        <div class="bgimg" data-slot="after"></div>
+        <div class="bgfallback"><svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-label="The restored courtyard">
+          <rect width="1600" height="900" fill="#4a1478"/>
+          <rect y="560" width="1600" height="340" fill="#2b0e46"/>
+          <g fill="#ffb43c"><rect x="200" y="180" width="56" height="44"/><rect x="420" y="240" width="56" height="44"/>
+            <rect x="1100" y="180" width="56" height="44"/><rect x="1340" y="250" width="56" height="44"/></g>
+          <g fill="#ff2ea6"><circle cx="900" cy="700" r="16"/><circle cx="1000" cy="730" r="13"/></g>
+        </svg></div>
+      </div>
+      <div class="before">
+        <div class="bgimg" data-slot="before"></div>
+        <div class="bgfallback"><svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-label="The ruined courtyard">
+          <rect width="1600" height="900" fill="#46464e"/>
+          <rect y="560" width="1600" height="340" fill="#2a2a30"/>
+          <g fill="#1a1a20"><rect x="200" y="180" width="56" height="44"/><rect x="420" y="240" width="56" height="44"/>
+            <rect x="1100" y="180" width="56" height="44"/><rect x="1340" y="250" width="56" height="44"/></g>
+        </svg></div>
+      </div>
+      <div class="handle" id="revealHandle" role="slider" tabindex="0"
+           aria-label="Drag to reveal the rebuilt Dvor" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"></div>
+      <div class="lbl" style="left:5%">Before</div>
+      <div class="lbl" style="right:5%;color:var(--lime)">After</div>
+    </div>
+    <div class="scrim" style="background:linear-gradient(180deg,rgba(8,6,16,.55) 0%,transparent 26%,rgba(8,6,16,.86) 84%);z-index:5"></div>
+
+    <div class="layer" style="z-index:20">
+      <div style="width:100%;text-align:center">
+        <h2 class="brush" style="font-size:clamp(1.5rem,4.2vw,3.4rem)">
+          He came back<br><span style="color:var(--lime)">stronger</span> for the Dvor
+        </h2>
+      </div>
+
+      <div style="display:flex;justify-content:center;width:100%">
+        <div class="box" style="--accent:var(--lime);--boxbg:linear-gradient(135deg,rgba(26,20,44,.72),rgba(54,14,84,.62));width:min(620px,94%)">
+          <span class="eyebrow">Chapter Five · Now we build</span>
+          <div class="stage"></div>
+          <div class="pline"><i></i></div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:.5rem;width:100%">
+        <div class="statpill" style="--sc:var(--mag)"><i>👥</i><div><b>12,420+</b><span>Block members</span></div></div>
+        <div class="statpill" style="--sc:var(--green)"><i>🛡</i><div><b>98.7%</b><span>Dvor safety</span></div></div>
+        <div class="statpill" style="--sc:var(--cyan)"><i>🔧</i><div><b>256+</b><span>Rebuilt spots</span></div></div>
+        <div class="statpill" style="--sc:var(--gold)"><i>🕊</i><div><b>3,412</b><span>Proud pigeons</span></div></div>
+        <div class="statpill" style="--sc:var(--mag)"><i>❤</i><div><b>100%</b><span>Dvor love</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 6 · CHOOSE YOUR FUTURE ══════════ -->
+<section class="page" id="p6" data-title="Choose Your Future">
+  <div class="pin">
+    <div class="bgimg"></div>
+    <div class="bgfallback"><svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-label="The Dvor crowd celebrating">
+      <rect width="1600" height="900" fill="#1e0a3c"/>
+      <radialGradient id="g6" cx="50%" cy="50%" r="72%"><stop offset="0" stop-color="#6d1fa8"/><stop offset="1" stop-color="#120620"/></radialGradient>
+      <rect width="1600" height="900" fill="url(#g6)"/>
+    </svg></div>
+    <div class="scrim" style="background:linear-gradient(90deg,rgba(8,4,18,.86) 0%,rgba(8,4,18,.38) 46%,rgba(8,4,18,.72) 100%)"></div>
+
+    <div class="layer">
+      <div class="lcol">
+        <h2 class="brush" style="font-size:clamp(1.9rem,5.4vw,4.4rem)">
+          Choose<br><span style="color:var(--lime)">your future</span>
+        </h2>
+        <div class="tagband">The Dvor awaits.</div>
+        <p style="margin:.1rem 0 .3rem;font-size:clamp(.85rem,1.2vw,1.1rem)">
+          Two futures. One cult. One coin. <span style="color:var(--violet)">Infinite chaos.</span>
+        </p>
+
+        <div class="btns">
+          <a class="btn buy" href="#" data-cta="buy"><i>🛒</i><span>Buy $SB<small>set DEX link</small></span></a>
+          <a class="btn tg" href="#" data-cta="telegram"><i>✈</i><span>Join Telegram<small>join the cult</small></span></a>
+          <a class="btn x" href="#" data-cta="x"><i>𝕏</i><span>Follow on X<small>follow the chaos</small></span></a>
+          <a class="btn enter" href="#p1"><i>🐾</i><span>Enter the Dvor<small>read it again</small></span></a>
+        </div>
+
+        <div class="ca">
+          <label>Contract address</label>
+          <div class="row">
+            <code id="caText">— set CONTRACT in config —</code>
+            <button id="copyCa" type="button" aria-label="Copy contract address">⧉</button>
+          </div>
+        </div>
+
+        <div class="charts">
+          <a class="chart" href="#" data-cta="dextools">DEXTools<small>live charts</small></a>
+          <a class="chart" href="#" data-cta="dexscreener">DexScreener<small>live charts</small></a>
+          <a class="chart" href="#" data-cta="coingecko">CoinGecko<small>$SB</small></a>
+          <a class="chart" href="#" data-cta="cmc">CoinMarketCap<small>$SB</small></a>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.7rem;justify-content:center">
+        <div class="rcol">
+          <div class="statpill" style="--sc:var(--gold)"><i>🐻</i><div><b>42.0K+</b><span>Dvor army</span></div></div>
+          <div class="statpill" style="--sc:var(--mag)"><i>💀</i><div><b>420.69B</b><span>$SB played</span></div></div>
+          <div class="statpill" style="--sc:var(--violet)"><i>◎</i><div><b>100%</b><span>Chaos level</span></div></div>
+          <div class="statpill" style="--sc:var(--gold)"><i>☺</i><div><b>∞</b><span>Meme power</span></div></div>
+        </div>
+        <div class="thanks" style="color:var(--lime)">Thank you for believing in the chaos ♥</div>
+        <div class="see">
+          <span>See</span> <span style="color:var(--lime)">you</span>
+          <span style="color:var(--cyan)">in</span> <span style="color:var(--violet)">the</span>
+          <span style="color:var(--mag)">Dvor</span>
+          <u></u>
+        </div>
+      </div>
+    </div>
+
+    <div id="foot">
+      <span>© 2026 Suka Blyat $SB. All rights reserved.</span>
+      <span>Not financial advice. Just hardbass.</span>
+      <span id="chainLabel">Built on <b>Solana</b></span>
+    </div>
+  </div>
+</section>
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   CONFIG
+   ══════════════════════════════════════════════════════════════ */
+const ART = {
+  p1: 'img/1-dvor.webp',
+  p2: 'img/2-news.webp',
+  p3: 'img/3-doors.webp',
+  p4: 'img/4-training.webp',
+  p5: 'img/5-return.webp',
+  p5before: null,
+  p6: 'img/6-choose.webp'
+};
+
+const LINKS = {
+  buy:'', telegram:'https://t.me/sbmemetoken', x:'https://x.com/sbmemecoin',
+  discord:'', dextools:'', dexscreener:'', coingecko:'', cmc:''
+};
+const CONTRACT = '';
+
+/* ══════════════════════════════════════════════════════════════
+   STORY — original wording. w = scroll weight (punchlines get more)
+   ══════════════════════════════════════════════════════════════ */
+const STORY = {
+  p1:[
+    {w:1,   h:'There is a place called the Dvor.', t:['Somewhere behind the last normal building…']},
+    {w:1,   t:['The swings have been broken since 2007.']},
+    {w:1,   t:['The streetlight only works when nobody is looking.']},
+    {w:1,   t:['A refrigerator stands near the entrance, but nobody remembers who brought it.']},
+    {w:1.1, h:'This is where Mishka Blyatovich lives.'},
+    {w:1.3, t:['Mishka is a large bear with a small apartment, one gold tooth, and an old three-stripe tracksuit that has survived three governments, four relationships, and one unexplained fire.']},
+    {w:1,   l:['He has no job.','He has no plan.']},
+    {w:1.7, h:'He has a plastic bag containing another plastic bag.'},
+    {w:1.2, t:['Every morning, Mishka wakes up at 2:40 in the afternoon, looks through the window, and asks:'], h:'“What now, suka blyat?”'},
+    {w:1,   t:['Usually, nothing now.','So he goes downstairs.']}
+  ],
+  p2:[
+    {w:1,   t:['Mishka sits on the same bench every day.']},
+    {w:1.2, t:['He eats sunflower seeds, listens to hardbass through one working earphone, and gives financial advice to pigeons.']},
+    {w:1.7, h:'Nobody asked him.'},
+    {w:1.2, t:['Sometimes Mishka becomes drunk and starts feeling important. He puts on black sunglasses, even at night.']},
+    {w:1.2, t:['He walks around the Dvor like a dangerous gangster and demands respect from:'],
+            l:['children','pigeons','parked cars','the broken elevator','one grandmother named Zinaida']},
+    {w:1,   t:['Once, he created a criminal organization called <em>The Concrete Bears</em>.']},
+    {w:1.2, t:['It lasted eleven minutes. The other members were two pigeons and a shopping cart.']},
+    {w:1.7, h:'The shopping cart betrayed him.'},
+    {w:1,   t:['Mishka still does not talk about it.']}
+  ],
+  p3:[
+    {w:1.1, t:['One night, Mishka found a mysterious bottle underneath the bench. It had no label.']},
+    {w:1.2, t:['Only two words were scratched into the glass:'], h:'SUKA BLYAT'},
+    {w:.8,  t:['Mishka drank it.']},
+    {w:1.2, l:['Immediately, the moon turned purple.','The refrigerator opened by itself.','Hardbass started playing from inside.']},
+    {w:1.1, t:['Then a three-eyed pigeon descended from the sky wearing a tiny leather jacket. The pigeon spoke:']},
+    {w:1.7, h:'“Mishka. Your life has reached critical blyat.”'},
+    {w:1.3, t:['Two doors appeared in the middle of the Dvor.','Behind the first door was a bottle, dark sunglasses, a black Lada with no wheels, and unlimited bad decisions.']},
+    {w:1.2, t:['Behind the second door was an old minibus with a sign:'], l:['DAGESTAN','2 TO 3 YEARS','NO REFUNDS']},
+    {w:.9,  h:'Mishka had two choices.'},
+    {w:1.2, t:['Mishka chooses the bottle. Five minutes later, he becomes the self-appointed Supreme Authority of the Dvor.']},
+    {w:1.2, t:['He puts three phones on the table, but none of them have SIM cards. He starts collecting protection money from pigeons.']},
+    {w:1.4, t:['He tries to intimidate a vending machine.','He steals a bicycle, then realizes it is his own bicycle.']}
+  ],
+  p4:[
+    {w:1.2, t:['He opens a nightclub inside the refrigerator. The club is successful until somebody closes the door.']},
+    {w:1.1, h:'At 4:00 in the morning, Mishka attempts to fight the moon.'},
+    {w:1.7, h:'The moon refuses.'},
+    {w:1.4, t:['At sunrise, he wakes up inside a sandbox. He has lost:'],
+            l:['one sneaker','his sunglasses','twelve sunflower seeds','control of the Dvor','another argument with Zinaida']},
+    {w:1.3, t:['Nothing has changed. Mishka is still the same bear.','Only now his head hurts.']},
+    {w:1.3, t:['Mishka enters the minibus. The driver is a goat named Timur.','Mishka asks: “Do you have Wi-Fi?” Timur looks into his soul.']},
+    {w:1.7, h:'“After training, you become Wi-Fi.”'},
+    {w:1.3, t:['The doors close. The minibus drives directly into the mountains. Nobody sees Mishka again for two to three years. Possibly four. Time works differently in Dagestan.']},
+    {w:1.6, t:['Every morning, Mishka wakes up before the sun.'], h:'The sun is offended.'},
+    {w:1.2, t:['He runs up a mountain carrying an old washing machine. At the top, the washing machine tells him to run back down.']},
+    {w:1.7, l:['He wrestles bears stronger than him.','He wrestles goats smarter than him.','He wrestles one cloud.'], h:'The cloud wins the first round.'},
+    {w:1.4, t:['For strength training, Mishka lifts a Lada. For cardio, he chases a sheep that stole his passport.','For mental discipline, he sits completely still while somebody plays hardbass from a Nokia for nine hours.']}
+  ],
+  p5:[
+    {w:1.3, l:['He learns patience from an eagle.','He learns loyalty from a wolf.','He learns compound interest from a grandmother selling apricots near the road.']},
+    {w:1.3, t:['Most importantly, he learns that being strong does not mean frightening the Dvor. It means protecting it.']},
+    {w:1.6, t:['Mishka does not become normal. That would be impossible.'], h:'He becomes disciplined chaos.'},
+    {w:1.7, t:['One evening, the old minibus returns.'], h:'Only seventeen minutes have passed in the Dvor.'},
+    {w:1.4, t:['The doors open. Mishka steps out. He is enormous. His old tracksuit now fits like battle armor. His gold tooth shines brighter than the streetlight.','The pigeons immediately return his missing sneaker.']},
+    {w:1.2, t:['Mishka looks around the Dvor.'],
+            l:['The swings are still broken.','The refrigerator is now running for mayor.','The shopping cart controls the eastern entrance.']},
+    {w:1.7, t:['Mishka cracks his neck.'], h:'“Enough blyat.”'},
+    {w:1.3, l:['He repairs the playground.','He fixes the streetlight.','He builds a gym inside the abandoned garage.'],
+            t:['He teaches young bears how to squat correctly, respect grandmothers, and never trust a shopping cart.']},
+    {w:1.4, t:['He protects the Dvor from scammers, fake gangsters, rug pulls, bad vibes, and one extremely aggressive goose.'], h:'He is not just living in the community. He is building it.'},
+    {w:1.4, t:['Every bear has two futures. One future sits on the bench forever. The other disappears for two to three years and returns completely unreasonable.','One bear drinks because he has nothing to do. The other trains until the mountains begin asking him for advice.']},
+    {w:1.3, t:['One says: “Tomorrow.”'], h:'The other says: “Suka blyat. Today.”'},
+    {w:1.4, t:['This is $SB. A coin for every chaotic bear standing between another terrible decision and an unnecessary training montage.','The choice is yours.'], l:['GET DRUNK.','GO TO DAGESTAN.']},
+    {w:2,   h:'OR SOMEHOW DO BOTH.'}
+  ]
+};
+
+(function(){
+  var reduce   = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var pages    = [].slice.call(document.querySelectorAll('.page'));
+  var STEP_VH  = 38, PAGE_MIN = 560, PAGE_MAX = 700;
+
+  /* ── artwork slots ── */
+  pages.forEach(function(pg){
+    var src = ART[pg.id];
+    if (!src) return;
+    pg.classList.add('has-img');
+    pg.querySelectorAll('.bgimg').forEach(function(el){
+      var slot = el.dataset.slot;
+      var use  = slot === 'before' ? (ART.p5before || src) : src;
+      el.style.backgroundImage = 'url("' + use + '")';
+    });
+  });
+
+  /* ── build steps, size pages ── */
+  var model = [];
+  pages.forEach(function(pg){
+    var steps = STORY[pg.id] || [];
+    var stage = pg.querySelector('.stage');
+    var nodes = [];
+
+    if (stage){
+      steps.forEach(function(s,i){
+        var d = document.createElement('div');
+        d.className = 'step' + (i === 0 ? ' on' : '');
+        var html = '';
+        if (s.t) s.t.forEach(function(x){ html += '<p>' + x + '</p>'; });
+        if (s.h) html += '<p class="hit">' + s.h + '</p>';
+        if (s.l){ html += '<ul class="list">'; s.l.forEach(function(x){ html += '<li>' + x + '</li>'; }); html += '</ul>'; }
+        d.innerHTML = html;
+        stage.appendChild(d); nodes.push(d);
+      });
+      requestAnimationFrame(function(){
+        var tall = 0;
+        nodes.forEach(function(n){
+          var was = n.classList.contains('on');
+          n.classList.add('on'); tall = Math.max(tall, n.offsetHeight);
+          if (!was) n.classList.remove('on');
+        });
+        if (tall) stage.style.minHeight = tall + 'px';
+      });
+    }
+
+    var w = steps.map(function(s){ return s.w || 1; });
+    var total = w.reduce(function(a,b){ return a+b; }, 0) || 1;
+    var acc = 0, bounds = [];
+    w.forEach(function(x){ acc += x; bounds.push(acc/total); });
+
+    var len = steps.length
+      ? Math.min(Math.max(Math.round(total * STEP_VH), PAGE_MIN), PAGE_MAX)
+      : 110;
+    pg.style.height = (len + 100) + 'svh';
+
+    model.push({ el:pg, nodes:nodes, bounds:bounds, idx:0, fill:pg.querySelector('.pline i') });
+  });
+
+  /* ── dots ── */
+  var dotsWrap = document.getElementById('dots'), dots = [];
+  pages.forEach(function(pg,i){
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.title = (i+1) + ' / ' + pages.length + ' · ' + pg.dataset.title;
+    b.setAttribute('aria-label','Go to ' + pg.dataset.title);
+    b.onclick = function(){ scrollTo({ top: pg.offsetTop + 4, behavior: reduce ? 'auto' : 'smooth' }); };
+    dotsWrap.appendChild(b); dots.push(b);
+  });
+
+  var hudN = document.querySelector('#hud .n'), hudBar = document.querySelector('#hud .bar i');
+  var menuLinks = [].slice.call(document.querySelectorAll('#menu a'));
+  var ticking = false;
+
+  function frame(){
+    var vh = innerHeight, y = scrollY;
+    var docH = document.documentElement.scrollHeight - vh;
+    if (hudBar) hudBar.style.width = (docH > 0 ? (y/docH)*100 : 0) + '%';
+
+    for (var i = 0; i < model.length; i++){
+      var m = model[i], pg = m.el;
+      var top = pg.offsetTop, span = pg.offsetHeight - vh;
+      var active = y >= top - vh*0.6 && y < top + pg.offsetHeight;
+      if (!active) continue;
+
+      hudN.textContent = (i+1) + ' / ' + model.length;
+      for (var d = 0; d < dots.length; d++) dots[d].classList.toggle('on', d === i);
+      menuLinks.forEach(function(a){
+        if (a.getAttribute('href') === '#' + pg.id) a.setAttribute('aria-current','page');
+        else a.removeAttribute('aria-current');
+      });
+
+      if (!m.nodes.length) continue;
+      var p = span > 0 ? Math.min(Math.max((y-top)/span, 0), 1) : 0;
+      if (m.fill) m.fill.style.width = (p*100).toFixed(1) + '%';
+
+      var next = m.bounds.length - 1;
+      for (var b = 0; b < m.bounds.length; b++){ if (p <= m.bounds[b]){ next = b; break; } }
+      if (next !== m.idx){
+        m.nodes[m.idx].classList.remove('on');
+        m.nodes[next].classList.add('on');
+        m.idx = next;
+      }
+    }
+    ticking = false;
+  }
+  addEventListener('scroll', function(){ if (!ticking){ ticking = true; requestAnimationFrame(frame); } }, {passive:true});
+  addEventListener('resize', function(){ requestAnimationFrame(frame); });
+  frame();
+
+  /* ── page 3: choose your future ── */
+  var slider = document.getElementById('futureSlider');
+  var hint   = document.getElementById('chooseHint');
+  function setChoice(v){
+    if (slider) slider.value = v;
+    var label = v < 35 ? 'Chaos it is. Good luck, suka blyat.'
+              : v > 65 ? 'Dagestan. See you in 2–3 years.'
+              : 'Drag the slider or pick a side';
+    if (hint) hint.textContent = label;
+    try { localStorage.setItem('sb-future', v); } catch(e){}
+  }
+  if (slider) slider.addEventListener('input', function(){ setChoice(+this.value); });
+  document.querySelectorAll('[data-choose]').forEach(function(btn){
+    btn.onclick = function(){ setChoice(btn.dataset.choose === 'chaos' ? 0 : 100); };
+  });
+  try { var sv = localStorage.getItem('sb-future'); if (sv !== null) setChoice(+sv); } catch(e){}
+
+  /* ── page 5: before / after reveal ── */
+  var wrap = document.querySelector('#p5 .revealwrap');
+  var handle = document.getElementById('revealHandle');
+  if (wrap && handle){
+    var dragging = false;
+    function setSplit(clientX){
+      var r = wrap.getBoundingClientRect();
+      var pct = Math.min(Math.max(((clientX - r.left)/r.width)*100, 4), 96);
+      wrap.style.setProperty('--split', pct + '%');
+      handle.setAttribute('aria-valuenow', Math.round(pct));
+    }
+    handle.addEventListener('pointerdown', function(e){
+      dragging = true; handle.setPointerCapture(e.pointerId); e.preventDefault();
+    });
+    addEventListener('pointermove', function(e){ if (dragging) setSplit(e.clientX); });
+    addEventListener('pointerup', function(){ dragging = false; });
+    wrap.addEventListener('click', function(e){ if (e.target !== handle) setSplit(e.clientX); });
+    handle.addEventListener('keydown', function(e){
+      var cur = parseFloat(getComputedStyle(wrap).getPropertyValue('--split')) || 50;
+      if (e.key === 'ArrowLeft'){ wrap.style.setProperty('--split', Math.max(cur-4,4) + '%'); e.preventDefault(); }
+      if (e.key === 'ArrowRight'){ wrap.style.setProperty('--split', Math.min(cur+4,96) + '%'); e.preventDefault(); }
+    });
+  }
+
+  /* ── page 4: horizontal rail via wheel ── */
+  var rail = document.getElementById('trainRail');
+  if (rail){
+    rail.addEventListener('wheel', function(e){
+      if (Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
+      var atStart = rail.scrollLeft <= 0 && e.deltaY < 0;
+      var atEnd   = rail.scrollLeft >= rail.scrollWidth - rail.clientWidth - 1 && e.deltaY > 0;
+      if (atStart || atEnd) return;          /* let the page keep scrolling */
+      rail.scrollLeft += e.deltaY;
+      e.preventDefault();
+    }, {passive:false});
+  }
+
+  /* ── links ── */
+  Object.keys(LINKS).forEach(function(k){
+    var url = LINKS[k];
+    document.querySelectorAll('[data-cta="' + k + '"]').forEach(function(a){
+      if (url){
+        a.href = url; a.target = '_blank'; a.rel = 'noopener';
+        var s = a.querySelector('small');
+        if (s) s.textContent = url.replace(/^https?:\/\//,'').replace(/\/$/,'');
+      } else {
+        a.setAttribute('aria-disabled','true');
+      }
+    });
+  });
+
+  /* ── contract ── */
+  var caText = document.getElementById('caText');
+  if (CONTRACT) caText.textContent = CONTRACT;
+  document.getElementById('copyCa').onclick = function(){
+    if (!CONTRACT){ caText.textContent = '— set CONTRACT in config —'; return; }
+    navigator.clipboard.writeText(CONTRACT).then(function(){
+      var old = caText.textContent;
+      caText.textContent = 'Copied ✓';
+      setTimeout(function(){ caText.textContent = old; }, 1500);
+    });
+  };
+})();
+</script>
