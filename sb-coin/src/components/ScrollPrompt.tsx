@@ -2,22 +2,20 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 
-export function ScrollPrompt() {
-  const reduced = useReducedMotion();
+type Props = {
+  /** Feeds every coin to the bear, one by one. */
+  onFeedAll: () => void;
+};
 
-  const scrollToStory = () => {
-    document.getElementById("story")?.scrollIntoView({
-      behavior: reduced ? "auto" : "smooth",
-      block: "start",
-    });
-  };
+export function ScrollPrompt({ onFeedAll }: Props) {
+  const reduced = useReducedMotion();
 
   return (
     <button
       type="button"
-      onClick={scrollToStory}
-      aria-label="Feed the bear — scroll to the next section"
-      className="group relative z-20 inline-flex cursor-pointer items-center gap-2.5 text-[11px] font-bold uppercase tracking-[0.22em] text-navy/85 transition-colors hover:text-navy sm:text-xs"
+      onClick={onFeedAll}
+      aria-label="Feed the bear — send every coin to his medallion"
+      className="group relative z-20 inline-flex cursor-pointer items-center gap-2.5 text-[11px] font-bold uppercase tracking-[0.22em] text-navy/85 transition-colors hover:text-navy sm:text-xs lg:text-[13px]"
     >
       Feed the Bear
       <motion.span

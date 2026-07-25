@@ -10,13 +10,20 @@ type Props = {
   /** True while this coin is mid-flight; it stays hidden and unclickable. */
   hidden: boolean;
   onFeed: (coin: Coin, el: HTMLElement) => void;
+  /** Lets the hero find this coin's element for the feed-all sequence. */
+  register: (id: string, el: HTMLButtonElement | null) => void;
 };
 
-export function FloatingCoin({ coin, hidden, onFeed }: Props) {
+export function FloatingCoin({ coin, hidden, onFeed, register }: Props) {
   const reduced = useReducedMotion();
   const controls = useAnimationControls();
   const [hovered, setHovered] = useState(false);
   const ref = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    register(coin.id, ref.current);
+    return () => register(coin.id, null);
+  }, [coin.id, register]);
 
   // Float pauses on hover. Resuming eases back to the origin first, otherwise
   // the keyframe loop restarts from 0 and the coin visibly jumps.

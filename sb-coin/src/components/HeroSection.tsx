@@ -15,6 +15,11 @@ export function HeroSection() {
   const reduced = useReducedMotion();
   const medallionRef = useRef<HTMLDivElement>(null);
   const [flights, setFlights] = useState<Flight[]>([]);
+  // Refs, not state, for the guards and registry: the feed-all timers fire
+  // long after the closures that scheduled them were rendered.
+  const inFlightRef = useRef<Set<string>>(new Set());
+  const coinEls = useRef<Map<string, HTMLButtonElement>>(new Map());
+  const seqTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const [pulseKey, setPulseKey] = useState(0);
   const [showMemePower, setShowMemePower] = useState(false);
   const memeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -22,11 +27,18 @@ export function HeroSection() {
   useEffect(
     () => () => {
       if (memeTimer.current) clearTimeout(memeTimer.current);
+      seqTimers.current.forEach(clearTimeout);
     },
     []
   );
 
+  const registerCoin = useCallback((id: string, el: HTMLButtonElement | null) => {
+    if (el) coinEls.current.set(id, el);
+    else coinEls.current.delete(id);
+  }, []);
+
   const arrive = useCallback((id: string) => {
+    inFlightRef.current.delete(id);
     setFlights((f) => f.filter((x) => x.coin.id !== id));
     setPulseKey((k) => k + 1);
     setShowMemePower(true);
@@ -40,9 +52,10 @@ export function HeroSection() {
   const feed = useCallback(
     (coin: Coin, el: HTMLElement) => {
       // Guard against repeat clicks while this coin is already travelling.
-      if (flights.some((f) => f.coin.id === coin.id)) return;
+      if (inFlightRef.current.has(coin.id)) return;
       const to = medallionRef.current?.getBoundingClientRect();
       if (!to) return;
+      inFlightRef.current.add(coin.id);
       // Measure the zoomed image, not the button, so the flying clone matches
       // what's on screen pixel for pixel.
       const img = el.querySelector("img");
@@ -58,8 +71,20 @@ export function HeroSection() {
 
       setFlights((f) => [...f, { coin, from: fromEl.getBoundingClientRect(), to }]);
     },
-    [flights, reduced, arrive]
+    [reduced, arrive]
   );
+
+  // FEED THE BEAR sends every coin to the medallion, one by one.
+  const feedAll = useCallback(() => {
+    if (inFlightRef.current.size > 0) return;
+    seqTimers.current.forEach(clearTimeout);
+    seqTimers.current = COINS.map((coin, i) =>
+      setTimeout(() => {
+        const el = coinEls.current.get(coin.id);
+        if (el) feed(coin, el);
+      }, i * (reduced ? 450 : 750))
+    );
+  }, [feed, reduced]);
 
   const inFlight = new Set(flights.map((f) => f.coin.id));
 
@@ -123,6 +148,7 @@ export function HeroSection() {
               coin={coin}
               hidden={inFlight.has(coin.id)}
               onFeed={feed}
+              register={registerCoin}
             />
           ))}
 
@@ -134,7 +160,7 @@ export function HeroSection() {
 
           {/* Above the bear so it reads as his label and invites the click. */}
           <div className="pointer-events-auto absolute top-[36%] left-1/2 z-20 -translate-x-1/2 whitespace-nowrap lg:top-[31%] lg:left-[72.8%]">
-            <ScrollPrompt />
+            <ScrollPrompt onFeedAll={feedAll} />
           </div>
         </div>
 
