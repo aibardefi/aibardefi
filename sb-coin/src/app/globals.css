@@ -37,12 +37,16 @@ html {
  * box replicates `object-cover` on the background's own aspect ratio: it fills
  * the viewport, overflows on whichever axis is tighter, and never distorts.
  * Percentage positions inside it therefore track the background exactly.
+ *
+ * Anchored to the BOTTOM, not centred: on viewports wider than the art's
+ * 1672/941 the overflow is vertical, and bottom-anchoring crops empty sky
+ * instead of pushing the bear's feet below the fold.
  */
 .hero-stage {
   position: absolute;
-  top: 50%;
+  bottom: 0;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
   width: max(100%, calc(100svh * (1672 / 941)));
   aspect-ratio: 1672 / 941;
   pointer-events: none;
