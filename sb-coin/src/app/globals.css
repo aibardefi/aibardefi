@@ -495,7 +495,7 @@ html {
   max-width: none;
 }
 .play3 .cs-coin {
-  animation: cscoin 1s cubic-bezier(0.5, 0, 0.78, 0.4) 0.35s forwards;
+  animation: cscoin 1.3s cubic-bezier(0.5, 0, 0.78, 0.4) 0.45s forwards;
 }
 @keyframes cscoin {
   0% { left: 18%; opacity: 0; }
@@ -517,7 +517,7 @@ html {
   mix-blend-mode: screen;
 }
 .play3 .cs-streak {
-  animation: csstreak 1.05s ease 0.35s forwards;
+  animation: csstreak 1.37s ease 0.45s forwards;
 }
 @keyframes csstreak {
   0% { opacity: 0; transform: translate(-100%, -50%) scaleX(0.2); }
@@ -538,7 +538,7 @@ html {
   pointer-events: none;
 }
 .play3 .cs-green {
-  animation: csgreen 0.5s ease 1.25s forwards, cspulse 1.8s ease-in-out 1.9s infinite;
+  animation: csgreen 0.65s ease 1.63s forwards, cspulse 2.34s ease-in-out 2.47s infinite;
 }
 @keyframes csgreen {
   to { opacity: 0.9; }
@@ -563,7 +563,7 @@ html {
   max-width: none;
 }
 .play3 .cs-tube {
-  animation: cstube 0.55s ease 1.55s both;
+  animation: cstube 0.72s ease 2.02s both;
 }
 @keyframes cstube {
   0% { opacity: 0; transform: translate(-50%, -25%) scale(0.5); }
@@ -600,7 +600,7 @@ html {
   pointer-events: none;
 }
 .play3 .cs-med {
-  animation: csmed 0.8s ease 1.7s backwards, cspulse 2.2s ease-in-out 2.5s infinite;
+  animation: csmed 1.04s ease 2.21s backwards, cspulse 2.86s ease-in-out 3.25s infinite;
 }
 @keyframes csmed {
   0% { opacity: 0; transform: translate(-50%, -50%) scale(1); }

@@ -109,14 +109,14 @@ export function ClaimSection() {
             aria-label="Replay: watch the memecoin claim"
             className="inline-flex cursor-pointer items-center gap-2.5 whitespace-nowrap text-[11px] font-bold uppercase tracking-[0.22em] text-navy/85 transition-colors hover:text-navy lg:text-[13px]"
           >
-            Watch Again
+            Exchange
             <motion.span
               aria-hidden
-              animate={reduced ? undefined : { rotate: [0, 360] }}
-              transition={{ duration: 2.2, repeat: Infinity, ease: "linear" }}
+              animate={reduced ? undefined : { y: [0, 5, 0] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
               className="text-base leading-none"
             >
-              ↻
+              ↓
             </motion.span>
           </button>
         </div>
