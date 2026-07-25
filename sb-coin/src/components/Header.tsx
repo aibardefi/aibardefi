@@ -11,7 +11,7 @@ const BUTTON_BASE =
 
 export function Header() {
   return (
-    <header className="relative z-30 flex w-full items-center justify-between gap-3 px-5 pt-5 sm:px-8 sm:pt-7 lg:absolute lg:inset-x-0 lg:top-0 lg:px-10 lg:pt-8">
+    <header className="fixed inset-x-0 top-0 z-50 flex w-full items-center justify-between gap-3 px-5 pt-5 sm:px-8 sm:pt-7 lg:px-10 lg:pt-8">
       <a href="#" aria-label="$SB home" className="shrink-0">
         <SbLogo className="w-[92px] sm:w-[112px] lg:w-[132px]" />
       </a>

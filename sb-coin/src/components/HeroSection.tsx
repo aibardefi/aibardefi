@@ -106,7 +106,7 @@ export function HeroSection() {
 
         <Header />
 
-        <div className="relative z-20 px-5 pt-10 sm:px-8 lg:absolute lg:top-1/2 lg:left-[4.5%] lg:max-w-[46%] lg:-translate-y-[54%] lg:px-0 lg:pt-0">
+        <div className="relative z-20 px-5 pt-24 sm:px-8 sm:pt-28 lg:absolute lg:top-1/2 lg:left-[4.5%] lg:max-w-[46%] lg:-translate-y-[54%] lg:px-0 lg:pt-0">
           <h1 className="text-[clamp(2.25rem,10.5vw,3.5rem)] leading-[1.02] font-extrabold tracking-[-0.02em] text-navy uppercase lg:text-[clamp(2.75rem,10svh,6.75rem)]">
             Lock <span className="text-orange">Memes.</span>
             <br />
@@ -214,8 +214,6 @@ export function HeroSection() {
         </div>
       </section>
 
-      {/* Scroll target. Intentionally empty until the real section exists. */}
-      <section id="story" aria-hidden className="h-[60svh] w-full bg-cream" />
     </>
   );
 }

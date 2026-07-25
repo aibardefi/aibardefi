@@ -1,0 +1,197 @@
+"use client";
+
+import Image from "next/image";
+import { useRef, useState } from "react";
+import { motion, useInView, useReducedMotion } from "framer-motion";
+
+/**
+ * Section 2: memecoins lock into the vault, $SB comes out.
+ *
+ * The whole sequence is CSS-transition driven off a single `.play` class
+ * (added when 35% of the section is in view, removed when it leaves, so the
+ * animation replays on re-entry). Geometry follows the approved section mock;
+ * positions are % of the same height-fit stage system the hero uses.
+ */
+
+const INSIDE = [
+  { src: "/assets/coin-ansemcat.webp", x: 42, y: 52, size: 15, zoom: 234, d2: null },
+  { src: "/assets/coin-tendies.webp", x: 60, y: 52, size: 15, zoom: 202, d2: null },
+  { src: "/assets/coin-cashdog.webp", x: 36, y: 64, size: 12, zoom: 212, d2: "1.35s" },
+  { src: "/assets/coin-cashcat.webp", x: 51, y: 67, size: 12, zoom: 190, d2: "1.7s" },
+  { src: "/assets/coin-littlejohn.webp", x: 65, y: 64, size: 12, zoom: 182, d2: "2.05s" },
+];
+
+const TRAVEL = [
+  { src: "/assets/coin-cashdog.webp", zoom: 212, d: "0.35s", sx: 30.5, sy: 63.5, tsz: 3.6, msx: 12, msy: 58, mtsz: 9 },
+  { src: "/assets/coin-cashcat.webp", zoom: 190, d: "0.7s", sx: 36, sy: 60, tsz: 3.9, msx: 22, msy: 52, mtsz: 10 },
+  { src: "/assets/coin-littlejohn.webp", zoom: 182, d: "1.05s", sx: 42.3, sy: 57.5, tsz: 4.2, msx: 32, msy: 47, mtsz: 10.5 },
+];
+
+export function VaultSection() {
+  const reduced = useReducedMotion();
+  const ref = useRef<HTMLElement>(null);
+  const inView = useInView(ref, { amount: 0.35 });
+  // Swap in the real art the moment the files exist in /assets — until then
+  // the vault shows a labelled slot and $SB is the bear's medallion, cropped.
+  const [hasVault, setHasVault] = useState(true);
+  const [hasSbCoin, setHasSbCoin] = useState(true);
+
+  const scrollNext = () => {
+    document.getElementById("powers")?.scrollIntoView({
+      behavior: reduced ? "auto" : "smooth",
+      block: "start",
+    });
+  };
+
+  return (
+    <>
+      <section
+        id="story"
+        ref={ref}
+        className={`relative flex min-h-[100svh] w-full flex-col overflow-hidden bg-cream lg:block ${inView ? "play" : ""}`}
+      >
+        <div className="v-copy relative z-20 px-5 pt-24 sm:px-8 sm:pt-28">
+          <h2 className="text-[clamp(2rem,9vw,3rem)] leading-[1.04] font-extrabold tracking-[-0.02em] text-navy uppercase lg:text-[clamp(2.25rem,8.5svh,5.5rem)]">
+            Lock Memes.
+            <br />
+            Unlock <span className="text-orange">$SB.</span>
+          </h2>
+          <p className="mt-4 max-w-[26ch] text-[clamp(0.95rem,4vw,1.15rem)] font-semibold text-navy/90 lg:text-[clamp(1rem,2.6svh,1.45rem)]">
+            Keep your memecoins and get $SB without selling them.
+          </p>
+        </div>
+
+        <div className="v-stage relative z-10 mt-2">
+          <div className="vault">
+            <div className="vault-glow" aria-hidden />
+            {hasVault ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src="/assets/vault.webp"
+                alt="Stone vault holding locked memecoins"
+                className="h-full w-full object-contain select-none"
+                onError={() => setHasVault(false)}
+              />
+            ) : (
+              <div className="vault-ph">Vault art</div>
+            )}
+            {INSIDE.map((c) => (
+              <span
+                key={`${c.src}-in`}
+                aria-hidden
+                className={`icoin ${c.d2 ? "arrive" : ""}`}
+                style={
+                  {
+                    left: `${c.x}%`,
+                    top: `${c.y}%`,
+                    width: `${c.size}%`,
+                    "--zoom": `${c.zoom}%`,
+                    "--d2": c.d2 ?? undefined,
+                  } as React.CSSProperties
+                }
+              >
+                <Image src={c.src} alt="" width={1536} height={1024} />
+              </span>
+            ))}
+          </div>
+
+          {TRAVEL.map((c) => (
+            <span
+              key={`${c.src}-t`}
+              aria-hidden
+              className="tcoin"
+              style={
+                {
+                  "--sx": `${c.sx}%`,
+                  "--sy": `${c.sy}%`,
+                  "--tsz": `${c.tsz}%`,
+                  "--gx": "54%",
+                  "--gy": "54.4%",
+                  "--msx": `${c.msx}%`,
+                  "--msy": `${c.msy}%`,
+                  "--mtsz": `${c.mtsz}%`,
+                  "--mgx": "50%",
+                  "--mgy": "45%",
+                  "--d": c.d,
+                  "--zoom": `${c.zoom}%`,
+                } as React.CSSProperties
+              }
+            >
+              <Image src={c.src} alt="" width={1536} height={1024} />
+            </span>
+          ))}
+
+          {/* The glowing $SB coin that leaves the vault. */}
+          <span className="sbout" aria-hidden>
+            <span className="halo" />
+            <span className="disc">
+              {hasSbCoin ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src="/assets/sb-gold-coin.webp"
+                  alt=""
+                  className="relative h-full w-full object-contain"
+                  onError={() => setHasSbCoin(false)}
+                />
+              ) : (
+                // Fallback: the bear's own medallion, cropped from bear.webp.
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src="/assets/bear.webp"
+                  alt=""
+                  style={{ width: "870%", left: "-349%", top: "-558%" }}
+                />
+              )}
+            </span>
+          </span>
+
+          <div className="bear2" aria-hidden>
+            <motion.div
+              animate={
+                reduced
+                  ? undefined
+                  : { scaleY: [1, 1.012, 1], scaleX: [1, 1.008, 1], y: [0, -3, 0] }
+              }
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1.3 }}
+              style={{ transformOrigin: "bottom center" }}
+              className="relative"
+            >
+              <Image
+                src="/assets/bear.webp"
+                alt=""
+                width={1024}
+                height={1536}
+                className="h-auto w-full select-none"
+              />
+              <div className="medspot">
+                <div className="med-glow2" />
+              </div>
+            </motion.div>
+          </div>
+        </div>
+
+        <div className="v-cue relative z-20 px-5 pt-4 pb-10 sm:px-8">
+          <button
+            type="button"
+            onClick={scrollNext}
+            aria-label="See what powers $SB — scroll to the next section"
+            className="inline-flex cursor-pointer items-center gap-2.5 text-[11px] font-bold uppercase tracking-[0.22em] text-navy/85 transition-colors hover:text-navy lg:text-[13px]"
+          >
+            See What Powers $SB
+            <motion.span
+              aria-hidden
+              animate={reduced ? undefined : { y: [0, 5, 0] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+              className="text-base leading-none"
+            >
+              ↓
+            </motion.span>
+          </button>
+        </div>
+      </section>
+
+      {/* Scroll target for the cue. Intentionally empty until section 3 exists. */}
+      <section id="powers" aria-hidden className="h-[60svh] w-full bg-cream" />
+    </>
+  );
+}
