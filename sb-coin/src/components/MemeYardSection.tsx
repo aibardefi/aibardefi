@@ -1,6 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import { asset } from "@/lib/asset";
+
+/**
+ * The live $SB token contract address. Leave as an empty string until the
+ * token launches — the bar then shows a "coming soon" state so nobody copies
+ * a placeholder by mistake. Paste the real address here to make it copyable.
+ */
+const CONTRACT_ADDRESS = "";
 
 /**
  * Page 4: the Meme Yard.
@@ -53,14 +61,73 @@ const SOCIALS = [
   { label: "Discord", href: "#", d: "M20.3 4.4A19.8 19.8 0 0 0 15.4 3l-.3.5a18 18 0 0 1 4.3 1.4A17.6 17.6 0 0 0 3.6 5 18 18 0 0 1 8 3.5L7.7 3a19.8 19.8 0 0 0-5 1.4C.4 8 .1 11.6.3 15.1a20 20 0 0 0 6 3l.8-1.4c-.7-.3-1.3-.6-1.9-1l.5-.3a14.2 14.2 0 0 0 12.6 0l.5.3c-.6.4-1.2.7-1.9 1l.8 1.4a20 20 0 0 0 6-3c.4-4.2-.5-7.8-3.4-10.7ZM8.3 13.2c-1 0-1.7-.9-1.7-1.9s.8-1.9 1.7-1.9 1.7.9 1.7 1.9-.7 1.9-1.7 1.9Zm7.4 0c-1 0-1.7-.9-1.7-1.9s.8-1.9 1.7-1.9 1.7.9 1.7 1.9-.7 1.9-1.7 1.9Z" },
 ];
 
+/**
+ * Copyable contract-address pill. Clicking copies the address to the clipboard
+ * (with a legacy execCommand fallback) and flashes "Copied!". While the address
+ * is unset it renders a non-interactive "coming soon" state.
+ */
+function ContractAddress() {
+  const [copied, setCopied] = useState(false);
+  const has = CONTRACT_ADDRESS.length > 0;
+
+  const copy = async () => {
+    if (!has) return;
+    try {
+      await navigator.clipboard.writeText(CONTRACT_ADDRESS);
+    } catch {
+      const ta = document.createElement("textarea");
+      ta.value = CONTRACT_ADDRESS;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand("copy");
+      } catch {
+        /* clipboard unavailable — nothing else to try */
+      }
+      document.body.removeChild(ta);
+    }
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1600);
+  };
+
+  return (
+    <button
+      type="button"
+      className="y-ca"
+      onClick={copy}
+      disabled={!has}
+      aria-label={has ? "Copy the $SB contract address" : "Contract address coming soon"}
+    >
+      <span className="y-ca-label">CA</span>
+      <span className="y-ca-addr">{has ? CONTRACT_ADDRESS : "Coming soon"}</span>
+      {has && (
+        <span className="y-ca-icon" aria-hidden>
+          {copied ? (
+            "Copied!"
+          ) : (
+            <>
+              <svg viewBox="0 0 24 24" aria-hidden>
+                <path d="M9 3h9a2 2 0 0 1 2 2v11h-2V5H9V3Zm-4 4h9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Zm0 2v10h9V9H5Z" />
+              </svg>
+              Copy
+            </>
+          )}
+        </span>
+      )}
+    </button>
+  );
+}
+
 export function MemeYardSection() {
   return (
     <section id="yard">
       <div className="y-copy">
         <h2 className="text-[clamp(2.1rem,9vw,3.2rem)] leading-[1.02] font-extrabold tracking-[-0.02em] text-navy uppercase lg:text-[clamp(2.5rem,7svh,4.6rem)]">
-          Welcome To
+          The Meme
           <br />
-          The <span className="text-orange">Meme Yard.</span>
+          Powered By <span className="text-orange">Memes.</span>
         </h2>
         <p className="mt-4 text-[clamp(0.95rem,4vw,1.15rem)] font-semibold text-navy/90 lg:text-[clamp(1rem,2.4svh,1.35rem)]">
           Meme power. Community chaos.
@@ -70,6 +137,7 @@ export function MemeYardSection() {
         <a className="y-join" href="#">
           Join The Yard
         </a>
+        <ContractAddress />
         <div className="y-social">
           {SOCIALS.map((social) => {
             const external = social.href !== "#";
