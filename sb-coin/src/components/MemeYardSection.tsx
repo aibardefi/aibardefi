@@ -46,9 +46,9 @@ const YARD: Yard[] = [
 ];
 
 const SOCIALS = [
-  { label: "X (Twitter)", d: "M18.9 1.6h3.7l-8 9.1L24 22.4h-7.4l-5.8-7.6-6.6 7.6H.5l8.6-9.8L0 1.6h7.6l5.2 6.9 6.1-6.9Zm-1.3 18.6h2L6.5 3.7H4.3l13.3 16.5Z" },
-  { label: "Telegram", d: "M9.8 15.6 9.6 19c.4 0 .6-.2.8-.4l2-1.9 4.1 3c.8.4 1.3.2 1.5-.7l2.7-12.7c.3-1.2-.4-1.6-1.2-1.3L2.4 9.6c-1.2.5-1.2 1.1-.2 1.4l4.3 1.3 9.9-6.2c.5-.3.9-.1.5.2l-8 7.3Z" },
-  { label: "Discord", d: "M20.3 4.4A19.8 19.8 0 0 0 15.4 3l-.3.5a18 18 0 0 1 4.3 1.4A17.6 17.6 0 0 0 3.6 5 18 18 0 0 1 8 3.5L7.7 3a19.8 19.8 0 0 0-5 1.4C.4 8 .1 11.6.3 15.1a20 20 0 0 0 6 3l.8-1.4c-.7-.3-1.3-.6-1.9-1l.5-.3a14.2 14.2 0 0 0 12.6 0l.5.3c-.6.4-1.2.7-1.9 1l.8 1.4a20 20 0 0 0 6-3c.4-4.2-.5-7.8-3.4-10.7ZM8.3 13.2c-1 0-1.7-.9-1.7-1.9s.8-1.9 1.7-1.9 1.7.9 1.7 1.9-.7 1.9-1.7 1.9Zm7.4 0c-1 0-1.7-.9-1.7-1.9s.8-1.9 1.7-1.9 1.7.9 1.7 1.9-.7 1.9-1.7 1.9Z" },
+  { label: "X (Twitter)", href: "https://x.com/sbmemecoin", d: "M18.9 1.6h3.7l-8 9.1L24 22.4h-7.4l-5.8-7.6-6.6 7.6H.5l8.6-9.8L0 1.6h7.6l5.2 6.9 6.1-6.9Zm-1.3 18.6h2L6.5 3.7H4.3l13.3 16.5Z" },
+  { label: "Telegram", href: "https://t.me/sbmemetoken", d: "M9.8 15.6 9.6 19c.4 0 .6-.2.8-.4l2-1.9 4.1 3c.8.4 1.3.2 1.5-.7l2.7-12.7c.3-1.2-.4-1.6-1.2-1.3L2.4 9.6c-1.2.5-1.2 1.1-.2 1.4l4.3 1.3 9.9-6.2c.5-.3.9-.1.5.2l-8 7.3Z" },
+  { label: "Discord", href: "#", d: "M20.3 4.4A19.8 19.8 0 0 0 15.4 3l-.3.5a18 18 0 0 1 4.3 1.4A17.6 17.6 0 0 0 3.6 5 18 18 0 0 1 8 3.5L7.7 3a19.8 19.8 0 0 0-5 1.4C.4 8 .1 11.6.3 15.1a20 20 0 0 0 6 3l.8-1.4c-.7-.3-1.3-.6-1.9-1l.5-.3a14.2 14.2 0 0 0 12.6 0l.5.3c-.6.4-1.2.7-1.9 1l.8 1.4a20 20 0 0 0 6-3c.4-4.2-.5-7.8-3.4-10.7ZM8.3 13.2c-1 0-1.7-.9-1.7-1.9s.8-1.9 1.7-1.9 1.7.9 1.7 1.9-.7 1.9-1.7 1.9Zm7.4 0c-1 0-1.7-.9-1.7-1.9s.8-1.9 1.7-1.9 1.7.9 1.7 1.9-.7 1.9-1.7 1.9Z" },
 ];
 
 export function MemeYardSection() {
@@ -69,14 +69,22 @@ export function MemeYardSection() {
           Join The Yard
         </a>
         <div className="y-social">
-          {SOCIALS.map((sisocial) => (
-            <a key={sisocial.label} href="#">
-              <svg viewBox="0 0 24 24" aria-hidden>
-                <path d={sisocial.d} />
-              </svg>
-              {sisocial.label}
-            </a>
-          ))}
+          {SOCIALS.map((social) => {
+            const external = social.href !== "#";
+            return (
+              <a
+                key={social.label}
+                href={social.href}
+                target={external ? "_blank" : undefined}
+                rel={external ? "noopener noreferrer" : undefined}
+              >
+                <svg viewBox="0 0 24 24" aria-hidden>
+                  <path d={social.d} />
+                </svg>
+                {social.label}
+              </a>
+            );
+          })}
         </div>
       </div>
 
