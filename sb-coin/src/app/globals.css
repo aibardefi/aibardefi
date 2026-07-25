@@ -82,8 +82,9 @@ html {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(to right, var(--cream), rgba(246, 237, 223, 0) 18%),
-    linear-gradient(to bottom, var(--cream), rgba(246, 237, 223, 0) 25%);
+    linear-gradient(to right, var(--cream), rgba(246, 237, 223, 0) 32%),
+    linear-gradient(to bottom, var(--cream), rgba(246, 237, 223, 0) 42%),
+    linear-gradient(to left, var(--cream), rgba(246, 237, 223, 0) 12%);
 }
 
 /*

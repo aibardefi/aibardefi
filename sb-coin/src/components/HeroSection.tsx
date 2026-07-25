@@ -131,10 +131,11 @@ export function HeroSection() {
             showMemePower={showMemePower}
             medallionRef={medallionRef}
           />
-        </div>
 
-        <div className="relative z-20 px-5 pt-6 pb-10 sm:px-8 lg:absolute lg:bottom-[12%] lg:left-[4.5%] lg:px-0 lg:pt-0 lg:pb-0">
-          <ScrollPrompt />
+          {/* Above the bear so it reads as his label and invites the click. */}
+          <div className="pointer-events-auto absolute top-[36%] left-1/2 z-20 -translate-x-1/2 whitespace-nowrap lg:top-[31%] lg:left-[72.8%]">
+            <ScrollPrompt />
+          </div>
         </div>
 
         {/* Coins fly in a fixed overlay because the coin and the medallion sit

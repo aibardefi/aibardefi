@@ -124,9 +124,9 @@ export const BEAR = {
    * Slightly positive so his soles sit on the mock's lower plaza line
    * (bear.webp has ~21% empty canvas below the soles).
    */
-  bottom: 2.8,
+  bottom: -1.8,
   /** Box width as % of stage width. */
-  width: 20.3,
+  width: 26,
   /** Centred and larger on the square mobile stage. */
   mobile: { x: 50, width: 44, bottom: -4 },
   /** Intrinsic pixel size of bear.webp, for next/image sizing. */
