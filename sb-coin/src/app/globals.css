@@ -1,0 +1,845 @@
+@import "tailwindcss";
+
+:root {
+  /* Sampled from design/homepage-reference.webp */
+  --cream: #f6eddf;
+  --navy: #14243f;
+  --orange: #f4581e;
+
+  /* Confetti dots scattered around the bear in the reference */
+  --dot-red: #e8564a;
+  --dot-orange: #f6a32b;
+  --dot-green: #6fc04a;
+  --dot-blue: #4a9be0;
+  --dot-yellow: #f5c63c;
+}
+
+@theme inline {
+  --color-cream: var(--cream);
+  --color-navy: var(--navy);
+  --color-orange: var(--orange);
+  --font-sans: var(--font-poppins);
+}
+
+html,
+body {
+  background: var(--cream);
+  color: var(--navy);
+}
+
+/* No horizontal scrollbar at any breakpoint. */
+html {
+  overflow-x: hidden;
+}
+
+/*
+ * The bear and coins must stay locked to the courtyard behind them, so this
+ * box replicates `object-cover` on the background's own aspect ratio: it fills
+ * the viewport, overflows on whichever axis is tighter, and never distorts.
+ * Percentage positions inside it therefore track the background exactly.
+ *
+ * Sized by HEIGHT, bottom-anchored and centred: narrower windows crop the
+ * scene's sides, wider windows leave side gaps that the full-bleed background
+ * fills. The bear and coins therefore never scale with window width — they
+ * hold the reference composition, feet on the plaza, at any viewport.
+ */
+.hero-stage {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100svh * (1672 / 941));
+  aspect-ratio: 1672 / 941;
+  pointer-events: none;
+}
+
+/* Below `lg` the hero stacks, so the stage becomes an ordinary block. */
+@media (max-width: 1023px) {
+  .hero-stage {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+  }
+}
+
+/*
+ * Desktop scenery: the courtyard art shrunk into the bottom-right of the
+ * scene (per the client mock), edges faded into the cream so it reads as a
+ * vignette rather than a full-bleed backdrop.
+ */
+.scenery {
+  position: absolute;
+  right: 0;
+  bottom: -4%;
+  width: 68%;
+  pointer-events: none;
+}
+.scenery::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to right, var(--cream), rgba(246, 237, 223, 0) 32%),
+    linear-gradient(to bottom, var(--cream), rgba(246, 237, 223, 0) 42%),
+    linear-gradient(to left, var(--cream), rgba(246, 237, 223, 0) 12%);
+}
+
+/*
+ * Bear and coins read their position from CSS variables so a single media
+ * query swaps the whole arrangement for mobile without duplicating markup.
+ * Desktop values are the defaults; below `lg` the mobile set takes over.
+ */
+.bear-pos {
+  left: var(--bx);
+  width: var(--bw);
+  bottom: var(--bb);
+}
+.coin-pos {
+  left: var(--x);
+  top: var(--y);
+  width: var(--sz);
+}
+@media (max-width: 1023px) {
+  .bear-pos {
+    left: var(--mbx);
+    width: var(--mbw);
+    bottom: var(--mbb);
+  }
+  .coin-pos {
+    left: var(--mx);
+    top: var(--my);
+    width: var(--msz);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ---------- Section 2: the vault ---------- */
+.v-cue {
+  position: absolute;
+  z-index: 20;
+  left: 50%;
+  top: 8%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+.v-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 5 / 7;
+}
+.vault {
+  position: absolute;
+  left: 50%;
+  bottom: 46%;
+  width: 92%;
+  aspect-ratio: 1536 / 1024;
+  transform: translateX(-50%);
+}
+.vault-ph {
+  width: 100%;
+  height: 100%;
+  border: 2px dashed rgba(20, 36, 63, 0.25);
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(20, 36, 63, 0.4);
+}
+.vault-glow {
+  position: absolute;
+  left: 55.6%;
+  top: 57%;
+  width: 52%;
+  aspect-ratio: 1 / 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(120, 230, 200, 0.5) 0%,
+    rgba(255, 214, 110, 0.4) 38%,
+    rgba(255, 214, 110, 0) 70%
+  );
+  opacity: 0;
+  transition: opacity 0.9s ease 0.1s;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+.play .vault-glow {
+  opacity: 1;
+  animation: vglow 2.4s ease-in-out 1.2s infinite;
+}
+@keyframes vglow {
+  0%, 100% { opacity: 0.65; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.14); }
+}
+.icoin {
+  position: absolute;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  overflow: hidden;
+  transform: translate(-50%, -50%);
+}
+.icoin img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: var(--zoom);
+  height: auto;
+  max-width: none;
+}
+.icoin.arrive {
+  opacity: 0;
+}
+.play .icoin.arrive {
+  opacity: 1;
+  transition: opacity 0.3s ease var(--d2);
+}
+.tcoin {
+  position: absolute;
+  left: var(--msx);
+  top: var(--msy);
+  width: var(--mtsz);
+  aspect-ratio: 1 / 1;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.tcoin::after {
+  content: "";
+  position: absolute;
+  right: 35%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 320%;
+  height: 60%;
+  border-radius: 50%;
+  background: linear-gradient(to left, var(--trail), transparent 78%);
+  filter: blur(7px);
+  opacity: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+.play .tcoin::after {
+  animation: trail 0.95s ease var(--d) forwards;
+}
+@keyframes trail {
+  0% { opacity: 0; }
+  22% { opacity: 0.95; }
+  72% { opacity: 0.55; }
+  100% { opacity: 0; }
+}
+.tcoin img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: var(--zoom);
+  height: auto;
+  max-width: none;
+}
+.play .tcoin {
+  left: var(--mgx);
+  top: var(--mgy);
+  width: calc(var(--mtsz) * 0.4);
+  opacity: 0;
+  transition:
+    left 0.8s cubic-bezier(0.6, 0, 0.85, 0.35) var(--d),
+    top 0.8s cubic-bezier(0.6, 0, 0.85, 0.35) var(--d),
+    width 0.8s ease var(--d),
+    opacity 0.18s ease calc(var(--d) + 0.68s);
+}
+.sbout {
+  position: absolute;
+  left: 84%;
+  top: 30%;
+  width: 13%;
+  aspect-ratio: 1 / 1;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  pointer-events: none;
+}
+.play .sbout {
+  animation:
+    sbout 1.05s cubic-bezier(0.2, 1.5, 0.4, 1) 2.55s backwards,
+    sbfloat 3s ease-in-out 3.6s infinite;
+}
+@keyframes sbout {
+  0% { opacity: 0; transform: translate(-50%, -50%) translateX(-70%) scale(0.2); }
+  45% { opacity: 1; }
+  72% { transform: translate(-50%, -50%) translateX(8%) scale(1.18); }
+  100% { opacity: 1; transform: translate(-50%, -50%) translateX(0) scale(1); }
+}
+@keyframes sbfloat {
+  0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+  50% { transform: translate(-50%, -50%) translateY(-6px); }
+}
+.sbbeam {
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  width: 260%;
+  height: 34%;
+  transform: translateY(-50%);
+  background: linear-gradient(to left, rgba(255, 208, 64, 0.9), rgba(255, 208, 64, 0) 85%);
+  filter: blur(4px);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+}
+.play .sbbeam {
+  animation: beam 1.1s ease 2.55s backwards;
+}
+@keyframes beam {
+  0% { opacity: 0; transform: translateY(-50%) scaleX(0.2); }
+  45% { opacity: 1; transform: translateY(-50%) scaleX(1); }
+  100% { opacity: 0; transform: translateY(-50%) scaleX(1); }
+}
+.sbburst {
+  position: absolute;
+  inset: -30%;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 214, 110, 0.9);
+  opacity: 0;
+  pointer-events: none;
+}
+.play .sbburst {
+  animation: burst 0.7s ease-out 2.75s backwards;
+}
+@keyframes burst {
+  0% { opacity: 0.95; transform: scale(0.3); }
+  100% { opacity: 0; transform: scale(1.9); }
+}
+.sbout .disc {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.sbout .disc img {
+  position: absolute;
+  max-width: none;
+  user-select: none;
+}
+.sbout .halo {
+  position: absolute;
+  inset: -75%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 235, 150, 0.95) 0%,
+    rgba(255, 200, 50, 0.5) 40%,
+    rgba(255, 184, 28, 0) 72%
+  );
+  mix-blend-mode: screen;
+}
+.play .sbout .halo {
+  animation: sbpulse 1.8s ease-in-out 3.2s infinite;
+}
+@keyframes sbpulse {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.28); }
+}
+.bear2 {
+  position: absolute;
+  left: 50%;
+  bottom: 0%;
+  width: 52%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.bear2 .medspot {
+  position: absolute;
+  left: 45.9%;
+  top: 46.6%;
+  width: 11.5%;
+  aspect-ratio: 1 / 1;
+  transform: translate(-50%, -50%);
+}
+.med-glow2 {
+  position: absolute;
+  inset: -70%;
+  border-radius: 50%;
+  opacity: 0;
+  background: radial-gradient(
+    circle,
+    rgba(255, 208, 64, 0.95) 0%,
+    rgba(255, 184, 28, 0.45) 42%,
+    rgba(255, 184, 28, 0) 72%
+  );
+}
+.play .med-glow2 {
+  animation: medglow2 0.8s ease-out 3.1s backwards;
+}
+@keyframes medglow2 {
+  0% { opacity: 0; transform: scale(1); }
+  40% { opacity: 1; transform: scale(1.6); }
+  100% { opacity: 0; transform: scale(1); }
+}
+
+@media (min-width: 1024px) {
+  .v-copy {
+    position: absolute;
+    left: 4.5%;
+    top: 32%;
+    max-width: 41%;
+    padding: 0;
+  }
+  .v-stage {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: calc(100svh * (1672 / 941));
+    aspect-ratio: 1672 / 941;
+    margin: 0;
+  }
+  .vault {
+    left: 48%;
+    bottom: 23%;
+    width: 45%;
+    transform: translateX(-50%);
+  }
+  .tcoin {
+    left: var(--sx);
+    top: var(--sy);
+    width: var(--tsz);
+  }
+  .play .tcoin {
+    left: var(--gx);
+    top: var(--gy);
+    width: calc(var(--tsz) * 0.4);
+  }
+  .sbout {
+    left: 65.5%;
+    top: 56.5%;
+    width: 5.6%;
+  }
+  .bear2 {
+    left: 87%;
+    width: 19%;
+    bottom: 13%;
+  }
+  .v-cue {
+    left: 48%;
+    top: 16%;
+    bottom: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tcoin,
+  .icoin.arrive,
+  .sbout,
+  .vault-glow {
+    transition-duration: 0.01s;
+  }
+  .play .sbout .halo,
+  .play .med-glow2 {
+    animation: none;
+  }
+  .play .sbout .halo {
+    opacity: 0.8;
+  }
+}
+
+/* ---------- Page 3: Claim Station ---------- */
+.c-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 5 / 7;
+}
+.station {
+  position: absolute;
+  left: 50%;
+  bottom: 30%;
+  width: 96%;
+  aspect-ratio: 1536 / 1024;
+  transform: translateX(-50%);
+}
+.station > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  user-select: none;
+}
+.cs-coin {
+  position: absolute;
+  top: 46.4%;
+  left: 18%;
+  width: 11%;
+  aspect-ratio: 1 / 1;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  pointer-events: none;
+}
+.cs-coin img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 236%;
+  height: auto;
+  max-width: none;
+}
+.play3 .cs-coin {
+  animation: cscoin 1.3s cubic-bezier(0.5, 0, 0.78, 0.4) 0.45s forwards;
+}
+@keyframes cscoin {
+  0% { left: 18%; opacity: 0; }
+  18% { opacity: 1; }
+  100% { left: 50.7%; opacity: 1; }
+}
+.cs-streak {
+  position: absolute;
+  top: 46.4%;
+  left: 50.7%;
+  width: 36%;
+  height: 4.5%;
+  transform: translate(-100%, -50%);
+  background: linear-gradient(to left, rgba(255, 210, 70, 0.95), rgba(255, 210, 70, 0) 82%);
+  filter: blur(3px);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+.play3 .cs-streak {
+  animation: csstreak 1.37s ease 0.45s forwards;
+}
+@keyframes csstreak {
+  0% { opacity: 0; transform: translate(-100%, -50%) scaleX(0.2); }
+  40% { opacity: 1; transform: translate(-100%, -50%) scaleX(1); }
+  100% { opacity: 0; }
+}
+.cs-green {
+  position: absolute;
+  top: 46%;
+  left: 62%;
+  width: 13%;
+  aspect-ratio: 1 / 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(90, 240, 100, 0.85), rgba(90, 240, 100, 0) 66%);
+  opacity: 0;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.play3 .cs-green {
+  animation: csgreen 0.65s ease 1.63s forwards, cspulse 2.34s ease-in-out 2.47s infinite;
+}
+@keyframes csgreen {
+  to { opacity: 0.9; }
+}
+.cs-tube {
+  position: absolute;
+  top: 66.5%;
+  left: 55.3%;
+  width: 8.5%;
+  aspect-ratio: 1 / 1;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  pointer-events: none;
+}
+.cs-tube img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 213%;
+  height: auto;
+  max-width: none;
+}
+.play3 .cs-tube {
+  animation: cstube 0.72s ease 2.02s both;
+}
+@keyframes cstube {
+  0% { opacity: 0; transform: translate(-50%, -25%) scale(0.5); }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+.clerk {
+  position: absolute;
+  left: 50%;
+  bottom: -2%;
+  width: 46%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.clerk .breathe {
+  position: relative;
+}
+.clerk .breathe > img {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+}
+.cs-med {
+  position: absolute;
+  top: 47.8%;
+  left: 46.2%;
+  width: 15%;
+  aspect-ratio: 1 / 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 214, 90, 0.9), rgba(255, 184, 28, 0) 68%);
+  opacity: 0;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.play3 .cs-med {
+  animation: csmed 1.04s ease 2.21s backwards, cspulse 2.86s ease-in-out 3.25s infinite;
+}
+@keyframes csmed {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+  45% { opacity: 0.95; transform: translate(-50%, -50%) scale(1.4); }
+  100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.05); }
+}
+@keyframes cspulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 0.95; }
+}
+.c-cue {
+  position: absolute;
+  z-index: 20;
+  left: 50%;
+  top: 8%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+@media (min-width: 1024px) {
+  .c-copy {
+    position: absolute;
+    left: 4.5%;
+    top: 29%;
+    max-width: 40%;
+    padding: 0;
+  }
+  .c-stage {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: calc(100svh * (1672 / 941));
+    aspect-ratio: 1672 / 941;
+    margin: 0;
+  }
+  .station {
+    left: 50%;
+    bottom: 15%;
+    width: 62%;
+  }
+  .clerk {
+    left: 86%;
+    width: 20%;
+    bottom: 8%;
+  }
+  .c-cue {
+    left: 50%;
+    top: 14%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .play3 .cs-coin,
+  .play3 .cs-streak,
+  .play3 .cs-green,
+  .play3 .cs-tube,
+  .play3 .cs-med {
+    animation-duration: 0.01s;
+    animation-delay: 0s;
+  }
+}
+
+/* ---------- Page 4: Meme Yard ---------- */
+#yard {
+  position: relative;
+  width: 100%;
+  min-height: 100svh;
+  background: var(--cream);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.y-copy {
+  position: relative;
+  z-index: 20;
+  padding: 96px 20px 0;
+}
+.y-copy h2 {
+  text-wrap: balance;
+}
+.y-join {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 22px;
+  border-radius: 9999px;
+  padding: 14px 30px;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #fff;
+  background: var(--orange);
+  text-decoration: none;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s, filter 0.2s;
+}
+.y-join:hover {
+  transform: scale(1.06) translateY(-2px);
+  box-shadow: 0 12px 30px -8px rgba(244, 88, 30, 0.7);
+  filter: brightness(1.06);
+}
+.y-join:active {
+  transform: scale(1.01);
+}
+.y-social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-top: 20px;
+}
+.y-social a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--navy);
+  opacity: 0.78;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+.y-social a:hover {
+  opacity: 1;
+}
+.y-social svg {
+  width: 15px;
+  height: 15px;
+  fill: currentColor;
+}
+.y-stage {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  aspect-ratio: 1672/941;
+  margin-top: 6px;
+}
+.p4c {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.p4a {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  animation-duration: var(--dur);
+  animation-delay: var(--delay);
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+.p4a > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  user-select: none;
+}
+.p4crop {
+  overflow: hidden;
+}
+.p4crop > img {
+  height: auto;
+}
+.a-bob { animation-name: p4bob; }
+.a-bounce { animation-name: p4bounce; }
+.a-wobble { animation-name: p4wobble; }
+.a-wiggle { animation-name: p4wiggle; }
+.a-sway { animation-name: p4sway; }
+.a-peck { animation-name: p4peck; }
+.a-bass { animation-name: p4bass; }
+.a-flag { animation-name: p4flag; }
+.a-king { animation-name: p4king; }
+@keyframes p4bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5%); } }
+@keyframes p4bounce { 0%, 100% { transform: translateY(0) scaleY(1); } 45%, 55% { transform: translateY(-8%) scaleY(1.03); } }
+@keyframes p4wobble { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+@keyframes p4wiggle { 0%, 100% { transform: rotate(-5deg); } 25% { transform: rotate(5deg); } 50% { transform: rotate(-3deg); } 75% { transform: rotate(4deg); } }
+@keyframes p4sway { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } }
+@keyframes p4peck { 0%, 55%, 100% { transform: translateY(0) rotate(0); } 70% { transform: translateY(6%) rotate(7deg); } 85% { transform: translateY(0) rotate(0); } }
+@keyframes p4bass { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
+@keyframes p4flag { 0%, 100% { transform: rotate(-2deg) skewY(-1.5deg); } 50% { transform: rotate(2deg) skewY(1.5deg); } }
+@keyframes p4king { 0%, 60%, 100% { transform: rotate(0) scale(1); } 68% { transform: rotate(-1.3deg) scale(1.012); } 76% { transform: rotate(1deg) scale(1.012); } 84% { transform: rotate(0) scale(1); } }
+.king-med {
+  position: absolute;
+  left: 49%;
+  top: 47%;
+  width: 10%;
+  aspect-ratio: 1 / 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 214, 90, 0.85), rgba(255, 184, 28, 0) 68%);
+  mix-blend-mode: screen;
+  animation: kingglow 3.5s ease-in-out infinite;
+}
+@keyframes kingglow { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.9; } }
+.p4shine {
+  position: absolute;
+  left: 40%;
+  top: 46%;
+  width: 30%;
+  height: 11%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) rotate(-18deg);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), transparent);
+  opacity: 0;
+  animation: shine 5s ease-in-out 1s infinite;
+  mix-blend-mode: screen;
+}
+@keyframes shine { 0%, 82%, 100% { opacity: 0; } 86% { opacity: 0.9; } 92% { opacity: 0; } }
+.p4sparkle {
+  position: absolute;
+  left: 60%;
+  top: 32%;
+  width: 8%;
+  aspect-ratio: 1 / 1;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.95), transparent 60%);
+  opacity: 0;
+  animation: sparkle 3.6s ease-in-out 0.5s infinite;
+}
+@keyframes sparkle { 0%, 72%, 100% { opacity: 0; transform: scale(0.4); } 82% { opacity: 1; transform: scale(1); } }
+@media (min-width: 1024px) {
+  .y-copy {
+    position: absolute;
+    left: 4.5%;
+    top: 23%;
+    max-width: 46%;
+    padding: 0;
+    z-index: 20;
+  }
+  .y-stage {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: calc(100svh * (1672 / 941));
+    aspect-ratio: 1672 / 941;
+    margin: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .p4a, .king-med, .p4shine, .p4sparkle { animation: none; }
+}
