@@ -159,7 +159,7 @@ export function VaultSection() {
                     left: "50%",
                     top: "50%",
                     transform: "translate(-50%, -50%)",
-                    width: "455%",
+                    width: "236%",
                     height: "auto",
                   }}
                   onError={() => setHasSbCoin(false)}
@@ -222,8 +222,6 @@ export function VaultSection() {
         </div>
       </section>
 
-      {/* Scroll target for the cue. Intentionally empty until section 3 exists. */}
-      <section id="powers" aria-hidden className="h-[60svh] w-full bg-cream" />
     </>
   );
 }

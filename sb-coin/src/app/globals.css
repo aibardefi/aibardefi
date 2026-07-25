@@ -453,3 +453,213 @@ html {
     opacity: 0.8;
   }
 }
+
+/* ---------- Page 3: Claim Station ---------- */
+.c-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 5 / 7;
+}
+.station {
+  position: absolute;
+  left: 50%;
+  bottom: 30%;
+  width: 96%;
+  aspect-ratio: 1536 / 1024;
+  transform: translateX(-50%);
+}
+.station > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  user-select: none;
+}
+.cs-coin {
+  position: absolute;
+  top: 46.4%;
+  left: 18%;
+  width: 11%;
+  aspect-ratio: 1 / 1;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  pointer-events: none;
+}
+.cs-coin img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 236%;
+  height: auto;
+  max-width: none;
+}
+.play3 .cs-coin {
+  animation: cscoin 1s cubic-bezier(0.5, 0, 0.78, 0.4) 0.35s forwards;
+}
+@keyframes cscoin {
+  0% { left: 18%; opacity: 0; }
+  18% { opacity: 1; }
+  100% { left: 50.7%; opacity: 1; }
+}
+.cs-streak {
+  position: absolute;
+  top: 46.4%;
+  left: 50.7%;
+  width: 36%;
+  height: 4.5%;
+  transform: translate(-100%, -50%);
+  background: linear-gradient(to left, rgba(255, 210, 70, 0.95), rgba(255, 210, 70, 0) 82%);
+  filter: blur(3px);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+.play3 .cs-streak {
+  animation: csstreak 1.05s ease 0.35s forwards;
+}
+@keyframes csstreak {
+  0% { opacity: 0; transform: translate(-100%, -50%) scaleX(0.2); }
+  40% { opacity: 1; transform: translate(-100%, -50%) scaleX(1); }
+  100% { opacity: 0; }
+}
+.cs-green {
+  position: absolute;
+  top: 46%;
+  left: 62%;
+  width: 13%;
+  aspect-ratio: 1 / 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(90, 240, 100, 0.85), rgba(90, 240, 100, 0) 66%);
+  opacity: 0;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.play3 .cs-green {
+  animation: csgreen 0.5s ease 1.25s forwards, cspulse 1.8s ease-in-out 1.9s infinite;
+}
+@keyframes csgreen {
+  to { opacity: 0.9; }
+}
+.cs-tube {
+  position: absolute;
+  top: 66.5%;
+  left: 55.3%;
+  width: 8.5%;
+  aspect-ratio: 1 / 1;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  pointer-events: none;
+}
+.cs-tube img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 213%;
+  height: auto;
+  max-width: none;
+}
+.play3 .cs-tube {
+  animation: cstube 0.55s ease 1.55s both;
+}
+@keyframes cstube {
+  0% { opacity: 0; transform: translate(-50%, -25%) scale(0.5); }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+.clerk {
+  position: absolute;
+  left: 50%;
+  bottom: -2%;
+  width: 46%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.clerk .breathe {
+  position: relative;
+}
+.clerk .breathe > img {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+}
+.cs-med {
+  position: absolute;
+  top: 47.8%;
+  left: 46.2%;
+  width: 15%;
+  aspect-ratio: 1 / 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 214, 90, 0.9), rgba(255, 184, 28, 0) 68%);
+  opacity: 0;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.play3 .cs-med {
+  animation: csmed 0.8s ease 1.7s backwards, cspulse 2.2s ease-in-out 2.5s infinite;
+}
+@keyframes csmed {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+  45% { opacity: 0.95; transform: translate(-50%, -50%) scale(1.4); }
+  100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.05); }
+}
+@keyframes cspulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 0.95; }
+}
+.c-cue {
+  position: absolute;
+  z-index: 20;
+  left: 50%;
+  top: 8%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+@media (min-width: 1024px) {
+  .c-copy {
+    position: absolute;
+    left: 4.5%;
+    top: 29%;
+    max-width: 40%;
+    padding: 0;
+  }
+  .c-stage {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: calc(100svh * (1672 / 941));
+    aspect-ratio: 1672 / 941;
+    margin: 0;
+  }
+  .station {
+    left: 50%;
+    bottom: 15%;
+    width: 62%;
+  }
+  .clerk {
+    left: 86%;
+    width: 20%;
+    bottom: 8%;
+  }
+  .c-cue {
+    left: 50%;
+    top: 14%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .play3 .cs-coin,
+  .play3 .cs-streak,
+  .play3 .cs-green,
+  .play3 .cs-tube,
+  .play3 .cs-med {
+    animation-duration: 0.01s;
+    animation-delay: 0s;
+  }
+}
