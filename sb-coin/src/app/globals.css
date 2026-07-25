@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+:root {
+  /* Sampled from design/homepage-reference.webp */
+  --cream: #f6eddf;
+  --navy: #14243f;
+  --orange: #f4581e;
+
+  /* Confetti dots scattered around the bear in the reference */
+  --dot-red: #e8564a;
+  --dot-orange: #f6a32b;
+  --dot-green: #6fc04a;
+  --dot-blue: #4a9be0;
+  --dot-yellow: #f5c63c;
+}
+
+@theme inline {
+  --color-cream: var(--cream);
+  --color-navy: var(--navy);
+  --color-orange: var(--orange);
+  --font-sans: var(--font-poppins);
+}
+
+html,
+body {
+  background: var(--cream);
+  color: var(--navy);
+}
+
+/* No horizontal scrollbar at any breakpoint. */
+html {
+  overflow-x: hidden;
+}
+
+/*
+ * The bear and coins must stay locked to the courtyard behind them, so this
+ * box replicates `object-cover` on the background's own aspect ratio: it fills
+ * the viewport, overflows on whichever axis is tighter, and never distorts.
+ * Percentage positions inside it therefore track the background exactly.
+ */
+.hero-stage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: max(100%, calc(100svh * (1656 / 943)));
+  aspect-ratio: 1656 / 943;
+  pointer-events: none;
+}
+
+/* Below `lg` the hero stacks, so the stage becomes an ordinary block. */
+@media (max-width: 1023px) {
+  .hero-stage {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
