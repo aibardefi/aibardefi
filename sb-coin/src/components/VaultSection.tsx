@@ -14,11 +14,11 @@ import { motion, useInView, useReducedMotion } from "framer-motion";
  */
 
 const INSIDE = [
-  { src: "/assets/coin-ansemcat.webp", x: 50.5, y: 50, size: 9.5, zoom: 234, d2: "0.85s" },
-  { src: "/assets/coin-tendies.webp", x: 61, y: 52, size: 9.5, zoom: 202, d2: "1.1s" },
-  { src: "/assets/coin-cashdog.webp", x: 49, y: 64, size: 8, zoom: 212, d2: "1.35s" },
-  { src: "/assets/coin-cashcat.webp", x: 57.5, y: 66, size: 8, zoom: 190, d2: "1.6s" },
-  { src: "/assets/coin-littlejohn.webp", x: 66, y: 63, size: 8, zoom: 182, d2: "1.85s" },
+  { src: "/assets/coin-ansemcat.webp", x: 49.5, y: 45, size: 7.5, zoom: 234, d2: "0.85s" },
+  { src: "/assets/coin-tendies.webp", x: 60.5, y: 45, size: 7.5, zoom: 202, d2: "1.1s" },
+  { src: "/assets/coin-cashdog.webp", x: 49, y: 58, size: 7, zoom: 212, d2: "1.35s" },
+  { src: "/assets/coin-cashcat.webp", x: 55, y: 60, size: 7, zoom: 190, d2: "1.6s" },
+  { src: "/assets/coin-littlejohn.webp", x: 61, y: 58, size: 7, zoom: 182, d2: "1.85s" },
 ];
 
 const TRAVEL = [
@@ -125,8 +125,8 @@ export function VaultSection() {
                   "--sx": `${c.sx}%`,
                   "--sy": `${c.sy}%`,
                   "--tsz": `${c.tsz}%`,
-                  "--gx": "50.6%",
-                  "--gy": "56.5%",
+                  "--gx": "55%",
+                  "--gy": "51.5%",
                   "--msx": `${c.msx}%`,
                   "--msy": `${c.msy}%`,
                   "--mtsz": `${c.mtsz}%`,
