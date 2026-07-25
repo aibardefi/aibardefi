@@ -1,5 +1,7 @@
 "use client";
 
+import { asset } from "@/lib/asset";
+
 /**
  * Page 4: the Meme Yard.
  *
@@ -100,7 +102,7 @@ export function MemeYardSection() {
               style={{ "--dur": `${c.dur}s`, "--delay": `${c.delay}s`, transformOrigin: c.org || "bottom center" } as React.CSSProperties}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={c.src} alt="" />
+              <img src={asset(c.src)} alt="" />
               {c.king && <span className="king-med" />}
               {c.shine && <span className="p4shine" />}
               {c.sparkle && <span className="p4sparkle" />}

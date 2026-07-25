@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { asset } from "@/lib/asset";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 
@@ -87,7 +88,7 @@ export function VaultSection() {
             {hasVault ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                src="/assets/vault.webp"
+                src={asset("/assets/vault.webp")}
                 alt="Stone vault holding locked memecoins"
                 className="h-full w-full object-contain select-none"
                 onError={() => setHasVault(false)}
@@ -110,7 +111,7 @@ export function VaultSection() {
                   } as React.CSSProperties
                 }
               >
-                <Image src={c.src} alt="" width={1536} height={1024} />
+                <Image src={asset(c.src)} alt="" width={1536} height={1024} />
               </span>
             ))}
           </div>
@@ -138,7 +139,7 @@ export function VaultSection() {
                 } as React.CSSProperties
               }
             >
-              <Image src={c.src} alt="" width={1536} height={1024} />
+              <Image src={asset(c.src)} alt="" width={1536} height={1024} />
             </span>
           ))}
 
@@ -151,7 +152,7 @@ export function VaultSection() {
               {hasSbCoin ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  src="/assets/sb-gold-coin.webp"
+                  src={asset("/assets/sb-gold-coin.webp")}
                   alt=""
                   className="select-none"
                   style={{
@@ -168,7 +169,7 @@ export function VaultSection() {
                 // Fallback: the bear's own medallion, cropped from bear.webp.
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  src="/assets/bear.webp"
+                  src={asset("/assets/bear.webp")}
                   alt=""
                   style={{ width: "870%", left: "-349%", top: "-558%" }}
                 />
@@ -188,7 +189,7 @@ export function VaultSection() {
               className="relative"
             >
               <Image
-                src="/assets/bear.webp"
+                src={asset("/assets/bear.webp")}
                 alt=""
                 width={1024}
                 height={1536}

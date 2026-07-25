@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { asset } from "@/lib/asset";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 
 /**
@@ -59,19 +60,19 @@ export function ClaimSection() {
         <div className="station">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/assets/claim-station.webp"
+            src={asset("/assets/claim-station.webp")}
             alt="$SB claim station"
             className="h-full w-full object-contain select-none"
           />
           <span className="cs-streak" aria-hidden />
           <span className="cs-coin" aria-hidden>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/assets/sb-gold-coin.webp" alt="" />
+            <img src={asset("/assets/sb-gold-coin.webp")} alt="" />
           </span>
           <span className="cs-green" aria-hidden />
           <span className="cs-tube" aria-hidden>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/assets/returned-memecoin.webp" alt="" />
+            <img src={asset("/assets/returned-memecoin.webp")} alt="" />
           </span>
         </div>
 
@@ -94,7 +95,7 @@ export function ClaimSection() {
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/assets/bear-claim-clerk.webp"
+              src={asset("/assets/bear-claim-clerk.webp")}
               alt="The $SB bear clerk holding a gold key and a claim ticket"
             />
             <span className="cs-med" />

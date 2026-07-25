@@ -9,6 +9,7 @@ import {
   useReducedMotion,
   useSpring,
 } from "framer-motion";
+import { asset } from "@/lib/asset";
 import { BEAR, EYES, MEDALLION } from "@/lib/heroConfig";
 import { useBlink } from "@/hooks/useBlink";
 import { useFinePointer } from "@/hooks/useFinePointer";
@@ -105,7 +106,7 @@ export function BearMascot({ pulseKey, showMemePower, medallionRef }: Props) {
           className="relative"
         >
           <Image
-            src="/assets/bear.webp"
+            src={asset("/assets/bear.webp")}
             alt="The $SB bear, wearing a bucket hat and a gold $SB medallion"
             width={BEAR.intrinsic.width}
             height={BEAR.intrinsic.height}
@@ -121,7 +122,7 @@ export function BearMascot({ pulseKey, showMemePower, medallionRef }: Props) {
                 style={{ x: pupilX, y: pupilY }}
               >
                 <Image
-                  src="/assets/bear-eyes-open.webp"
+                  src={asset("/assets/bear-eyes-open.webp")}
                   alt=""
                   width={BEAR.intrinsic.width}
                   height={BEAR.intrinsic.height}
@@ -137,7 +138,7 @@ export function BearMascot({ pulseKey, showMemePower, medallionRef }: Props) {
                 transition={{ duration: EYES.blink.fadeMs / 1000 }}
               >
                 <Image
-                  src="/assets/bear-eyes-closed.webp"
+                  src={asset("/assets/bear-eyes-closed.webp")}
                   alt=""
                   width={BEAR.intrinsic.width}
                   height={BEAR.intrinsic.height}

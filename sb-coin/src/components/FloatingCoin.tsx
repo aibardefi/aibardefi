@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { motion, useAnimationControls, useReducedMotion } from "framer-motion";
+import { asset } from "@/lib/asset";
 import type { Coin } from "@/lib/heroConfig";
 
 type Props = {
@@ -96,7 +97,7 @@ export function FloatingCoin({ coin, hidden, onFeed, register }: Props) {
       {/* Zoomed past the button so the canvas's transparent padding doesn't
           shrink the visible coin — `size` stays the true diameter. */}
       <Image
-        src={coin.src}
+        src={asset(coin.src)}
         alt={coin.alt}
         width={1536}
         height={1024}

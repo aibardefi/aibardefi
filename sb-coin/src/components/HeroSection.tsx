@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { asset } from "@/lib/asset";
 import { BearMascot } from "@/components/BearMascot";
 import { FloatingCoin } from "@/components/FloatingCoin";
 import { Header } from "@/components/Header";
@@ -95,7 +96,7 @@ export function HeroSection() {
             scenery vignette inside the stage (per the client mock). */}
         <div aria-hidden className="absolute inset-0 lg:hidden">
           <Image
-            src="/assets/background.webp"
+            src={asset("/assets/background.webp")}
             alt=""
             fill
             priority
@@ -118,7 +119,7 @@ export function HeroSection() {
         <div className="hero-stage relative z-10 mt-4 lg:mt-0">
           <div aria-hidden className="scenery hidden lg:block">
             <Image
-              src="/assets/background.webp"
+              src={asset("/assets/background.webp")}
               alt=""
               width={1672}
               height={941}
@@ -175,7 +176,7 @@ export function HeroSection() {
               flights.map(({ coin, from, to }) => (
                 <motion.img
                   key={coin.id}
-                  src={coin.src}
+                  src={asset(coin.src)}
                   alt=""
                   initial={{
                     x: from.left,
