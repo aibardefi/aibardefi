@@ -68,91 +68,153 @@ const STEPS = [
 function BearMascot({ className, onClick }: { className?: string; onClick?: () => void }) {
   return (
     <div className={className} onClick={onClick} style={{ cursor: onClick ? "pointer" : undefined }}>
-      <svg viewBox="0 0 300 400" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-[0_0_40px_rgba(255,45,120,0.3)]">
-        {/* Legs */}
-        <ellipse cx="110" cy="355" rx="28" ry="32" fill="#7A3B10" />
-        <ellipse cx="190" cy="355" rx="28" ry="32" fill="#7A3B10" />
-        <ellipse cx="110" cy="378" rx="24" ry="12" fill="#5C2D0E" />
-        <ellipse cx="190" cy="378" rx="24" ry="12" fill="#5C2D0E" />
-        {/* Toe pads */}
-        <circle cx="98" cy="380" r="5" fill="#DEB887" opacity="0.5" />
-        <circle cx="110" cy="383" r="5" fill="#DEB887" opacity="0.5" />
-        <circle cx="122" cy="380" r="5" fill="#DEB887" opacity="0.5" />
-        <circle cx="178" cy="380" r="5" fill="#DEB887" opacity="0.5" />
-        <circle cx="190" cy="383" r="5" fill="#DEB887" opacity="0.5" />
-        <circle cx="202" cy="380" r="5" fill="#DEB887" opacity="0.5" />
+      <svg viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg" className="w-full h-full" style={{ filter: "drop-shadow(0 0 30px rgba(255,45,120,0.25))" }}>
+        <defs>
+          <radialGradient id="furMain" cx="50%" cy="40%" r="50%">
+            <stop offset="0%" stopColor="#C4793D" />
+            <stop offset="100%" stopColor="#7A3B10" />
+          </radialGradient>
+          <radialGradient id="furDark" cx="50%" cy="40%" r="50%">
+            <stop offset="0%" stopColor="#A0622A" />
+            <stop offset="100%" stopColor="#5C2D0E" />
+          </radialGradient>
+          <radialGradient id="belly" cx="50%" cy="35%" r="55%">
+            <stop offset="0%" stopColor="#FAEBD7" />
+            <stop offset="100%" stopColor="#D2B48C" />
+          </radialGradient>
+          <linearGradient id="hatTop" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#E01010" />
+            <stop offset="100%" stopColor="#8B0000" />
+          </linearGradient>
+          <radialGradient id="hatFur" cx="50%" cy="30%" r="60%">
+            <stop offset="0%" stopColor="#9B7B3A" />
+            <stop offset="100%" stopColor="#5C3317" />
+          </radialGradient>
+          <radialGradient id="noseShin" cx="35%" cy="30%" r="50%">
+            <stop offset="0%" stopColor="#4a3020" />
+            <stop offset="100%" stopColor="#1a0a00" />
+          </radialGradient>
+          <radialGradient id="eyeWhite" cx="45%" cy="40%" r="50%">
+            <stop offset="0%" stopColor="#ffffff" />
+            <stop offset="100%" stopColor="#e8e8e8" />
+          </radialGradient>
+          <linearGradient id="starGold" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#FFE44D" />
+            <stop offset="100%" stopColor="#FFB800" />
+          </linearGradient>
+          <filter id="innerShadow">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur" />
+            <feOffset dx="0" dy="2" result="offsetBlur" />
+            <feComposite in="SourceGraphic" in2="offsetBlur" operator="over" />
+          </filter>
+        </defs>
 
-        {/* Body */}
-        <ellipse cx="150" cy="275" rx="68" ry="88" fill="#8B4513" />
-        <ellipse cx="150" cy="282" rx="44" ry="58" fill="#DEB887" />
+        {/* === SHADOW on ground === */}
+        <ellipse cx="200" cy="488" rx="90" ry="12" fill="#000" opacity="0.15" />
 
-        {/* Left arm - waving */}
-        <g style={{ transformOrigin: "90px 230px", animation: "wave-arm 2s ease-in-out infinite" }}>
-          <ellipse cx="72" cy="258" rx="22" ry="48" fill="#A0522D" transform="rotate(-20 72 258)" />
-          <circle cx="58" cy="298" r="15" fill="#7A3B10" />
-          <circle cx="52" cy="293" r="4" fill="#DEB887" opacity="0.5" />
-          <circle cx="58" cy="290" r="4" fill="#DEB887" opacity="0.5" />
-          <circle cx="64" cy="293" r="4" fill="#DEB887" opacity="0.5" />
+        {/* === LEGS === */}
+        <path d="M140,400 C140,400 125,430 128,455 C130,470 145,478 155,475 C165,472 170,458 168,445 C166,430 160,400 160,400 Z" fill="url(#furDark)" stroke="#2A1506" strokeWidth="2.5" />
+        <path d="M240,400 C240,400 225,430 228,455 C230,470 245,478 255,475 C265,472 270,458 268,445 C266,430 260,400 260,400 Z" fill="url(#furDark)" stroke="#2A1506" strokeWidth="2.5" />
+        {/* Paw pads */}
+        <ellipse cx="148" cy="472" rx="16" ry="8" fill="#C4A67D" stroke="#2A1506" strokeWidth="1.5" />
+        <ellipse cx="248" cy="472" rx="16" ry="8" fill="#C4A67D" stroke="#2A1506" strokeWidth="1.5" />
+        <circle cx="139" cy="470" r="4" fill="#D2B48C" />
+        <circle cx="148" cy="473" r="4" fill="#D2B48C" />
+        <circle cx="157" cy="470" r="4" fill="#D2B48C" />
+        <circle cx="239" cy="470" r="4" fill="#D2B48C" />
+        <circle cx="248" cy="473" r="4" fill="#D2B48C" />
+        <circle cx="257" cy="470" r="4" fill="#D2B48C" />
+
+        {/* === BODY === */}
+        <path d="M120,280 C115,310 112,370 130,410 C140,430 175,440 200,440 C225,440 260,430 270,410 C288,370 285,310 280,280 C275,250 250,230 200,230 C150,230 125,250 120,280 Z" fill="url(#furMain)" stroke="#2A1506" strokeWidth="3" />
+        {/* Belly */}
+        <path d="M155,270 C145,290 142,340 152,380 C157,395 175,405 200,405 C225,405 243,395 248,380 C258,340 255,290 245,270 C238,258 220,252 200,252 C180,252 162,258 155,270 Z" fill="url(#belly)" stroke="#2A1506" strokeWidth="2" />
+
+        {/* === LEFT ARM (waving) === */}
+        <g style={{ transformOrigin: "130px 290px", animation: "wave-arm 2s ease-in-out infinite" }}>
+          <path d="M130,280 C110,285 85,310 78,340 C74,356 80,368 92,370 C104,372 115,362 118,348 C122,330 128,310 130,300 Z" fill="url(#furMain)" stroke="#2A1506" strokeWidth="2.5" />
+          <ellipse cx="88" cy="366" rx="16" ry="12" fill="#C4A67D" stroke="#2A1506" strokeWidth="1.5" />
+          <circle cx="80" cy="363" r="3.5" fill="#D2B48C" />
+          <circle cx="88" cy="360" r="3.5" fill="#D2B48C" />
+          <circle cx="96" cy="363" r="3.5" fill="#D2B48C" />
         </g>
-        {/* Right arm */}
-        <g>
-          <ellipse cx="228" cy="258" rx="22" ry="48" fill="#A0522D" transform="rotate(20 228 258)" />
-          <circle cx="242" cy="298" r="15" fill="#7A3B10" />
-          <circle cx="236" cy="293" r="4" fill="#DEB887" opacity="0.5" />
-          <circle cx="242" cy="290" r="4" fill="#DEB887" opacity="0.5" />
-          <circle cx="248" cy="293" r="4" fill="#DEB887" opacity="0.5" />
-        </g>
 
-        {/* Head */}
-        <circle cx="150" cy="138" r="65" fill="#A0522D" />
+        {/* === RIGHT ARM === */}
+        <path d="M270,280 C290,285 315,310 322,340 C326,356 320,368 308,370 C296,372 285,362 282,348 C278,330 272,310 270,300 Z" fill="url(#furMain)" stroke="#2A1506" strokeWidth="2.5" />
+        <ellipse cx="312" cy="366" rx="16" ry="12" fill="#C4A67D" stroke="#2A1506" strokeWidth="1.5" />
+        <circle cx="304" cy="363" r="3.5" fill="#D2B48C" />
+        <circle cx="312" cy="360" r="3.5" fill="#D2B48C" />
+        <circle cx="320" cy="363" r="3.5" fill="#D2B48C" />
 
-        {/* Ears */}
-        <circle cx="92" cy="88" r="24" fill="#A0522D" />
-        <circle cx="208" cy="88" r="24" fill="#A0522D" />
-        <circle cx="92" cy="88" r="14" fill="#DEB887" />
-        <circle cx="208" cy="88" r="14" fill="#DEB887" />
+        {/* === HEAD === */}
+        <path d="M200,68 C140,68 95,115 95,170 C95,225 140,265 200,265 C260,265 305,225 305,170 C305,115 260,68 200,68 Z" fill="url(#furMain)" stroke="#2A1506" strokeWidth="3" />
 
-        {/* Ushanka Hat */}
-        <ellipse cx="150" cy="78" rx="75" ry="34" fill="#8B0000" />
-        <rect x="76" y="88" width="148" height="24" rx="12" fill="#5C3317" />
-        <rect x="64" y="90" width="30" height="42" rx="15" fill="#5C3317" />
-        <rect x="206" y="90" width="30" height="42" rx="15" fill="#5C3317" />
+        {/* === EARS === */}
+        <circle cx="115" cy="100" r="30" fill="url(#furMain)" stroke="#2A1506" strokeWidth="2.5" />
+        <circle cx="285" cy="100" r="30" fill="url(#furMain)" stroke="#2A1506" strokeWidth="2.5" />
+        <circle cx="115" cy="100" r="18" fill="url(#belly)" stroke="#2A1506" strokeWidth="1.5" />
+        <circle cx="285" cy="100" r="18" fill="url(#belly)" stroke="#2A1506" strokeWidth="1.5" />
+
+        {/* === USHANKA HAT === */}
+        {/* Hat crown */}
+        <path d="M110,105 C110,60 145,30 200,30 C255,30 290,60 290,105 L290,115 C290,115 250,108 200,108 C150,108 110,115 110,115 Z" fill="url(#hatTop)" stroke="#2A1506" strokeWidth="2.5" />
+        {/* Fur band */}
+        <path d="M100,108 C100,98 140,92 200,92 C260,92 300,98 300,108 C300,125 260,130 200,130 C140,130 100,125 100,108 Z" fill="url(#hatFur)" stroke="#2A1506" strokeWidth="2.5" />
+        {/* Left ear flap */}
+        <path d="M108,112 C95,115 82,120 78,135 C75,148 80,160 92,162 C104,164 112,155 114,142 C116,130 112,118 108,112 Z" fill="url(#hatFur)" stroke="#2A1506" strokeWidth="2" />
+        {/* Right ear flap */}
+        <path d="M292,112 C305,115 318,120 322,135 C325,148 320,160 308,162 C296,164 288,155 286,142 C284,130 288,118 292,112 Z" fill="url(#hatFur)" stroke="#2A1506" strokeWidth="2" />
         {/* Gold star */}
-        <polygon points="150,58 155,71 169,72 159,81 162,94 150,87 138,94 141,81 131,72 145,71" fill="#FFD700" />
-        <polygon points="150,64 153,73 162,73 155,79 157,88 150,83 143,88 145,79 138,73 147,73" fill="#FFEC80" opacity="0.6" />
+        <polygon points="200,48 207,66 226,68 212,80 216,99 200,89 184,99 188,80 174,68 193,66" fill="url(#starGold)" stroke="#B8860B" strokeWidth="1.5" strokeLinejoin="round" />
+        {/* Star inner shine */}
+        <polygon points="200,56 204,68 216,69 207,77 210,89 200,83 190,89 193,77 184,69 196,68" fill="#FFE44D" opacity="0.5" />
 
-        {/* Muzzle */}
-        <ellipse cx="150" cy="157" rx="34" ry="27" fill="#DEB887" />
+        {/* === MUZZLE === */}
+        <path d="M155,170 C155,148 172,138 200,138 C228,138 245,148 245,170 C245,200 230,215 200,215 C170,215 155,200 155,170 Z" fill="url(#belly)" stroke="#2A1506" strokeWidth="2.5" />
 
-        {/* Eyes */}
-        <g style={{ transformOrigin: "123px 130px", animation: "blink 4s ease-in-out infinite" }}>
-          <ellipse cx="123" cy="130" rx="14" ry="16" fill="white" />
-          <circle cx="126" cy="133" r="8" fill="#1a1a1a" />
-          <circle cx="130" cy="129" r="3.5" fill="white" />
+        {/* === EYES === */}
+        {/* Left eye */}
+        <g style={{ transformOrigin: "170px 155px", animation: "blink 4s ease-in-out infinite" }}>
+          <ellipse cx="170" cy="155" rx="18" ry="22" fill="url(#eyeWhite)" stroke="#2A1506" strokeWidth="2.5" />
+          {/* Iris */}
+          <circle cx="174" cy="158" r="12" fill="#8B4513" />
+          <circle cx="174" cy="158" r="8" fill="#1a0a00" />
+          {/* Highlights */}
+          <circle cx="179" cy="150" r="5" fill="white" opacity="0.9" />
+          <circle cx="170" cy="162" r="3" fill="white" opacity="0.5" />
         </g>
-        <g style={{ transformOrigin: "177px 130px", animation: "blink 4s ease-in-out infinite 0.1s" }}>
-          <ellipse cx="177" cy="130" rx="14" ry="16" fill="white" />
-          <circle cx="174" cy="133" r="8" fill="#1a1a1a" />
-          <circle cx="170" cy="129" r="3.5" fill="white" />
+        {/* Right eye */}
+        <g style={{ transformOrigin: "230px 155px", animation: "blink 4s ease-in-out infinite 0.1s" }}>
+          <ellipse cx="230" cy="155" rx="18" ry="22" fill="url(#eyeWhite)" stroke="#2A1506" strokeWidth="2.5" />
+          <circle cx="226" cy="158" r="12" fill="#8B4513" />
+          <circle cx="226" cy="158" r="8" fill="#1a0a00" />
+          <circle cx="221" cy="150" r="5" fill="white" opacity="0.9" />
+          <circle cx="230" cy="162" r="3" fill="white" opacity="0.5" />
         </g>
 
-        {/* Angry eyebrows */}
-        <line x1="105" y1="110" x2="136" y2="117" stroke="#5C3317" strokeWidth="5" strokeLinecap="round" />
-        <line x1="195" y1="110" x2="164" y2="117" stroke="#5C3317" strokeWidth="5" strokeLinecap="round" />
+        {/* === EYEBROWS (angry) === */}
+        <path d="M148,128 C155,132 168,136 182,133" stroke="#2A1506" strokeWidth="6" strokeLinecap="round" fill="none" />
+        <path d="M252,128 C245,132 232,136 218,133" stroke="#2A1506" strokeWidth="6" strokeLinecap="round" fill="none" />
 
-        {/* Nose */}
-        <ellipse cx="150" cy="150" rx="11" ry="8" fill="#2F1810" />
-        <ellipse cx="147" cy="148" rx="4" ry="3" fill="#4a3525" opacity="0.6" />
+        {/* === NOSE === */}
+        <ellipse cx="200" cy="178" rx="14" ry="10" fill="url(#noseShin)" stroke="#1a0a00" strokeWidth="2" />
+        {/* Nose shine */}
+        <ellipse cx="195" cy="175" rx="6" ry="4" fill="white" opacity="0.25" />
 
-        {/* Mouth - smirk */}
-        <path d="M 128 167 Q 139 178 150 170 Q 161 178 172 167" fill="none" stroke="#2F1810" strokeWidth="3" strokeLinecap="round" />
-        {/* Teeth */}
-        <rect x="143" y="167" width="7" height="7" rx="1.5" fill="white" />
-        <rect x="151" y="167" width="7" height="7" rx="1.5" fill="white" />
+        {/* === MOUTH === */}
+        <path d="M178,195 C185,206 195,210 200,208 C205,210 215,206 222,195" fill="none" stroke="#2A1506" strokeWidth="3" strokeLinecap="round" />
+        {/* Fangs */}
+        <path d="M185,198 L188,208 L191,199" fill="white" stroke="#2A1506" strokeWidth="1.5" strokeLinejoin="round" />
+        <path d="M209,199 L212,208 L215,198" fill="white" stroke="#2A1506" strokeWidth="1.5" strokeLinejoin="round" />
 
-        {/* Cheek blush */}
-        <ellipse cx="105" cy="148" rx="12" ry="8" fill="#FF6B6B" opacity="0.25" />
-        <ellipse cx="195" cy="148" rx="12" ry="8" fill="#FF6B6B" opacity="0.25" />
+        {/* === CHEEK BLUSH === */}
+        <ellipse cx="148" cy="180" rx="15" ry="9" fill="#FF4D6D" opacity="0.2" />
+        <ellipse cx="252" cy="180" rx="15" ry="9" fill="#FF4D6D" opacity="0.2" />
+
+        {/* === FUR TEXTURE hints === */}
+        <path d="M130,150 C132,146 136,148 134,152" stroke="#8B5A2B" strokeWidth="1" opacity="0.3" fill="none" />
+        <path d="M270,150 C268,146 264,148 266,152" stroke="#8B5A2B" strokeWidth="1" opacity="0.3" fill="none" />
+        <path d="M200,240 C202,236 206,238 204,242" stroke="#A0784B" strokeWidth="1" opacity="0.3" fill="none" />
       </svg>
     </div>
   );
