@@ -33,61 +33,61 @@ export const COINS: Coin[] = [
     id: "cashcat",
     src: "/assets/coin-cashcat.webp",
     alt: "CashCat memecoin",
-    x: 47.7,
-    y: 24.6,
-    size: 5.0,
+    x: 57.3,
+    y: 25.0,
+    size: 8.4,
     duration: 3.4,
     delay: 0,
     amplitude: 1.5,
-    glow: "rgba(168, 178, 190, 0.85)",
+    glow: "rgba(168, 178, 190, 0.9)",
   },
   {
     id: "cashdog",
     src: "/assets/coin-cashdog.webp",
     alt: "CashDog memecoin",
-    x: 44.5,
-    y: 41.4,
-    size: 5.3,
+    x: 52.5,
+    y: 43.0,
+    size: 8.8,
     duration: 4.1,
     delay: 0.55,
     amplitude: 1.8,
-    glow: "rgba(150, 205, 45, 0.85)",
+    glow: "rgba(150, 205, 45, 0.9)",
   },
   {
     id: "littlejohn",
     src: "/assets/coin-littlejohn.webp",
     alt: "Little John memecoin",
-    x: 48.3,
-    y: 59.1,
-    size: 5.6,
+    x: 54.5,
+    y: 62.0,
+    size: 9.0,
     duration: 3.8,
     delay: 1.1,
     amplitude: 1.6,
-    glow: "rgba(212, 168, 42, 0.85)",
+    glow: "rgba(212, 168, 42, 0.9)",
   },
   {
     id: "tendies",
     src: "/assets/coin-tendies.webp",
     alt: "Tendies memecoin",
-    x: 88.3,
-    y: 24.2,
-    size: 5.1,
+    x: 85.5,
+    y: 26.0,
+    size: 8.4,
     duration: 4.4,
     delay: 0.3,
     amplitude: 1.7,
-    glow: "rgba(140, 200, 40, 0.85)",
+    glow: "rgba(140, 200, 40, 0.9)",
   },
   {
     id: "ansemcat",
     src: "/assets/coin-ansemcat.webp",
     alt: "Ansem Cat memecoin",
-    x: 91.8,
-    y: 46.3,
-    size: 5.4,
+    x: 88.5,
+    y: 46.0,
+    size: 8.8,
     duration: 3.6,
     delay: 0.85,
     amplitude: 1.9,
-    glow: "rgba(150, 90, 220, 0.85)",
+    glow: "rgba(150, 90, 220, 0.9)",
   },
 ];
 
@@ -97,11 +97,15 @@ export const COINS: Coin[] = [
  */
 export const BEAR = {
   /** Centre of the bear box, as % of stage width. */
-  x: 71.4,
-  /** Distance from stage bottom to the soles, as % of stage height. */
-  bottom: 8.5,
+  x: 70.6,
+  /**
+   * Distance from stage bottom to the box bottom, as % of stage height.
+   * Negative because bear.webp carries ~21% empty space below the soles;
+   * letting that overhang the stage bottom plants his feet on the paving.
+   */
+  bottom: -6,
   /** Box width as % of stage width. */
-  width: 31,
+  width: 24,
   /** Intrinsic pixel size of bear.webp, for next/image sizing. */
   intrinsic: { width: 1024, height: 1536 },
 } as const;
@@ -126,8 +130,14 @@ export const MEDALLION = {
  * false and the bear falls back to his baked-in expression — the brief is
  * explicit that a misaligned overlay is worse than no blink at all.
  */
+// The supplied eye layers are centred on their own canvas at ~46% height,
+// but the bear's eyes sit at ~18%, so the overlays land on his chest, not his
+// face. Per the brief — use them "only if they align" and "do not distort the
+// face" — the overlays are disabled and the bear keeps his baked-in eyes.
+// Re-exporting the eyes registered to bear.webp's canvas re-enables blink and
+// tracking by flipping this back to true.
 export const EYES = {
-  fitsBearCanvas: true,
+  fitsBearCanvas: false,
   /** Max pupil travel in px at the reference bear size. Kept small on purpose. */
   trackingRadius: 5,
   blink: { minMs: 4000, maxMs: 7000, holdMs: 130, fadeMs: 70 },

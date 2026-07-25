@@ -43,8 +43,8 @@ html {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: max(100%, calc(100svh * (1656 / 943)));
-  aspect-ratio: 1656 / 943;
+  width: max(100%, calc(100svh * (1672 / 941)));
+  aspect-ratio: 1672 / 941;
   pointer-events: none;
 }
 

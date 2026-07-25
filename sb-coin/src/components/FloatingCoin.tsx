@@ -77,14 +77,14 @@ export function FloatingCoin({ coin, hidden, onFeed }: Props) {
           filter instead would repaint on every frame. */}
       <span
         aria-hidden
-        className="absolute -inset-[22%] rounded-full blur-[14px] transition-opacity duration-300"
-        style={{ background: coin.glow, opacity: hovered ? 0.75 : 0.25 }}
+        className="absolute -inset-[18%] rounded-full blur-[16px] transition-opacity duration-300"
+        style={{ background: coin.glow, opacity: hovered ? 0.7 : 0 }}
       />
       <Image
         src={coin.src}
         alt={coin.alt}
-        width={512}
-        height={512}
+        width={1536}
+        height={1024}
         className="relative h-full w-full select-none object-contain"
       />
     </motion.button>

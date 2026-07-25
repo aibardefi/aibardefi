@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { motion } from "framer-motion";
 import { LINKS } from "@/lib/heroConfig";
+import { SbLogo } from "@/components/SbLogo";
 
 const BUTTON_BASE =
   "inline-flex items-center justify-center rounded-[10px] px-4 py-2.5 text-[11px] " +
@@ -13,14 +13,7 @@ export function Header() {
   return (
     <header className="relative z-30 flex w-full items-center justify-between gap-3 px-5 pt-5 sm:px-8 sm:pt-7 lg:absolute lg:inset-x-0 lg:top-0 lg:px-10 lg:pt-8">
       <a href="#" aria-label="$SB home" className="shrink-0">
-        <Image
-          src="/assets/sb-logo.webp"
-          alt="$SB"
-          width={1536}
-          height={1024}
-          priority
-          className="h-7 w-auto sm:h-9 lg:h-11"
-        />
+        <SbLogo className="w-[92px] sm:w-[112px] lg:w-[132px]" />
       </a>
 
       <nav className="flex shrink-0 items-center gap-2 sm:gap-3">
