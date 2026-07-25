@@ -14,17 +14,17 @@ import { motion, useInView, useReducedMotion } from "framer-motion";
  */
 
 const INSIDE = [
-  { src: "/assets/coin-ansemcat.webp", x: 42, y: 52, size: 15, zoom: 234, d2: null },
-  { src: "/assets/coin-tendies.webp", x: 60, y: 52, size: 15, zoom: 202, d2: null },
-  { src: "/assets/coin-cashdog.webp", x: 36, y: 64, size: 12, zoom: 212, d2: "1.35s" },
-  { src: "/assets/coin-cashcat.webp", x: 51, y: 67, size: 12, zoom: 190, d2: "1.7s" },
-  { src: "/assets/coin-littlejohn.webp", x: 65, y: 64, size: 12, zoom: 182, d2: "2.05s" },
+  { src: "/assets/coin-ansemcat.webp", x: 50.5, y: 50, size: 9.5, zoom: 234, d2: null },
+  { src: "/assets/coin-tendies.webp", x: 61, y: 52, size: 9.5, zoom: 202, d2: null },
+  { src: "/assets/coin-cashdog.webp", x: 49, y: 64, size: 8, zoom: 212, d2: "1.35s" },
+  { src: "/assets/coin-cashcat.webp", x: 57.5, y: 66, size: 8, zoom: 190, d2: "1.7s" },
+  { src: "/assets/coin-littlejohn.webp", x: 66, y: 63, size: 8, zoom: 182, d2: "2.05s" },
 ];
 
 const TRAVEL = [
-  { src: "/assets/coin-cashdog.webp", zoom: 212, d: "0.35s", sx: 30.5, sy: 63.5, tsz: 3.6, msx: 12, msy: 58, mtsz: 9 },
-  { src: "/assets/coin-cashcat.webp", zoom: 190, d: "0.7s", sx: 36, sy: 60, tsz: 3.9, msx: 22, msy: 52, mtsz: 10 },
-  { src: "/assets/coin-littlejohn.webp", zoom: 182, d: "1.05s", sx: 42.3, sy: 57.5, tsz: 4.2, msx: 32, msy: 47, mtsz: 10.5 },
+  { src: "/assets/coin-cashdog.webp", zoom: 212, d: "0.35s", sx: 30.5, sy: 63.5, tsz: 3.6, msx: 8, msy: 34, mtsz: 8 },
+  { src: "/assets/coin-cashcat.webp", zoom: 190, d: "0.7s", sx: 36, sy: 60, tsz: 3.9, msx: 15, msy: 31, mtsz: 8.5 },
+  { src: "/assets/coin-littlejohn.webp", zoom: 182, d: "1.05s", sx: 42.3, sy: 57.5, tsz: 4.2, msx: 22, msy: 29, mtsz: 9 },
 ];
 
 export function VaultSection() {
@@ -105,13 +105,13 @@ export function VaultSection() {
                   "--sx": `${c.sx}%`,
                   "--sy": `${c.sy}%`,
                   "--tsz": `${c.tsz}%`,
-                  "--gx": "54%",
-                  "--gy": "54.4%",
+                  "--gx": "50.6%",
+                  "--gy": "56.5%",
                   "--msx": `${c.msx}%`,
                   "--msy": `${c.msy}%`,
                   "--mtsz": `${c.mtsz}%`,
-                  "--mgx": "50%",
-                  "--mgy": "45%",
+                  "--mgx": "55%",
+                  "--mgy": "30%",
                   "--d": c.d,
                   "--zoom": `${c.zoom}%`,
                 } as React.CSSProperties
@@ -130,7 +130,15 @@ export function VaultSection() {
                 <img
                   src="/assets/sb-gold-coin.webp"
                   alt=""
-                  className="relative h-full w-full object-contain"
+                  className="select-none"
+                  style={{
+                    position: "absolute",
+                    left: "50%",
+                    top: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: "455%",
+                    height: "auto",
+                  }}
                   onError={() => setHasSbCoin(false)}
                 />
               ) : (

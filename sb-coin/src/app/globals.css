@@ -125,14 +125,14 @@ html {
 .v-stage {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 5 / 7;
 }
 .vault {
   position: absolute;
   left: 50%;
-  bottom: 20%;
-  width: 62%;
-  aspect-ratio: 480 / 550;
+  bottom: 46%;
+  width: 92%;
+  aspect-ratio: 1536 / 1024;
   transform: translateX(-50%);
 }
 .vault-ph {
@@ -151,9 +151,9 @@ html {
 }
 .vault-glow {
   position: absolute;
-  left: 50%;
-  top: 51%;
-  width: 120%;
+  left: 55.6%;
+  top: 57%;
+  width: 46%;
   aspect-ratio: 1 / 1;
   transform: translate(-50%, -50%);
   border-radius: 50%;
@@ -224,9 +224,9 @@ html {
 }
 .sbout {
   position: absolute;
-  left: 74%;
-  top: 55%;
-  width: 12%;
+  left: 84%;
+  top: 30%;
+  width: 13%;
   aspect-ratio: 1 / 1;
   transform: translate(-50%, -50%) translateX(-46%);
   opacity: 0;
@@ -277,8 +277,8 @@ html {
 .bear2 {
   position: absolute;
   left: 50%;
-  bottom: -2%;
-  width: 44%;
+  bottom: 0%;
+  width: 52%;
   transform: translateX(-50%);
   pointer-events: none;
 }
@@ -338,10 +338,10 @@ html {
     margin: 0;
   }
   .vault {
-    left: 39.5%;
-    bottom: 17%;
-    width: 29%;
-    transform: none;
+    left: 48%;
+    bottom: 23%;
+    width: 45%;
+    transform: translateX(-50%);
   }
   .tcoin {
     left: var(--sx);
@@ -354,14 +354,14 @@ html {
     width: calc(var(--tsz) * 0.4);
   }
   .sbout {
-    left: 72.3%;
-    top: 60%;
-    width: 5.4%;
+    left: 65.5%;
+    top: 56.5%;
+    width: 5.6%;
   }
   .bear2 {
-    left: 86%;
-    width: 18%;
-    bottom: 12%;
+    left: 87%;
+    width: 19%;
+    bottom: 13%;
   }
   .v-cue {
     position: absolute;
