@@ -202,10 +202,10 @@ html {
 }
 .icoin.arrive {
   opacity: 0;
-  transition: opacity 0.3s ease var(--d2);
 }
 .play .icoin.arrive {
   opacity: 1;
+  transition: opacity 0.3s ease var(--d2);
 }
 .tcoin {
   position: absolute;
@@ -214,11 +214,6 @@ html {
   width: var(--mtsz);
   aspect-ratio: 1 / 1;
   transform: translate(-50%, -50%);
-  transition:
-    left 0.8s cubic-bezier(0.6, 0, 0.85, 0.35) var(--d),
-    top 0.8s cubic-bezier(0.6, 0, 0.85, 0.35) var(--d),
-    width 0.8s ease var(--d),
-    opacity 0.18s ease calc(var(--d) + 0.68s);
   pointer-events: none;
 }
 .tcoin::after {
@@ -259,6 +254,11 @@ html {
   top: var(--mgy);
   width: calc(var(--mtsz) * 0.4);
   opacity: 0;
+  transition:
+    left 0.8s cubic-bezier(0.6, 0, 0.85, 0.35) var(--d),
+    top 0.8s cubic-bezier(0.6, 0, 0.85, 0.35) var(--d),
+    width 0.8s ease var(--d),
+    opacity 0.18s ease calc(var(--d) + 0.68s);
 }
 .sbout {
   position: absolute;
