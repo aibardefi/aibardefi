@@ -14,17 +14,19 @@ import { motion, useInView, useReducedMotion } from "framer-motion";
  */
 
 const INSIDE = [
-  { src: "/assets/coin-ansemcat.webp", x: 50.5, y: 50, size: 9.5, zoom: 234, d2: null },
-  { src: "/assets/coin-tendies.webp", x: 61, y: 52, size: 9.5, zoom: 202, d2: null },
+  { src: "/assets/coin-ansemcat.webp", x: 50.5, y: 50, size: 9.5, zoom: 234, d2: "0.85s" },
+  { src: "/assets/coin-tendies.webp", x: 61, y: 52, size: 9.5, zoom: 202, d2: "1.1s" },
   { src: "/assets/coin-cashdog.webp", x: 49, y: 64, size: 8, zoom: 212, d2: "1.35s" },
-  { src: "/assets/coin-cashcat.webp", x: 57.5, y: 66, size: 8, zoom: 190, d2: "1.7s" },
-  { src: "/assets/coin-littlejohn.webp", x: 66, y: 63, size: 8, zoom: 182, d2: "2.05s" },
+  { src: "/assets/coin-cashcat.webp", x: 57.5, y: 66, size: 8, zoom: 190, d2: "1.6s" },
+  { src: "/assets/coin-littlejohn.webp", x: 66, y: 63, size: 8, zoom: 182, d2: "1.85s" },
 ];
 
 const TRAVEL = [
-  { src: "/assets/coin-cashdog.webp", zoom: 212, d: "0.35s", sx: 30.5, sy: 63.5, tsz: 3.6, msx: 8, msy: 34, mtsz: 8, trail: "rgba(150,205,45,.85)" },
-  { src: "/assets/coin-cashcat.webp", zoom: 190, d: "0.7s", sx: 36, sy: 60, tsz: 3.9, msx: 15, msy: 31, mtsz: 8.5, trail: "rgba(190,198,206,.8)" },
-  { src: "/assets/coin-littlejohn.webp", zoom: 182, d: "1.05s", sx: 42.3, sy: 57.5, tsz: 4.2, msx: 22, msy: 29, mtsz: 9, trail: "rgba(212,168,42,.85)" },
+  { src: "/assets/coin-ansemcat.webp", zoom: 234, d: "0.15s", sx: 29, sy: 66, tsz: 4, msx: 6, msy: 36, mtsz: 8, trail: "rgba(150,90,220,.85)" },
+  { src: "/assets/coin-tendies.webp", zoom: 202, d: "0.4s", sx: 33, sy: 61, tsz: 4, msx: 11, msy: 32, mtsz: 8, trail: "rgba(140,200,40,.85)" },
+  { src: "/assets/coin-cashdog.webp", zoom: 212, d: "0.65s", sx: 30, sy: 64, tsz: 3.7, msx: 8, msy: 34, mtsz: 8, trail: "rgba(150,205,45,.85)" },
+  { src: "/assets/coin-cashcat.webp", zoom: 190, d: "0.9s", sx: 36, sy: 59, tsz: 4, msx: 15, msy: 31, mtsz: 8.5, trail: "rgba(190,198,206,.8)" },
+  { src: "/assets/coin-littlejohn.webp", zoom: 182, d: "1.15s", sx: 40, sy: 57, tsz: 4.3, msx: 22, msy: 29, mtsz: 9, trail: "rgba(212,168,42,.85)" },
 ];
 
 export function VaultSection() {
@@ -52,8 +54,11 @@ export function VaultSection() {
   }, []);
 
   useEffect(() => {
-    if (inView) restart();
-    else setPlay(false);
+    const id = requestAnimationFrame(() => {
+      if (inView) restart();
+      else setPlay(false);
+    });
+    return () => cancelAnimationFrame(id);
   }, [inView, restart]);
 
   useEffect(() => () => rafs.current.forEach(cancelAnimationFrame), []);

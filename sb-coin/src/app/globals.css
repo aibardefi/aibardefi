@@ -272,8 +272,8 @@ html {
 }
 .play .sbout {
   animation:
-    sbout 1.05s cubic-bezier(0.2, 1.5, 0.4, 1) 2.35s backwards,
-    sbfloat 3s ease-in-out 3.4s infinite;
+    sbout 1.05s cubic-bezier(0.2, 1.5, 0.4, 1) 2.55s backwards,
+    sbfloat 3s ease-in-out 3.6s infinite;
 }
 @keyframes sbout {
   0% { opacity: 0; transform: translate(-50%, -50%) translateX(-70%) scale(0.2); }
@@ -299,7 +299,7 @@ html {
   pointer-events: none;
 }
 .play .sbbeam {
-  animation: beam 1.1s ease 2.35s backwards;
+  animation: beam 1.1s ease 2.55s backwards;
 }
 @keyframes beam {
   0% { opacity: 0; transform: translateY(-50%) scaleX(0.2); }
@@ -315,7 +315,7 @@ html {
   pointer-events: none;
 }
 .play .sbburst {
-  animation: burst 0.7s ease-out 2.55s backwards;
+  animation: burst 0.7s ease-out 2.75s backwards;
 }
 @keyframes burst {
   0% { opacity: 0.95; transform: scale(0.3); }
@@ -345,7 +345,7 @@ html {
   mix-blend-mode: screen;
 }
 .play .sbout .halo {
-  animation: sbpulse 1.8s ease-in-out 3s infinite;
+  animation: sbpulse 1.8s ease-in-out 3.2s infinite;
 }
 @keyframes sbpulse {
   0%, 100% { opacity: 0.7; transform: scale(1); }
@@ -380,7 +380,7 @@ html {
   );
 }
 .play .med-glow2 {
-  animation: medglow2 0.8s ease-out 2.9s backwards;
+  animation: medglow2 0.8s ease-out 3.1s backwards;
 }
 @keyframes medglow2 {
   0% { opacity: 0; transform: scale(1); }
