@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 
 /**
@@ -36,19 +36,34 @@ export function VaultSection() {
   const [hasVault, setHasVault] = useState(true);
   const [hasSbCoin, setHasSbCoin] = useState(true);
 
-  const scrollNext = () => {
-    document.getElementById("powers")?.scrollIntoView({
-      behavior: reduced ? "auto" : "smooth",
-      block: "start",
+  // `.play` drives the whole CSS sequence. Cycling it off→on restarts every
+  // animation from zero, so the section replays both on scroll-into-view and
+  // when the cue is clicked.
+  const [play, setPlay] = useState(false);
+  const rafs = useRef<number[]>([]);
+  const restart = useCallback(() => {
+    rafs.current.forEach(cancelAnimationFrame);
+    setPlay(false);
+    const r1 = requestAnimationFrame(() => {
+      const r2 = requestAnimationFrame(() => setPlay(true));
+      rafs.current.push(r2);
     });
-  };
+    rafs.current.push(r1);
+  }, []);
+
+  useEffect(() => {
+    if (inView) restart();
+    else setPlay(false);
+  }, [inView, restart]);
+
+  useEffect(() => () => rafs.current.forEach(cancelAnimationFrame), []);
 
   return (
     <>
       <section
         id="story"
         ref={ref}
-        className={`relative flex min-h-[100svh] w-full flex-col overflow-hidden bg-cream lg:block ${inView ? "play" : ""}`}
+        className={`relative flex min-h-[100svh] w-full flex-col overflow-hidden bg-cream lg:block ${play ? "play" : ""}`}
       >
         <div className="v-copy relative z-20 px-5 pt-24 sm:px-8 sm:pt-28">
           <h2 className="text-[clamp(2rem,9vw,3rem)] leading-[1.04] font-extrabold tracking-[-0.02em] text-navy uppercase lg:text-[clamp(2.25rem,8.5svh,5.5rem)]">
@@ -184,8 +199,8 @@ export function VaultSection() {
           <div className="v-cue">
             <button
               type="button"
-              onClick={scrollNext}
-              aria-label="See what powers $SB — scroll to the next section"
+              onClick={restart}
+              aria-label="Replay: watch the memecoins lock into the vault"
               className="inline-flex cursor-pointer items-center gap-2.5 whitespace-nowrap text-[11px] font-bold uppercase tracking-[0.22em] text-navy/85 transition-colors hover:text-navy lg:text-[13px]"
             >
               See What Powers $SB
