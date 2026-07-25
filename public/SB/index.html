@@ -1,674 +1,1154 @@
-<title>SUKA BLYAT · $SB — Welcome to the Dvor</title>
+<title>SUKA BLYAT · $SB — The Legend of Blyat Bear</title>
 <style>
 :root{
-  --ink:#0a0614; --paper:#fff6ea;
-  --mag:#ff2ea6; --lime:#c6ff2e; --cyan:#22d8ff; --violet:#a855f7;
-  --gold:#ffc93c; --red:#ff2d55; --blue:#2f7bff; --green:#4dff7a;
+  --ink:#0a0710; --paper:#fff6ea;
+  --mag:#ff2ea6; --lime:#d9ff2e; --cyan:#28e0ff; --violet:#a855f7;
+  --gold:#ffc93c; --red:#ff2d55; --blue:#2f7bff;
   --sans:system-ui,-apple-system,"Segoe UI",sans-serif;
   --fat:"Trebuchet MS","Segoe UI",system-ui,sans-serif;
-  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
-  --navh:64px;
 }
 *{box-sizing:border-box}
-html{background:var(--ink);scroll-behavior:smooth}
+html{background:var(--ink)}
 body{margin:0;background:var(--ink);color:var(--paper);font-family:var(--sans);
-     overflow-x:hidden;-webkit-font-smoothing:antialiased;line-height:1.5}
-.mono{font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase}
-.fat{font-family:var(--fat);font-weight:700}
-img{max-width:100%;display:block}
+     overflow-x:hidden;-webkit-font-smoothing:antialiased}
+.mono{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:.62rem;
+      letter-spacing:.18em;text-transform:uppercase}
 
-/* ═══ NAV ═══ */
-#nav{position:fixed;inset:0 0 auto;height:var(--navh);z-index:400;display:flex;
-     align-items:center;justify-content:space-between;gap:1rem;padding:0 1rem;
-     background:linear-gradient(180deg,rgba(8,4,18,.86),rgba(8,4,18,.25) 70%,transparent);
-     backdrop-filter:blur(6px)}
-.brand{display:flex;align-items:center;gap:.55rem;flex:none;text-decoration:none;color:inherit}
-.brand svg{width:36px;height:36px;flex:none}
-.brand span{font-family:var(--fat);font-weight:700;font-size:1rem;text-transform:uppercase;
-            letter-spacing:.01em;white-space:nowrap;text-shadow:0 2px 10px #000}
-.brand b{color:var(--lime)}
-#menu{display:flex;gap:1.35rem;list-style:none;margin:0;padding:0}
-#menu a{font-family:var(--fat);font-weight:700;font-size:.82rem;text-transform:uppercase;
-        letter-spacing:.04em;color:var(--paper);text-decoration:none;padding:.35rem 0;
-        border-bottom:3px solid transparent;text-shadow:0 2px 8px #000;white-space:nowrap}
-#menu a:hover{color:var(--lime)}
-#menu a[aria-current]{border-bottom-color:var(--gold);color:#fff}
-.navr{display:flex;align-items:center;gap:.5rem;flex:none}
-.icn{width:34px;height:34px;border:1.5px solid rgba(255,246,234,.45);border-radius:9px;
-     display:grid;place-items:center;color:var(--paper);text-decoration:none;font-size:.85rem;
-     background:rgba(10,6,20,.4);transition:box-shadow .2s,border-color .2s,transform .2s}
-.icn:hover{border-color:var(--cyan);box-shadow:0 0 16px -2px var(--cyan);transform:translateY(-2px)}
-.joinpill{font-family:var(--fat);font-weight:700;font-size:.8rem;text-transform:uppercase;
-          color:#fff;text-decoration:none;padding:.5rem 1rem;border-radius:10px;
-          border:2px solid #ffb0d8;background:linear-gradient(100deg,#ff2ea6,#ff5d3a);
-          box-shadow:0 0 22px -6px var(--mag);white-space:nowrap;transition:transform .2s,box-shadow .2s}
-.joinpill:hover{transform:translateY(-2px);box-shadow:0 0 30px -4px var(--mag)}
-@media(max-width:1180px){#menu{display:none}}
-@media(max-width:620px){.icn{display:none}.brand span{font-size:.85rem}}
+/* ══ fixed chrome ══ */
+#nav{position:fixed;top:0;left:0;right:0;z-index:300;display:flex;align-items:center;
+     justify-content:space-between;padding:.75rem 1.1rem;pointer-events:none}
+#nav .brand{display:flex;align-items:center;gap:.55rem;pointer-events:auto}
+#nav .mark{width:34px;height:34px;flex:none}
+#nav .word{font-family:var(--fat);font-weight:700;font-size:.95rem;letter-spacing:.02em;
+           text-transform:uppercase;text-shadow:0 2px 10px rgba(0,0,0,.8)}
+#nav .word b{color:var(--lime)}
+#nav .right{display:flex;align-items:center;gap:.5rem;pointer-events:auto}
+.pill{border:2px solid var(--paper);border-radius:999px;padding:.35rem .8rem;
+      font-family:var(--fat);font-weight:700;font-size:.72rem;text-transform:uppercase;
+      letter-spacing:.02em;color:var(--paper);text-decoration:none;
+      background:linear-gradient(90deg,var(--mag),var(--red));white-space:nowrap}
+.pill:focus-visible{outline:3px solid var(--lime);outline-offset:2px}
+.icn{width:32px;height:32px;border:1.5px solid rgba(255,246,234,.5);border-radius:50%;
+     display:grid;place-items:center;color:var(--paper);text-decoration:none;font-size:.8rem}
+.icn:hover{border-color:var(--paper)}
+@media(max-width:620px){#nav .icn{display:none}}
 
-/* ═══ page shell ═══ */
-.page{position:relative}
-.pin{position:sticky;top:0;height:100svh;overflow:hidden}
-.bgimg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:0}
-.bgfallback{position:absolute;inset:0;z-index:0}
-.bgfallback svg{width:100%;height:100%;display:block}
-.page.has-img .bgfallback{display:none}
-.scrim{position:absolute;inset:0;z-index:1;pointer-events:none}
-.layer{position:absolute;inset:var(--navh) 0 0;z-index:10;
-       padding:clamp(.75rem,2vw,1.6rem);display:flex;pointer-events:none}
-.layer > *{pointer-events:auto}
-
-/* ═══ story text box ═══ */
-.box{width:min(560px,100%);border-radius:18px;padding:clamp(.9rem,1.6vw,1.35rem) clamp(1rem,1.8vw,1.5rem);
-     background:var(--boxbg,linear-gradient(135deg,rgba(60,20,96,.66),rgba(18,8,34,.6)));
-     backdrop-filter:blur(14px) saturate(1.3);-webkit-backdrop-filter:blur(14px) saturate(1.3);
-     border:1.5px solid rgba(255,255,255,.2);
-     box-shadow:0 22px 60px -22px #000, inset 0 1px 0 rgba(255,255,255,.16)}
-.box .eyebrow{font-family:var(--mono);font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;
-              color:var(--accent,var(--lime));display:block;margin-bottom:.4rem}
-.stage{position:relative}
-.step{position:absolute;inset:0;opacity:0;transform:translateY(12px);pointer-events:none;
-      transition:opacity .38s ease,transform .38s cubic-bezier(.2,.7,.3,1)}
-.step.on{opacity:1;transform:none;position:relative;pointer-events:auto}
-.step p{margin:0 0 .45rem;font-size:clamp(.98rem,1.18vw,1.28rem);line-height:1.42;
-        text-shadow:0 2px 12px rgba(0,0,0,.6)}
-.step p:last-child{margin:0}
-.step .hit{font-family:var(--fat);font-weight:700;color:var(--accent,var(--lime));
-           font-size:clamp(1.15rem,1.75vw,1.6rem);line-height:1.16}
-.step .list{margin:.35rem 0 0;padding:0;list-style:none;font-size:clamp(.9rem,1.05vw,1.1rem);line-height:1.5}
-.step .list li{padding-left:1rem;position:relative}
-.step .list li::before{content:"›";position:absolute;left:0;color:var(--accent,var(--lime));opacity:.8}
-.step em{font-style:normal;color:var(--accent,var(--lime))}
-.pline{height:3px;border-radius:2px;background:rgba(255,255,255,.18);overflow:hidden;margin-top:.85rem}
-.pline i{display:block;height:100%;width:0;border-radius:2px;
-         background:linear-gradient(90deg,var(--accent,var(--lime)),var(--mag));transition:width .18s ease}
-
-/* ═══ shared bits ═══ */
-.brush{font-family:var(--fat);font-weight:700;text-transform:uppercase;letter-spacing:-.04em;
-       line-height:.88;margin:0;text-shadow:4px 4px 0 rgba(0,0,0,.55),0 0 30px rgba(0,0,0,.5)}
-.tagband{display:inline-block;background:linear-gradient(100deg,#7c2ad0,#a855f7);color:#fff;
-         font-family:var(--fat);font-weight:700;text-transform:uppercase;
-         padding:.28rem 1.1rem;border-radius:6px;transform:rotate(-1.2deg);
-         font-size:clamp(.75rem,1.35vw,1.05rem);box-shadow:0 6px 20px -8px #a855f7}
-.feat{display:flex;gap:.7rem;align-items:flex-start;margin-bottom:.7rem}
-.feat .ic{width:38px;height:38px;flex:none;border-radius:10px;display:grid;place-items:center;
-          font-size:1.05rem;border:2px solid var(--fc,var(--violet));background:rgba(12,6,26,.6);
-          box-shadow:0 0 16px -4px var(--fc,var(--violet))}
-.feat b{display:block;font-family:var(--fat);font-weight:700;font-size:clamp(.9rem,1.1vw,1.05rem)}
-.feat span{font-size:clamp(.76rem,.95vw,.9rem);opacity:.82}
-.chip{display:flex;align-items:center;gap:.5rem;border:2px solid var(--cc,var(--mag));
-      border-radius:999px;padding:.35rem .85rem;background:rgba(12,6,26,.55);
-      font-family:var(--fat);font-weight:700;font-size:clamp(.75rem,.95vw,.92rem);
-      box-shadow:0 0 16px -6px var(--cc,var(--mag));margin-bottom:.5rem;width:fit-content}
-.card{border:2px solid var(--kc,var(--violet));border-radius:16px;background:rgba(10,5,22,.66);
-      backdrop-filter:blur(10px);box-shadow:0 0 24px -10px var(--kc,var(--violet))}
-.statpill{border:2px solid var(--sc,var(--mag));border-radius:14px;background:rgba(10,5,22,.66);
-          backdrop-filter:blur(8px);padding:.5rem .7rem;display:flex;align-items:center;gap:.5rem;
-          box-shadow:0 0 20px -8px var(--sc,var(--mag))}
-.statpill i{font-style:normal;font-size:1.15em;color:var(--sc)}
-.statpill b{display:block;font-family:var(--fat);font-weight:700;
-            font-size:clamp(.95rem,1.5vw,1.5rem);line-height:1}
-.statpill span{display:block;font-family:var(--mono);font-size:.48rem;letter-spacing:.13em;
-               text-transform:uppercase;opacity:.72;margin-top:.1rem}
-.btn{border:2.5px solid var(--paper);border-radius:12px;padding:.62rem 1rem;color:var(--paper);
-     text-decoration:none;cursor:pointer;display:flex;align-items:center;gap:.65rem;
-     font-family:var(--fat);font-weight:700;font-size:clamp(.82rem,1.15vw,1.05rem);
-     text-transform:uppercase;transition:transform .16s,box-shadow .16s;text-align:left}
-.btn:hover,.btn:focus-visible{transform:translateY(-3px);box-shadow:0 14px 32px -12px currentColor;outline:none}
-.btn i{font-style:normal;font-size:1.2em;flex:none}
-.btn small{display:block;font-family:var(--mono);font-size:.5rem;letter-spacing:.1em;
-           text-transform:none;opacity:.82;font-weight:400;margin-top:.12rem}
-.btn.buy{background:linear-gradient(100deg,#ff2ea6,#d1106e);border-color:#ffa8d8;box-shadow:0 0 22px -8px var(--mag)}
-.btn.tg{background:linear-gradient(100deg,#2f7bff,#1550bd);border-color:#8fc0ff;box-shadow:0 0 22px -8px var(--blue)}
-.btn.x{background:linear-gradient(100deg,#26262e,#0b0b11);border-color:#8b8b99}
-.btn.enter{background:linear-gradient(100deg,var(--lime),#8fd60c);color:#111806;border-color:#e6ff8f;box-shadow:0 0 22px -8px var(--lime)}
-
-/* ═══ ticker ═══ */
-.ticker{position:absolute;left:0;right:0;bottom:0;z-index:12;display:flex;align-items:stretch;
-        background:rgba(8,4,18,.9);border-top:3px solid var(--gold);height:52px}
-.ticker .tag{flex:none;display:flex;align-items:center;gap:.5rem;padding:0 .9rem;
-             border-right:2px solid rgba(255,201,60,.4);font-family:var(--fat);font-weight:700;
-             font-size:.78rem;text-transform:uppercase;color:var(--violet);white-space:nowrap}
-.ticker .run{flex:1;overflow:hidden;display:flex;align-items:center}
-.ticker .run div{display:inline-block;white-space:nowrap;font-family:var(--fat);font-weight:700;
-                 font-size:.82rem;text-transform:uppercase;animation:roll 34s linear infinite}
-.ticker .run span{padding-right:2.2rem}
-@keyframes roll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-
-/* ═══ page-specific layouts ═══ */
-#p1 .layer{align-items:center}
-#p1 .col{width:min(620px,54%);display:flex;flex-direction:column;gap:.7rem}
-@media(max-width:900px){#p1 .col{width:100%}}
-
-#p2 .layer{gap:.9rem;align-items:stretch}
-#p2 .left{width:min(360px,30%);display:flex;flex-direction:column;gap:.6rem;overflow:hidden}
-#p2 .mid{flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:60px}
-#p2 .cams{width:min(300px,24%);display:flex;flex-direction:column;gap:.55rem}
-#p2 .cam{flex:1;border-radius:12px;border:2px solid var(--mag);background:rgba(10,5,22,.6);
-         position:relative;overflow:hidden;min-height:0;display:flex;align-items:flex-end;padding:.5rem}
-#p2 .cam b{font-family:var(--fat);font-weight:700;font-size:.82rem}
-#p2 .cam .live{position:absolute;right:.5rem;bottom:.5rem;color:var(--red);font-size:.62rem;font-family:var(--mono)}
-#p2 .chyron{background:linear-gradient(90deg,#c1121f,#8a0d18);border-radius:6px;padding:.45rem .8rem;
-            font-family:var(--fat);font-weight:700;font-size:clamp(.8rem,1.3vw,1.15rem);text-transform:uppercase}
-@media(max-width:1080px){#p2 .cams{display:none}#p2 .left{width:min(400px,44%)}}
-@media(max-width:760px){#p2 .left{width:100%}#p2 .mid{display:none}}
-
-#p3 .layer{flex-direction:column;align-items:center;justify-content:space-between;text-align:center}
-#p3 .modes{display:flex;justify-content:space-between;width:100%;gap:1rem}
-#p3 .mode{width:min(280px,26%);text-align:left}
-#p3 .mode.r{text-align:right}
-#p3 .mode.r .chip{margin-left:auto;flex-direction:row-reverse}
-#p3 .slider{width:min(520px,92%);display:flex;align-items:center;gap:.6rem;
-            background:rgba(10,5,22,.6);border:2px solid rgba(255,255,255,.22);
-            border-radius:999px;padding:.4rem .9rem;backdrop-filter:blur(10px)}
-#p3 .slider input{flex:1;accent-color:var(--lime);cursor:ew-resize}
-#p3 .choose{display:flex;justify-content:space-between;width:100%;gap:1rem;align-items:center}
-@media(max-width:860px){#p3 .modes{display:none}#p3 .choose{flex-direction:column}}
-
-#p4 .layer{flex-direction:column;gap:.7rem}
-#p4 .rail{display:flex;gap:.7rem;overflow-x:auto;padding-bottom:.5rem;scroll-snap-type:x mandatory;
-          scrollbar-width:thin}
-#p4 .tcard{flex:0 0 clamp(180px,20vw,240px);scroll-snap-align:center;border-radius:14px;
-           border:2px solid var(--kc);background:rgba(10,5,22,.68);backdrop-filter:blur(8px);
-           padding:.7rem;box-shadow:0 0 24px -10px var(--kc);display:flex;flex-direction:column;gap:.4rem}
-#p4 .tcard .no{font-family:var(--mono);font-size:.6rem;color:var(--kc)}
-#p4 .tcard h4{margin:0;font-family:var(--fat);font-weight:700;font-size:.92rem;text-transform:uppercase}
-#p4 .tcard .cap{font-size:.78rem;opacity:.84;flex:1}
-#p4 .tcard .unlock{border:1.5px solid var(--kc);border-radius:8px;padding:.3rem .5rem;
-                   font-family:var(--mono);font-size:.5rem;letter-spacing:.1em;text-transform:uppercase}
-#p4 .years{display:flex;justify-content:space-around;font-family:var(--fat);font-weight:700;font-size:.8rem}
-
-#p5 .layer{flex-direction:column;justify-content:space-between}
-#p5 .revealwrap{position:absolute;inset:0;z-index:2}
-#p5 .after{position:absolute;inset:0;clip-path:inset(0 0 0 var(--split,50%))}
-#p5 .before{position:absolute;inset:0;clip-path:inset(0 calc(100% - var(--split,50%)) 0 0);filter:grayscale(.85) brightness(.6)}
-#p5 .handle{position:absolute;top:0;bottom:0;left:var(--split,50%);width:4px;
-            background:#e8fbff;box-shadow:0 0 22px 2px rgba(232,251,255,.7);z-index:6;cursor:ew-resize}
-#p5 .handle::after{content:"‹ ›";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-                   width:52px;height:52px;border-radius:50%;background:rgba(10,6,20,.72);
-                   border:2px solid #e8fbff;display:grid;place-items:center;
-                   font-family:var(--fat);font-weight:700;font-size:1.05rem;letter-spacing:-.05em}
-#p5 .lbl{position:absolute;top:12%;z-index:7;background:#0a0a0c;border-radius:6px;
-         padding:.3rem .9rem;font-family:var(--fat);font-weight:700;text-transform:uppercase;
-         font-size:clamp(.85rem,1.6vw,1.3rem)}
-
-#p6 .layer{align-items:center;justify-content:space-between;gap:1rem}
-#p6 .lcol{width:min(560px,46%);display:flex;flex-direction:column;gap:.65rem}
-#p6 .rcol{width:min(430px,32%);display:grid;grid-template-columns:1fr 1fr;gap:.55rem;align-content:center}
-#p6 .btns{display:grid;grid-template-columns:1fr 1fr;gap:.55rem}
-#p6 .ca{border:2px solid rgba(255,255,255,.28);border-radius:10px;background:rgba(10,5,22,.66);
-        padding:.5rem .7rem}
-#p6 .ca label{font-family:var(--mono);font-size:.5rem;letter-spacing:.14em;opacity:.7;display:block}
-#p6 .ca .row{display:flex;align-items:center;gap:.5rem}
-#p6 .ca code{flex:1;font-family:var(--mono);font-size:.72rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#p6 .ca button{background:none;border:0;color:var(--paper);cursor:pointer;font-size:.9rem;padding:.2rem}
-#p6 .charts{display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem}
-#p6 .chart{border:1.5px solid rgba(255,255,255,.22);border-radius:9px;background:rgba(10,5,22,.6);
-           padding:.4rem .45rem;text-decoration:none;color:var(--paper);font-size:.6rem;
-           font-family:var(--fat);font-weight:700;text-align:center;transition:border-color .2s}
-#p6 .chart:hover{border-color:var(--cyan)}
-#p6 .chart small{display:block;font-family:var(--mono);font-size:.44rem;opacity:.62;font-weight:400}
-#p6 .thanks{font-family:var(--fat);font-weight:700;font-size:clamp(.75rem,1.2vw,1rem);
-            text-transform:uppercase;text-align:right}
-#p6 .see{font-family:var(--fat);font-weight:700;text-transform:uppercase;text-align:right;
-         font-size:clamp(1.5rem,4.6vw,3.6rem);line-height:.9;letter-spacing:-.04em;
-         text-shadow:0 4px 22px #000}
-#p6 .see u{display:block;height:5px;border-radius:3px;margin-top:.25rem;
-           background:linear-gradient(90deg,var(--mag),var(--violet),var(--cyan))}
-@media(max-width:980px){#p6 .rcol{display:none}#p6 .lcol{width:100%}}
-
-#foot{position:absolute;left:0;right:0;bottom:0;z-index:13;display:flex;justify-content:space-between;
-      gap:1rem;padding:.6rem 1rem;background:rgba(8,4,18,.9);font-size:.68rem;opacity:.72;flex-wrap:wrap}
-
-/* ═══ hud ═══ */
-#hud{position:fixed;right:12px;bottom:14px;z-index:400;display:flex;align-items:center;gap:.55rem;
-     background:rgba(10,5,22,.72);border:1.5px solid rgba(255,255,255,.2);border-radius:999px;
-     padding:.3rem .7rem;backdrop-filter:blur(8px)}
-#hud .n{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em}
-#hud .bar{width:74px;height:4px;border-radius:2px;background:rgba(255,255,255,.2);overflow:hidden}
-#hud .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--mag),var(--cyan))}
-#dots{position:fixed;right:14px;top:50%;transform:translateY(-50%);z-index:400;
+#count{position:fixed;right:14px;bottom:16px;z-index:300;
+       font-family:ui-monospace,Menlo,monospace;font-size:.7rem;letter-spacing:.14em;
+       color:var(--paper);opacity:.85;text-shadow:0 2px 10px rgba(0,0,0,.9);pointer-events:none}
+#dots{position:fixed;right:14px;top:50%;transform:translateY(-50%);z-index:300;
       display:flex;flex-direction:column;gap:.5rem}
-#dots button{width:10px;height:10px;padding:0;border-radius:50%;cursor:pointer;background:none;
-             border:1.5px solid rgba(255,246,234,.5);transition:background .2s,transform .2s,border-color .2s}
+#dots button{width:10px;height:10px;padding:0;border-radius:50%;cursor:pointer;
+             border:1.5px solid rgba(255,246,234,.55);background:none;
+             transition:background .2s,transform .2s,border-color .2s}
 #dots button.on{background:var(--lime);border-color:var(--lime);transform:scale(1.5)}
 #dots button:focus-visible{outline:2px solid var(--lime);outline-offset:3px}
-@media(max-width:620px){#dots{display:none}}
+@media(max-width:620px){#dots{right:8px;gap:.4rem}#dots button{width:8px;height:8px}}
 
-.hint{font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;opacity:.72}
-.live-anim{animation:pulse 2.4s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:.6}50%{opacity:1}}
+/* ══ page shell ══ */
+.page{position:relative}
+.pin{position:sticky;top:0;height:100svh;overflow:hidden}
+.scene{position:absolute;inset:0;z-index:0}
+.scene .art{position:absolute;inset:0;width:100%;height:100%;display:block}
+.scene .photo{position:absolute;inset:0;background-size:cover;background-position:center;
+              display:none}
+.page.has-photo .scene .photo{display:block}
+.page.has-photo .scene .art{display:none}
+.scrim{position:absolute;inset:0;z-index:1;pointer-events:none}
+
+/* ══ the text box — fixed position, content swaps ══ */
+.box{position:absolute;z-index:20;
+     width:min(600px,calc(100% - 3rem));
+     left:var(--bx,4vw); top:var(--by,50%); transform:translateY(-50%);
+     border-radius:20px;padding:1.5rem 1.6rem;
+     background:var(--boxbg,linear-gradient(135deg,rgba(60,20,90,.62),rgba(20,10,40,.55)));
+     backdrop-filter:blur(14px) saturate(1.25);
+     -webkit-backdrop-filter:blur(14px) saturate(1.25);
+     border:1.5px solid rgba(255,255,255,.22);
+     box-shadow:0 20px 60px -20px rgba(0,0,0,.75), inset 0 1px 0 rgba(255,255,255,.18)}
+.box .eyebrow{font-family:ui-monospace,Menlo,monospace;font-size:.6rem;letter-spacing:.2em;
+              text-transform:uppercase;color:var(--accent,var(--lime));margin-bottom:.5rem;display:block}
+.box h2{font-family:var(--fat);font-weight:700;text-transform:uppercase;
+        font-size:clamp(1.4rem,3vw,2rem);line-height:1;letter-spacing:-.02em;
+        margin:0 0 .9rem;text-shadow:0 2px 14px rgba(0,0,0,.6)}
+.stage{position:relative}
+.step{position:absolute;inset:0;opacity:0;transform:translateY(12px);
+      transition:opacity .38s ease, transform .38s cubic-bezier(.2,.7,.3,1);
+      pointer-events:none}
+.step.on{opacity:1;transform:translateY(0);position:relative;pointer-events:auto}
+.step p{margin:0 0 .5rem;font-size:clamp(1.05rem,1.55vw,1.62rem);line-height:1.4;
+        text-align:left;text-shadow:0 2px 12px rgba(0,0,0,.55)}
+.step p:last-child{margin:0}
+.step .hit{font-family:var(--fat);font-weight:700;font-size:clamp(1.3rem,2.4vw,2.05rem);
+           line-height:1.15;letter-spacing:-.01em;color:var(--accent,var(--lime))}
+.step .list{margin:.4rem 0 0;padding:0;list-style:none;font-size:clamp(.98rem,1.35vw,1.32rem);
+            line-height:1.55;opacity:.95}
+.step .list li{padding-left:1.1rem;position:relative}
+.step .list li::before{content:"›";position:absolute;left:0;opacity:.7;color:var(--accent,var(--lime))}
+.step em{font-style:normal;color:var(--accent,var(--lime))}
+
+/* in-page progress line */
+.pline{position:absolute;left:var(--bx,4vw);bottom:calc(50% - 1px);z-index:21;display:none}
+.box .pline{position:relative;left:auto;bottom:auto;display:block;margin-top:1.1rem;
+            height:3px;border-radius:2px;background:rgba(255,255,255,.2);overflow:hidden}
+.box .pline i{display:block;height:100%;width:0;border-radius:2px;
+              background:linear-gradient(90deg,var(--accent,var(--lime)),var(--mag));
+              transition:width .18s ease}
+
+@media(max-width:820px){
+  .box{left:16px !important;right:16px;width:auto;
+       top:auto !important;bottom:5.5rem;transform:none;
+       max-height:38svh;overflow:hidden;padding:1.1rem 1.15rem;border-radius:16px}
+  .step p{font-size:1.12rem;line-height:1.45}
+  .step .hit{font-size:1.35rem}
+  .step .list{font-size:1rem}
+  .box h2{font-size:1.2rem}
+}
+
+/* ══ page 6 ══ */
+#p6 .pin{display:grid;place-items:center}
+.final{position:relative;z-index:20;width:min(1240px,96vw);text-align:center;
+       display:flex;flex-direction:column;align-items:center;
+       gap:clamp(.5rem,1.6vh,1.1rem);padding:clamp(3.6rem,8vh,5rem) .9rem 1rem}
+.final h2{font-family:var(--fat);font-weight:700;text-transform:uppercase;margin:0;
+          font-size:clamp(2rem,7.2vw,5.4rem);line-height:.86;letter-spacing:-.045em;
+          text-shadow:0 5px 26px rgba(0,0,0,.8),0 0 2px rgba(0,0,0,.9)}
+.final h2 .b{color:var(--lime)}
+.final .sub{font-family:var(--fat);font-weight:700;text-transform:uppercase;
+            font-size:clamp(.92rem,2.3vw,1.55rem);letter-spacing:.01em;color:#fff;
+            background:linear-gradient(90deg,#7c2ad0,#a855f7);
+            padding:.32rem 1.5rem;border-radius:6px;transform:rotate(-1deg);
+            box-shadow:0 6px 22px -8px #a855f7}
+
+/* buttons flank the throne, as in the mockup */
+.deck{display:grid;grid-template-columns:1fr minmax(180px,300px) 1fr;
+      gap:clamp(.6rem,1.6vw,1.4rem);align-items:center;width:100%;margin-top:.4rem}
+.deck .col{display:flex;flex-direction:column;gap:clamp(.5rem,1.4vh,.9rem)}
+.throne{width:100%;height:auto;display:block;filter:drop-shadow(0 18px 34px rgba(0,0,0,.6))}
+@media(max-width:860px){
+  .deck{grid-template-columns:1fr 1fr;gap:.6rem}
+  .deck .mid{grid-column:1 / -1;order:-1;max-width:190px;margin:0 auto}
+}
+
+.btn{border:3px solid var(--paper);border-radius:14px;
+     padding:clamp(.6rem,1.5vh,.95rem) 1rem;
+     font-family:var(--fat);font-weight:700;text-transform:uppercase;
+     font-size:clamp(.85rem,1.5vw,1.25rem);letter-spacing:.01em;
+     color:var(--paper);text-decoration:none;cursor:pointer;
+     display:flex;align-items:center;justify-content:center;gap:.6rem;
+     transition:transform .16s,box-shadow .16s}
+.btn:hover,.btn:focus-visible{transform:translateY(-4px) scale(1.02);
+     box-shadow:0 14px 34px -10px currentColor;outline:none}
+.btn i{font-style:normal;font-size:1.15em;line-height:1}
+.btn small{display:block;font-family:ui-monospace,Menlo,monospace;font-size:.52rem;
+           letter-spacing:.12em;opacity:.8;font-weight:400;text-transform:none}
+.btn.buy{background:linear-gradient(100deg,#ff2ea6,#e0106e);border-color:#ffa8d8;
+         box-shadow:0 0 26px -6px #ff2ea6}
+.btn.tg{background:linear-gradient(100deg,#2f7bff,#1656c4);border-color:#8fc0ff;
+        box-shadow:0 0 26px -6px #2f7bff}
+.btn.x{background:linear-gradient(100deg,#2a2a32,#0c0c12);border-color:#8b8b99}
+.btn.copy{background:linear-gradient(100deg,var(--lime),#9fe012);color:#12180a;
+          border-color:#e8ff8a;box-shadow:0 0 26px -6px var(--lime)}
+
+/* stat pills */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(.4rem,1vw,.9rem);
+       width:100%;margin-top:.4rem}
+@media(max-width:760px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{border:2.5px solid var(--sc,#ff2ea6);border-radius:14px;
+      background:rgba(12,6,26,.62);backdrop-filter:blur(8px);
+      padding:clamp(.45rem,1.2vh,.8rem) .7rem;display:flex;align-items:center;
+      gap:.55rem;justify-content:center;box-shadow:0 0 20px -8px var(--sc,#ff2ea6)}
+.stat i{font-style:normal;font-size:1.3em;color:var(--sc)}
+.stat b{display:block;font-family:var(--fat);font-weight:700;
+        font-size:clamp(1rem,2.2vw,1.85rem);line-height:1;letter-spacing:-.02em}
+.stat span{display:block;font-family:ui-monospace,Menlo,monospace;font-size:.5rem;
+           letter-spacing:.14em;text-transform:uppercase;opacity:.72;margin-top:.15rem}
+
+/* SEE YOU IN THE DVOR */
+.see{font-family:var(--fat);font-weight:700;text-transform:uppercase;
+     font-size:clamp(1.5rem,6.4vw,4.6rem);line-height:.9;letter-spacing:-.04em;
+     margin-top:.3rem;text-shadow:0 5px 26px rgba(0,0,0,.8)}
+.see .w{color:#fff} .see .l{color:var(--lime)} .see .c{color:var(--cyan)}
+.see .v{color:var(--violet)} .see .m{color:var(--mag)}
+.see u{display:block;height:5px;width:min(420px,60%);margin:.35rem auto 0;
+       border-radius:3px;background:linear-gradient(90deg,var(--mag),var(--violet),var(--cyan))}
+
+/* ══ scene motion (gated by .live) ══ */
+.sway{transform-origin:50% 8%}
+.live .sway{animation:sway 4.4s ease-in-out infinite}
+@keyframes sway{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+.live .flick{animation:flick 5s steps(1) infinite}
+@keyframes flick{0%,62%{opacity:.95}64%,68%{opacity:.12}70%,88%{opacity:.95}90%,94%{opacity:.2}96%,100%{opacity:.95}}
+.live .puls{animation:puls 2.6s ease-in-out infinite}
+@keyframes puls{0%,100%{opacity:.55}50%{opacity:1}}
+.live .drift{animation:drift 9s ease-in-out infinite}
+@keyframes drift{0%,100%{transform:translateX(0)}50%{transform:translateX(22px)}}
+.live .blink{animation:blink 1.4s steps(1) infinite}
+@keyframes blink{0%,60%{opacity:1}61%,100%{opacity:.25}}
 
 @media (prefers-reduced-motion:reduce){
-  html{scroll-behavior:auto}
+  .live .sway,.live .flick,.live .puls,.live .drift,.live .blink{animation:none}
   .step{transition:none}
-  .ticker .run div,.live-anim{animation:none}
-  .btn,.icn,.joinpill{transition:none}
+  .btn{transition:none}
 }
 </style>
 
-<!-- ═══ NAV ═══ -->
+<!-- ══════════ NAV ══════════ -->
 <div id="nav">
-  <a class="brand" href="#p1">
-    <svg viewBox="0 0 64 64" aria-hidden="true">
-      <rect x="1" y="1" width="62" height="62" rx="14" fill="#150c24" stroke="#c6ff2e" stroke-width="2.5"/>
-      <circle cx="20" cy="22" r="8" fill="#7a5334"/><circle cx="44" cy="22" r="8" fill="#7a5334"/>
-      <rect x="15" y="20" width="34" height="30" rx="13" fill="#9a6c42"/>
-      <path d="M13 26 q19 -13 38 0 q-3 -13 -19 -13 q-16 0 -19 13 z" fill="#3f2c1c"/>
-      <circle cx="21" cy="20" r="2.6" fill="#ff2ea6"/><circle cx="32" cy="16" r="2.6" fill="#22d8ff"/>
-      <circle cx="43" cy="20" r="2.6" fill="#c6ff2e"/>
-      <path d="M24 34 l6 3 M43 34 l-6 3" stroke="#160e08" stroke-width="3" stroke-linecap="round"/>
+  <div class="brand">
+    <svg class="mark" viewBox="0 0 64 64" aria-hidden="true">
+      <circle cx="32" cy="32" r="30" fill="#1a1020" stroke="#d9ff2e" stroke-width="3"/>
+      <circle cx="20" cy="20" r="8" fill="#7a5334"/><circle cx="44" cy="20" r="8" fill="#7a5334"/>
+      <rect x="16" y="20" width="32" height="28" rx="12" fill="#9a6c42"/>
+      <path d="M14 24 q18 -10 36 0 l0 4 q-18 -8 -36 0 z" fill="#2f7bff"/>
+      <path d="M23 33 l7 3 M41 33 l-7 3" stroke="#160e08" stroke-width="3" stroke-linecap="round"/>
       <ellipse cx="32" cy="42" rx="11" ry="7" fill="#c49a68"/>
       <ellipse cx="32" cy="39" rx="4.5" ry="3" fill="#160e08"/>
-      <rect x="34" y="44" width="4" height="4.5" fill="#ffc93c"/>
+      <rect x="34" y="44" width="4" height="4" fill="#ffc93c"/>
     </svg>
-    <span>Suka Blyat · <b>$SB</b></span>
-  </a>
-
-  <ul id="menu">
-    <li><a href="#p1" aria-current="page">Story</a></li>
-    <li><a href="#p2">Comic</a></li>
-    <li><a href="#p6">Tokenomics</a></li>
-    <li><a href="#p4">Roadmap</a></li>
-    <li><a href="#p5">Dvor Map</a></li>
-    <li><a href="#p6">Merch</a></li>
-  </ul>
-
-  <div class="navr">
+    <span class="word">Suka Blyat · <b>$SB</b></span>
+  </div>
+  <div class="right">
     <a class="icn" href="#p6" data-cta="telegram" aria-label="Telegram">✈</a>
     <a class="icn" href="#p6" data-cta="x" aria-label="X">𝕏</a>
-    <a class="icn" href="#p6" data-cta="discord" aria-label="Discord">◈</a>
-    <a class="joinpill" href="#p6">Join the Dvor</a>
+    <a class="pill" href="#p6">Join the Dvor</a>
   </div>
 </div>
 
 <nav id="dots" aria-label="Jump to chapter"></nav>
-<div id="hud"><span class="n">1 / 6</span><span class="bar"><i></i></span></div>
+<div id="count" aria-live="polite">1 / 6</div>
 
-<!-- ══════════ 1 · WELCOME TO THE DVOR ══════════ -->
-<section class="page" id="p1" data-title="Welcome to the Dvor">
+<!-- ══════════ PAGE 1 — THE DVOR ══════════ -->
+<section class="page" id="p1" data-title="The Dvor">
   <div class="pin">
-    <div class="bgimg"></div>
-    <div class="bgfallback"><svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-label="Neon purple courtyard at night">
-      <defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#2a0f52"/><stop offset=".55" stop-color="#4a1470"/><stop offset="1" stop-color="#180828"/>
-      </linearGradient></defs>
-      <rect width="1600" height="900" fill="url(#g1)"/>
-      <g fill="#ffb43c" opacity=".72">
-        <rect x="80" y="120" width="64" height="50" rx="4"/><rect x="220" y="120" width="64" height="50" rx="4" opacity=".4"/>
-        <rect x="360" y="200" width="64" height="50" rx="4"/><rect x="1120" y="140" width="64" height="50" rx="4" opacity=".5"/>
-        <rect x="1260" y="220" width="64" height="50" rx="4"/><rect x="1400" y="150" width="64" height="50" rx="4" opacity=".45"/>
-      </g>
-      <rect y="620" width="1600" height="280" fill="#180a26"/>
-      <g fill="#7a3fd0" opacity=".45"><ellipse cx="300" cy="760" rx="220" ry="30"/><ellipse cx="1200" cy="800" rx="240" ry="32"/></g>
-    </svg></div>
-    <div class="scrim" style="background:linear-gradient(90deg,rgba(10,4,22,.86) 0%,rgba(10,4,22,.42) 46%,transparent 68%)"></div>
+    <div class="scene">
+      <div class="photo"></div>
+      <svg class="art" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-label="A neon purple courtyard at night with a panel building, playground, pigeons and Mishka the bear in a tracksuit">
+        <defs>
+          <linearGradient id="p1sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#2a0f4d"/><stop offset=".5" stop-color="#4a1466"/><stop offset="1" stop-color="#1a0828"/>
+          </linearGradient>
+          <linearGradient id="p1wall" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#3b1a5c"/><stop offset="1" stop-color="#200c33"/>
+          </linearGradient>
+        </defs>
+        <rect width="1600" height="900" fill="url(#p1sky)"/>
+        <!-- panel building facade -->
+        <rect x="0" y="60" width="1600" height="620" fill="url(#p1wall)"/>
+        <g fill="#ffb43c" opacity=".85">
+          <rect x="60" y="120" width="70" height="54" rx="4"/><rect x="190" y="120" width="70" height="54" rx="4" opacity=".4"/>
+          <rect x="320" y="120" width="70" height="54" rx="4"/><rect x="450" y="120" width="70" height="54" rx="4" opacity=".35"/>
+          <rect x="1080" y="120" width="70" height="54" rx="4" opacity=".5"/><rect x="1210" y="120" width="70" height="54" rx="4"/>
+          <rect x="1340" y="120" width="70" height="54" rx="4" opacity=".4"/>
+          <rect x="60" y="250" width="70" height="54" rx="4" opacity=".45"/><rect x="190" y="250" width="70" height="54" rx="4"/>
+          <rect x="320" y="250" width="70" height="54" rx="4" opacity=".3"/><rect x="1080" y="250" width="70" height="54" rx="4"/>
+          <rect x="1210" y="250" width="70" height="54" rx="4" opacity=".4"/><rect x="1340" y="250" width="70" height="54" rx="4" opacity=".6"/>
+          <rect x="60" y="380" width="70" height="54" rx="4"/><rect x="190" y="380" width="70" height="54" rx="4" opacity=".35"/>
+          <rect x="1210" y="380" width="70" height="54" rx="4" opacity=".5"/><rect x="1340" y="380" width="70" height="54" rx="4"/>
+        </g>
+        <!-- string lights -->
+        <path d="M0 110 q400 90 800 40 q400 -50 800 30" fill="none" stroke="#5a3a7a" stroke-width="3"/>
+        <g class="puls">
+          <circle cx="150" cy="146" r="7" fill="#ff2ea6"/><circle cx="330" cy="164" r="7" fill="#d9ff2e"/>
+          <circle cx="520" cy="168" r="7" fill="#28e0ff"/><circle cx="720" cy="156" r="7" fill="#ffc93c"/>
+          <circle cx="920" cy="146" r="7" fill="#ff2ea6"/><circle cx="1120" cy="140" r="7" fill="#28e0ff"/>
+          <circle cx="1320" cy="150" r="7" fill="#d9ff2e"/>
+        </g>
+        <!-- neon sign $SB WE TRUST -->
+        <g transform="translate(1360,300)">
+          <rect x="-10" y="-34" width="220" height="96" rx="10" fill="#150a22" opacity=".65"/>
+          <text x="0" y="0" font-family="Trebuchet MS,sans-serif" font-size="46" font-weight="700" fill="#ff2ea6">$SB</text>
+          <text x="0" y="44" font-family="Trebuchet MS,sans-serif" font-size="34" font-weight="700" fill="#4dff7a">WE TRUST</text>
+        </g>
+        <!-- graffiti DVOR LOVE -->
+        <g transform="translate(40,470)" opacity=".8">
+          <text x="0" y="0" font-family="Trebuchet MS,sans-serif" font-size="52" font-weight="700" fill="#3fb9ff" transform="rotate(-6)">DVOR</text>
+          <text x="6" y="52" font-family="Trebuchet MS,sans-serif" font-size="52" font-weight="700" fill="#ff4fd0" transform="rotate(-6)">LOVE</text>
+        </g>
+        <!-- streetlight -->
+        <g>
+          <path d="M690 680 L690 250" stroke="#150a22" stroke-width="12"/>
+          <path d="M690 250 q0 -34 42 -34" fill="none" stroke="#150a22" stroke-width="12"/>
+          <ellipse class="flick" cx="732" cy="212" rx="26" ry="14" fill="#ffd97a"/>
+          <path class="flick" d="M732 226 L640 430 L824 430 Z" fill="#ffd97a" opacity=".16"/>
+        </g>
+        <!-- playground slide -->
+        <g transform="translate(1080,430)">
+          <rect x="60" y="0" width="90" height="24" rx="8" fill="#ff2ea6"/>
+          <path d="M60 24 L-10 210 L40 210 L104 34 Z" fill="#28c8ff"/>
+          <rect x="66" y="24" width="12" height="190" fill="#ffc93c"/>
+          <rect x="132" y="24" width="12" height="190" fill="#ffc93c"/>
+          <rect x="150" y="60" width="90" height="12" rx="6" fill="#4dff7a"/>
+        </g>
+        <!-- swing (sways) -->
+        <g transform="translate(300,430)">
+          <path d="M0 250 L46 40 L206 40 L252 250" fill="none" stroke="#150a22" stroke-width="14" stroke-linecap="round"/>
+          <path d="M46 40 L206 40" stroke="#150a22" stroke-width="14" stroke-linecap="round"/>
+          <g class="sway">
+            <path d="M96 40 L96 150" stroke="#150a22" stroke-width="7"/>
+            <path d="M156 40 L156 150" stroke="#150a22" stroke-width="7"/>
+            <rect x="86" y="150" width="80" height="12" rx="4" fill="#150a22"/>
+          </g>
+        </g>
+        <!-- ground + puddles -->
+        <rect x="0" y="680" width="1600" height="220" fill="#180a26"/>
+        <g fill="#7a3fd0" opacity=".55">
+          <ellipse cx="240" cy="800" rx="150" ry="26"/><ellipse cx="700" cy="850" rx="200" ry="30"/>
+          <ellipse cx="1300" cy="790" rx="170" ry="26"/>
+        </g>
+        <g fill="#28e0ff" opacity=".3">
+          <ellipse cx="240" cy="798" rx="90" ry="12"/><ellipse cx="700" cy="848" rx="120" ry="14"/>
+        </g>
+        <!-- pigeons -->
+        <g fill="#8a94ad">
+          <g class="drift" transform="translate(120,780)">
+            <ellipse cx="0" cy="0" rx="34" ry="24"/><circle cx="26" cy="-18" r="15"/>
+            <path d="M38 -20 L58 -14 L38 -8 Z" fill="#ffc93c"/>
+            <path d="M-8 22 l0 16 M8 22 l0 16" stroke="#ffc93c" stroke-width="4"/>
+          </g>
+          <g transform="translate(1470,790)">
+            <ellipse cx="0" cy="0" rx="30" ry="21"/><circle cx="-23" cy="-16" r="13"/>
+            <path d="M-34 -18 L-52 -13 L-34 -7 Z" fill="#ffc93c"/>
+          </g>
+          <g transform="translate(880,770) scale(.7)">
+            <ellipse cx="0" cy="0" rx="30" ry="21"/><circle cx="24" cy="-16" r="13"/>
+          </g>
+        </g>
+        <!-- bottle + cup -->
+        <g transform="translate(1380,700)">
+          <path d="M-14 0 h28 v34 q14 12 14 34 v52 q0 12 -14 12 h-28 q-14 0 -14 -12 v-52 q0 -22 14 -34 z" fill="#8a3a12" stroke="#2a1206" stroke-width="4"/>
+          <rect x="-8" y="-16" width="16" height="18" rx="3" fill="#2a1206"/>
+          <rect x="-13" y="44" width="26" height="30" rx="3" fill="#ffc93c"/>
+        </g>
+        <g transform="translate(1470,846)"><path d="M-22 0 h44 l-6 30 h-32 z" fill="#e8332f"/></g>
 
-    <div class="layer">
-      <div class="col">
-        <h1 class="brush" style="font-size:clamp(2.1rem,6.4vw,5.2rem)">
-          Welcome<br><span style="color:var(--lime)">to the Dvor</span>
-        </h1>
-        <p style="margin:0;font-size:clamp(.95rem,1.35vw,1.25rem);max-width:34ch">
-          A colorful concrete fairytale where legends <em style="font-style:normal;color:var(--mag)">rot</em>
-          and <em style="font-style:normal;color:var(--cyan)">rise</em>.
-        </p>
+        <!-- ══ MISHKA ══ -->
+        <g transform="translate(1080,300) scale(1.18)">
+          <ellipse cx="0" cy="470" rx="180" ry="22" fill="#000" opacity=".4"/>
+          <!-- legs -->
+          <rect x="-96" y="300" width="82" height="140" rx="30" fill="#2f7bff" stroke="#100a18" stroke-width="8"/>
+          <rect x="14" y="300" width="82" height="140" rx="30" fill="#2f7bff" stroke="#100a18" stroke-width="8"/>
+          <rect x="-118" y="424" width="112" height="42" rx="18" fill="#f3efe6" stroke="#100a18" stroke-width="8"/>
+          <rect x="6" y="424" width="112" height="42" rx="18" fill="#f3efe6" stroke="#100a18" stroke-width="8"/>
+          <!-- torso -->
+          <path d="M0 120 q118 8 128 76 q10 68 -16 108 q-44 34 -112 34 q-68 0 -112 -34 q-26 -40 -16 -108 q10 -68 128 -76 z"
+                fill="#2f7bff" stroke="#100a18" stroke-width="9"/>
+          <path d="M-30 128 q30 -10 60 4 l-14 60 q-24 -10 -48 -2 z" fill="#ff2ea6"/>
+          <path d="M-104 176 q-8 60 6 108" stroke="#f3efe6" stroke-width="9" fill="none" stroke-linecap="round"/>
+          <path d="M-84 168 q-8 62 6 112" stroke="#f3efe6" stroke-width="9" fill="none" stroke-linecap="round"/>
+          <path d="M-64 162 q-8 64 6 116" stroke="#f3efe6" stroke-width="9" fill="none" stroke-linecap="round"/>
+          <!-- chain -->
+          <path d="M-56 130 q56 46 112 0" fill="none" stroke="#ffc93c" stroke-width="11" stroke-linecap="round"/>
+          <rect x="-30" y="164" width="62" height="34" rx="8" fill="#ffc93c" stroke="#100a18" stroke-width="5"/>
+          <text x="1" y="189" font-family="Trebuchet MS,sans-serif" font-size="24" font-weight="700"
+                text-anchor="middle" fill="#100a18">$SB</text>
+          <!-- arms -->
+          <path d="M-116 168 q-46 34 -34 92" fill="none" stroke="#2f7bff" stroke-width="34" stroke-linecap="round"/>
+          <path d="M116 168 q46 34 34 92" fill="none" stroke="#2f7bff" stroke-width="34" stroke-linecap="round"/>
+          <circle cx="-152" cy="266" r="22" fill="#9a6c42" stroke="#100a18" stroke-width="7"/>
+          <!-- mug -->
+          <g transform="translate(150,262)">
+            <rect x="-34" y="-34" width="68" height="66" rx="8" fill="#f7f3ea" stroke="#100a18" stroke-width="6"/>
+            <path d="M34 -14 q22 0 22 18 q0 18 -22 18" fill="none" stroke="#100a18" stroke-width="6"/>
+            <text x="0" y="-6" font-family="ui-monospace,monospace" font-size="11" text-anchor="middle" fill="#3a2a18">DOBRYM</text>
+            <text x="0" y="8" font-family="ui-monospace,monospace" font-size="11" text-anchor="middle" fill="#3a2a18">UTROM,</text>
+            <text x="0" y="24" font-family="Trebuchet MS,sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#e8332f">DVOR!</text>
+          </g>
+          <!-- ears -->
+          <circle cx="-84" cy="-58" r="38" fill="#7a5334" stroke="#100a18" stroke-width="8"/>
+          <circle cx="84" cy="-58" r="38" fill="#7a5334" stroke="#100a18" stroke-width="8"/>
+          <!-- head -->
+          <rect x="-104" y="-76" width="208" height="182" rx="72" fill="#9a6c42" stroke="#100a18" stroke-width="9"/>
+          <!-- ushanka with pins -->
+          <path d="M-112 -34 q112 -86 224 0 q-8 -84 -112 -84 q-104 0 -112 84 z" fill="#5b3f28" stroke="#100a18" stroke-width="8"/>
+          <g stroke="#100a18" stroke-width="2.5">
+            <circle cx="-64" cy="-70" r="12" fill="#ff2ea6"/><circle cx="-30" cy="-88" r="12" fill="#28e0ff"/>
+            <circle cx="4" cy="-94" r="12" fill="#d9ff2e"/><circle cx="38" cy="-88" r="12" fill="#ffc93c"/>
+            <circle cx="70" cy="-70" r="12" fill="#4dff7a"/><circle cx="-46" cy="-50" r="11" fill="#a855f7"/>
+            <circle cx="46" cy="-50" r="11" fill="#ff6a3d"/>
+          </g>
+          <!-- face: one spiral eye, one X -->
+          <circle cx="-42" cy="6" r="20" fill="#f7f3ea" stroke="#100a18" stroke-width="5"/>
+          <path d="M-42 6 m-11 0 a11 11 0 1 1 16 9 a7 7 0 1 1 -9 -11" fill="none" stroke="#a855f7" stroke-width="5"/>
+          <path d="M32 -8 l22 22 M54 -8 l-22 22" stroke="#100a18" stroke-width="7" stroke-linecap="round"/>
+          <!-- muzzle -->
+          <ellipse cx="0" cy="54" rx="64" ry="42" fill="#c49a68" stroke="#100a18" stroke-width="7"/>
+          <ellipse cx="0" cy="34" rx="26" ry="17" fill="#100a18"/>
+          <path d="M-30 66 q30 26 60 0" fill="none" stroke="#100a18" stroke-width="6" stroke-linecap="round"/>
+          <path d="M8 72 q14 26 -2 34 q-16 -8 -6 -34 z" fill="#ff5f8f" stroke="#100a18" stroke-width="4"/>
+          <rect x="-26" y="66" width="17" height="20" rx="3" fill="#ffc93c" stroke="#100a18" stroke-width="4"/>
+        </g>
+      </svg>
+      <div class="scrim" style="background:linear-gradient(90deg,rgba(12,4,24,.78) 0%,rgba(12,4,24,.4) 44%,transparent 70%)"></div>
+    </div>
 
-        <div style="margin-top:.3rem">
-          <div class="feat" style="--fc:var(--violet)"><span class="ic">📖</span>
-            <div><b>Scroll-driven story</b><span>The legend unfolds as you scroll.</span></div></div>
-          <div class="feat" style="--fc:var(--cyan)"><span class="ic">🗺</span>
-            <div><b>Parallax Dvor</b><span>The courtyard moves with you.</span></div></div>
-          <div class="feat" style="--fc:var(--green)"><span class="ic">▶</span>
-            <div><b>Six chapters, no clicks</b><span>Cinematic chaos, hands-free.</span></div></div>
-        </div>
-
-        <div class="box" style="--accent:var(--lime);--boxbg:linear-gradient(135deg,rgba(74,20,102,.62),rgba(24,8,40,.58))">
-          <span class="eyebrow">Chapter One · The Dvor</span>
-          <div class="stage"></div>
-          <div class="pline"><i></i></div>
-        </div>
-
-        <div class="hint" style="color:var(--lime)">↓ &nbsp; Scroll down — the legend starts here</div>
-      </div>
+    <div class="box" style="--bx:5vw;--by:52%;--accent:var(--lime);
+         --boxbg:linear-gradient(135deg,rgba(74,20,102,.6),rgba(26,8,40,.55))">
+      <span class="eyebrow">Chapter One · The Dvor</span>
+      <h2>Welcome to the Dvor</h2>
+      <div class="stage"></div>
+      <div class="pline"><i></i></div>
     </div>
   </div>
 </section>
 
-<!-- ══════════ 2 · BREAKING NEWS ══════════ -->
-<section class="page" id="p2" data-title="Breaking News">
+<!-- ══════════ PAGE 2 — KING OF THE DVOR ══════════ -->
+<section class="page" id="p2" data-title="King of the Dvor">
   <div class="pin">
-    <div class="bgimg"></div>
-    <div class="bgfallback"><svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-label="Neon news studio">
-      <rect width="1600" height="900" fill="#2a0f52"/>
-      <radialGradient id="g2" cx="50%" cy="45%" r="70%"><stop offset="0" stop-color="#5a1a9a"/><stop offset="1" stop-color="#120730"/></radialGradient>
-      <rect width="1600" height="900" fill="url(#g2)"/>
-    </svg></div>
-    <div class="scrim" style="background:linear-gradient(90deg,rgba(8,4,26,.88) 0%,rgba(8,4,26,.3) 40%,transparent 60%)"></div>
-
-    <div class="layer">
-      <div class="left">
-        <h2 class="brush" style="font-size:clamp(1.8rem,4.4vw,3.6rem);color:var(--gold)">
-          Breaking<br><span style="color:var(--mag)">News</span>
-        </h2>
-        <div class="tagband" style="background:linear-gradient(100deg,#1d6fd0,#2f9bff)">Live. Loud. Unfiltered.</div>
-
-        <div class="box" style="--accent:var(--lime);--boxbg:linear-gradient(135deg,rgba(92,20,112,.62),rgba(20,8,44,.6));width:100%">
-          <span class="eyebrow">Chapter Two · King of the Dvor</span>
-          <div class="stage"></div>
-          <div class="pline"><i></i></div>
-        </div>
-
-        <div class="card" style="--kc:var(--mag);padding:.6rem .75rem">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:.6rem">
-            <div>
-              <b class="fat" style="font-size:.85rem;color:var(--cyan)">Viewer poll</b>
-              <div style="font-size:.72rem;opacity:.78">Is he the real king?</div>
-            </div>
-            <div style="text-align:right;line-height:1.15">
-              <div><b class="fat" style="font-size:1.3rem;color:var(--green)">86%</b>
-                   <span class="mono" style="color:var(--green)">Yes</span></div>
-              <div><b class="fat" style="font-size:1.1rem;color:var(--mag)">14%</b>
-                   <span class="mono" style="color:var(--mag)">Lol no</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="mid">
-        <div class="chyron">Breaking: Suka Blyat bear crowns himself King of the Dvor</div>
-        <div style="display:flex;gap:.7rem;align-items:center;margin-top:.4rem;font-size:.78rem;opacity:.85">
-          <span class="mono">03:33 AM · Dvor time</span>
-          <span class="mono live-anim" style="color:var(--red)">● Live</span>
-          <span class="mono">👁 69.4K</span>
-        </div>
-      </div>
-
-      <div class="cams">
-        <div class="mono" style="color:var(--mag)">Chaos cams</div>
-        <div class="cam"><b>King Blyat speech</b><span class="live live-anim">● Live</span></div>
-        <div class="cam" style="border-color:var(--cyan)"><b>Block 7 aftermath</b><span class="live live-anim">● Live</span></div>
-        <div class="cam" style="border-color:var(--lime)"><b>Royal toast</b><span class="live live-anim">● Live</span></div>
-      </div>
+    <div class="scene">
+      <div class="photo"></div>
+      <svg class="art" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-label="A breaking-news broadcast where the bear sits crowned on a throne between two excited reporters">
+        <defs>
+          <linearGradient id="p2bg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#3a0f66"/><stop offset=".55" stop-color="#241046"/><stop offset="1" stop-color="#150a30"/>
+          </linearGradient>
+        </defs>
+        <rect width="1600" height="900" fill="#2a0f52"/>
+        <rect width="1600" height="900" fill="url(#p2bg)" opacity=".6"/>
+        <!-- crowd blur -->
+        <g opacity=".35" fill="#5a2a8a">
+          <circle cx="120" cy="480" r="60"/><circle cx="260" cy="520" r="52"/><circle cx="400" cy="470" r="58"/>
+          <circle cx="1200" cy="480" r="58"/><circle cx="1340" cy="520" r="52"/><circle cx="1470" cy="470" r="60"/>
+        </g>
+        <!-- confetti -->
+        <g class="drift">
+          <rect x="200" y="120" width="14" height="14" fill="#d9ff2e" transform="rotate(20 207 127)"/>
+          <rect x="430" y="90" width="12" height="12" fill="#ff2ea6" transform="rotate(-15 436 96)"/>
+          <rect x="620" y="150" width="14" height="14" fill="#28e0ff" transform="rotate(35 627 157)"/>
+          <rect x="980" y="110" width="12" height="12" fill="#ffc93c" transform="rotate(-25 986 116)"/>
+          <rect x="1180" y="140" width="14" height="14" fill="#4dff7a" transform="rotate(15 1187 147)"/>
+          <rect x="1380" y="100" width="12" height="12" fill="#a855f7" transform="rotate(40 1386 106)"/>
+        </g>
+        <!-- neon LONG LIVE THE DVOR -->
+        <g transform="translate(1120,180)" class="puls">
+          <text x="0" y="0" font-family="Trebuchet MS,sans-serif" font-size="30" font-weight="700" fill="#ff2ea6">LONG</text>
+          <text x="0" y="34" font-family="Trebuchet MS,sans-serif" font-size="30" font-weight="700" fill="#ff2ea6">LIVE</text>
+          <text x="0" y="68" font-family="Trebuchet MS,sans-serif" font-size="30" font-weight="700" fill="#d9ff2e">THE DVOR</text>
+        </g>
+        <!-- throne -->
+        <g transform="translate(800,300)">
+          <rect x="-150" y="60" width="300" height="330" rx="16" fill="#8a5a1e" stroke="#2a1a06" stroke-width="8"/>
+          <rect x="-190" y="140" width="46" height="200" rx="12" fill="#a8721e" stroke="#2a1a06" stroke-width="7"/>
+          <rect x="144" y="140" width="46" height="200" rx="12" fill="#a8721e" stroke="#2a1a06" stroke-width="7"/>
+          <path d="M-150 60 q150 -70 300 0 z" fill="#a8721e" stroke="#2a1a06" stroke-width="8"/>
+        </g>
+        <!-- reporters -->
+        <g transform="translate(370,470)">
+          <ellipse cx="0" cy="220" rx="130" ry="140" fill="#6d28d9" stroke="#1a0a30" stroke-width="7"/>
+          <circle cx="0" cy="20" r="72" fill="#c98a5e" stroke="#1a0a30" stroke-width="7"/>
+          <path d="M-72 -6 q28 -74 84 -56 q44 14 60 62 q-40 -26 -76 -14 q-38 12 -68 8 z" fill="#3a2114"/>
+          <circle cx="-24" cy="18" r="8" fill="#1a0a30"/><circle cx="26" cy="18" r="8" fill="#1a0a30"/>
+          <ellipse cx="0" cy="52" rx="18" ry="22" fill="#5a1a1a"/>
+          <rect x="76" y="96" width="58" height="150" rx="26" fill="#6d28d9" stroke="#1a0a30" stroke-width="7"/>
+          <rect x="72" y="60" width="66" height="80" rx="10" fill="#7c3aed" stroke="#1a0a30" stroke-width="6"/>
+          <text x="105" y="94" font-family="Trebuchet MS,sans-serif" font-size="15" font-weight="700" text-anchor="middle" fill="#fff">DVOR</text>
+          <text x="105" y="118" font-family="Trebuchet MS,sans-serif" font-size="15" font-weight="700" text-anchor="middle" fill="#fff">NEWS</text>
+        </g>
+        <g transform="translate(1230,470)">
+          <ellipse cx="0" cy="220" rx="130" ry="140" fill="#db2777" stroke="#1a0a30" stroke-width="7"/>
+          <circle cx="0" cy="20" r="72" fill="#d79a6e" stroke="#1a0a30" stroke-width="7"/>
+          <path d="M-76 10 q-6 -80 76 -80 q80 0 76 84 q-24 -46 -76 -40 q-52 6 -76 36 z" fill="#5a3016"/>
+          <circle cx="-24" cy="18" r="8" fill="#1a0a30"/><circle cx="26" cy="18" r="8" fill="#1a0a30"/>
+          <ellipse cx="0" cy="52" rx="20" ry="24" fill="#7a1a2a"/>
+          <rect x="-134" y="96" width="58" height="150" rx="26" fill="#db2777" stroke="#1a0a30" stroke-width="7"/>
+          <rect x="-138" y="60" width="66" height="80" rx="10" fill="#a21caf" stroke="#1a0a30" stroke-width="6"/>
+          <text x="-105" y="94" font-family="Trebuchet MS,sans-serif" font-size="15" font-weight="700" text-anchor="middle" fill="#fff">DVOR</text>
+          <text x="-105" y="118" font-family="Trebuchet MS,sans-serif" font-size="15" font-weight="700" text-anchor="middle" fill="#fff">NEWS</text>
+        </g>
+        <!-- crowned bear -->
+        <g transform="translate(800,300) scale(1.02)">
+          <path d="M0 96 q112 8 122 74 q10 64 -14 102 q-42 32 -108 32 q-66 0 -108 -32 q-24 -38 -14 -102 q10 -66 122 -74 z"
+                fill="#2f7bff" stroke="#100a18" stroke-width="9"/>
+          <path d="M-28 104 q28 -10 56 4 l-12 58 q-22 -10 -46 -2 z" fill="#ff2ea6"/>
+          <path d="M-96 150 q-8 58 6 104 M-78 142 q-8 60 6 108 M-60 136 q-8 62 6 110"
+                stroke="#f3efe6" stroke-width="8" fill="none" stroke-linecap="round"/>
+          <path d="M-52 106 q52 44 104 0" fill="none" stroke="#ffc93c" stroke-width="10" stroke-linecap="round"/>
+          <rect x="-28" y="138" width="58" height="32" rx="8" fill="#ffc93c" stroke="#100a18" stroke-width="5"/>
+          <text x="1" y="161" font-family="Trebuchet MS,sans-serif" font-size="23" font-weight="700" text-anchor="middle" fill="#100a18">$SB</text>
+          <!-- arms: bottle + sceptre -->
+          <path d="M-110 140 q-56 -34 -70 -96" fill="none" stroke="#2f7bff" stroke-width="32" stroke-linecap="round"/>
+          <path d="M110 140 q56 -34 70 -96" fill="none" stroke="#2f7bff" stroke-width="32" stroke-linecap="round"/>
+          <g transform="translate(-186,20)">
+            <path d="M-18 0 h36 v34 q14 12 14 34 v58 q0 12 -14 12 h-36 q-14 0 -14 -12 v-58 q0 -22 14 -34 z" fill="#c22b2b" stroke="#100a18" stroke-width="5"/>
+            <rect x="-10" y="-18" width="20" height="20" rx="4" fill="#100a18"/>
+            <text x="0" y="88" font-family="ui-monospace,monospace" font-size="13" font-weight="700" text-anchor="middle" fill="#ffe9a8">DVOR</text>
+          </g>
+          <g transform="translate(186,20)">
+            <rect x="-6" y="0" width="12" height="110" rx="6" fill="#ffc93c" stroke="#100a18" stroke-width="4"/>
+            <circle cx="0" cy="-16" r="22" fill="#ffc93c" stroke="#100a18" stroke-width="5"/>
+            <path d="M-9 -22 q9 -10 18 0 q-4 12 -9 14 q-5 -2 -9 -14 z" fill="#ff9f1c"/>
+          </g>
+          <circle cx="-80" cy="-64" r="36" fill="#7a5334" stroke="#100a18" stroke-width="8"/>
+          <circle cx="80" cy="-64" r="36" fill="#7a5334" stroke="#100a18" stroke-width="8"/>
+          <rect x="-98" y="-80" width="196" height="172" rx="68" fill="#9a6c42" stroke="#100a18" stroke-width="9"/>
+          <circle cx="-40" cy="0" r="19" fill="#f7f3ea" stroke="#100a18" stroke-width="5"/>
+          <path d="M-40 0 m-10 0 a10 10 0 1 1 15 8 a6 6 0 1 1 -8 -10" fill="none" stroke="#a855f7" stroke-width="5"/>
+          <path d="M30 -14 l21 21 M51 -14 l-21 21" stroke="#100a18" stroke-width="7" stroke-linecap="round"/>
+          <ellipse cx="0" cy="46" rx="60" ry="40" fill="#c49a68" stroke="#100a18" stroke-width="7"/>
+          <ellipse cx="0" cy="26" rx="25" ry="16" fill="#100a18"/>
+          <path d="M-28 58 q28 26 56 0" fill="none" stroke="#100a18" stroke-width="6" stroke-linecap="round"/>
+          <path d="M8 64 q13 25 -2 33 q-15 -8 -6 -33 z" fill="#ff5f8f" stroke="#100a18" stroke-width="4"/>
+          <rect x="-24" y="58" width="16" height="19" rx="3" fill="#ffc93c" stroke="#100a18" stroke-width="4"/>
+          <!-- crown -->
+          <path d="M-92 -92 L-92 -168 L-46 -124 L0 -186 L46 -124 L92 -168 L92 -92 Z" fill="#ffc93c" stroke="#100a18" stroke-width="8" stroke-linejoin="round"/>
+          <rect x="-92" y="-104" width="184" height="22" rx="6" fill="#e8ae1c" stroke="#100a18" stroke-width="6"/>
+          <text x="0" y="-122" font-family="Trebuchet MS,sans-serif" font-size="30" font-weight="700" text-anchor="middle" fill="#100a18">$SB</text>
+        </g>
+        <!-- LIVE panels right -->
+        <g transform="translate(1330,120)">
+          <g>
+            <rect x="0" y="0" width="250" height="140" rx="12" fill="#1e0d3a" stroke="#ff2ea6" stroke-width="4"/>
+            <text x="200" y="126" font-family="Trebuchet MS,sans-serif" font-size="17" font-weight="700" fill="#ff2ea6">● LIVE</text>
+          </g>
+          <g transform="translate(0,165)">
+            <rect x="0" y="0" width="250" height="140" rx="12" fill="#1e0d3a" stroke="#28e0ff" stroke-width="4"/>
+            <text x="200" y="126" font-family="Trebuchet MS,sans-serif" font-size="17" font-weight="700" fill="#28e0ff">● LIVE</text>
+          </g>
+          <g transform="translate(0,330)">
+            <rect x="0" y="0" width="250" height="140" rx="12" fill="#1e0d3a" stroke="#d9ff2e" stroke-width="4"/>
+            <text x="200" y="126" font-family="Trebuchet MS,sans-serif" font-size="17" font-weight="700" fill="#d9ff2e">● LIVE</text>
+          </g>
+        </g>
+        <!-- poll badge -->
+        <g transform="translate(70,560)">
+          <rect x="0" y="0" width="190" height="130" rx="16" fill="#12082a" stroke="#4dff7a" stroke-width="4"/>
+          <text x="20" y="36" font-family="Trebuchet MS,sans-serif" font-size="19" font-weight="700" fill="#ff2ea6">♛ KING?</text>
+          <text x="20" y="90" font-family="Trebuchet MS,sans-serif" font-size="52" font-weight="700" fill="#4dff7a">86%</text>
+          <text x="20" y="118" font-family="Trebuchet MS,sans-serif" font-size="19" font-weight="700" fill="#4dff7a">YES</text>
+        </g>
+        <!-- ticker -->
+        <rect x="0" y="812" width="1600" height="88" fill="#0e0620" stroke="#d9ff2e" stroke-width="4"/>
+        <rect x="20" y="828" width="200" height="56" rx="10" fill="#2a0f52" stroke="#a855f7" stroke-width="3"/>
+        <text x="120" y="864" font-family="Trebuchet MS,sans-serif" font-size="22" font-weight="700" text-anchor="middle" fill="#a855f7">DVOR FEED</text>
+        <g font-family="Trebuchet MS,sans-serif" font-size="21" font-weight="700" fill="#f3efe6">
+          <text x="260" y="864">♛ BEAR CROWNED</text>
+          <text x="560" y="864" fill="#d9ff2e">•</text>
+          <text x="600" y="864">DVOR GOES WILD</text>
+          <text x="850" y="864" fill="#d9ff2e">•</text>
+          <text x="890" y="864">CHAOS CONTINUES</text>
+          <text x="1180" y="864" fill="#d9ff2e">•</text>
+          <text x="1220" y="864">$SB TO THE MOON</text>
+        </g>
+      </svg>
+      <div class="scrim" style="background:linear-gradient(90deg,rgba(10,4,26,.82) 0%,rgba(10,4,26,.35) 42%,transparent 62%)"></div>
     </div>
 
-    <div class="ticker">
-      <span class="tag">📰 Dvor feed</span>
-      <span class="run"><div>
-        <span>● Riots continue in sector 9</span><span>✦ Bear merch sales up 666%</span>
-        <span>● Mayor missing (again)</span><span>✦ New holiday: Blyat Day announced</span>
-        <span>● Riots continue in sector 9</span><span>✦ Bear merch sales up 666%</span>
-        <span>● Mayor missing (again)</span><span>✦ New holiday: Blyat Day announced</span>
-      </div></span>
+    <div class="box" style="--bx:5vw;--by:50%;--accent:var(--lime);
+         --boxbg:linear-gradient(135deg,rgba(90,20,110,.6),rgba(20,8,44,.58))">
+      <span class="eyebrow">Chapter Two · Breaking News</span>
+      <h2>King of the Dvor</h2>
+      <div class="stage"></div>
+      <div class="pline"><i></i></div>
     </div>
   </div>
 </section>
 
-<!-- ══════════ 3 · TWO FUTURES ══════════ -->
+<!-- ══════════ PAGE 3 — THE BOTTLE AND TWO DOORS ══════════ -->
 <section class="page" id="p3" data-title="Two Futures">
   <div class="pin">
-    <div class="bgimg"></div>
-    <div class="bgfallback"><svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-label="Two glowing doors">
-      <rect width="800" height="900" fill="#3a0a3e"/><rect x="800" width="800" height="900" fill="#0d2560"/>
-      <rect x="400" y="240" width="240" height="560" rx="6" fill="#5a0a1e" stroke="#ff2d55" stroke-width="9"/>
-      <rect x="960" y="240" width="240" height="560" rx="6" fill="#0a2560" stroke="#2f7bff" stroke-width="9"/>
-    </svg></div>
-    <div class="scrim" style="background:linear-gradient(180deg,rgba(8,4,20,.5) 0%,transparent 30%,rgba(8,4,20,.85) 82%)"></div>
+    <div class="scene">
+      <div class="photo"></div>
+      <svg class="art" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-label="The bear stands from behind between a glowing red door on the left and a glowing blue door on the right">
+        <rect width="800" height="900" fill="#2a0a2e"/>
+        <rect x="800" width="800" height="900" fill="#0d1c4a"/>
+        <!-- left: graffiti wall + neon -->
+        <rect x="0" y="0" width="560" height="700" fill="#3a1140" opacity=".8"/>
+        <g transform="translate(50,300)" class="puls">
+          <text x="0" y="0" font-family="Trebuchet MS,sans-serif" font-size="60" font-weight="700" fill="#ff2ea6">NO</text>
+          <text x="0" y="62" font-family="Trebuchet MS,sans-serif" font-size="60" font-weight="700" fill="#ff2ea6">RUSH</text>
+        </g>
+        <circle cx="110" cy="470" r="40" fill="none" stroke="#ffc93c" stroke-width="6"/>
+        <path d="M92 462 l10 10 M128 462 l-10 10 M88 486 q22 20 44 0" stroke="#ffc93c" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <!-- boombox -->
+        <g transform="translate(60,640)">
+          <rect x="0" y="0" width="230" height="120" rx="10" fill="#16101e" stroke="#000" stroke-width="5"/>
+          <circle cx="60" cy="60" r="34" fill="#2a2438" stroke="#28e0ff" stroke-width="5"/>
+          <circle cx="170" cy="60" r="34" fill="#2a2438" stroke="#ff2ea6" stroke-width="5"/>
+          <rect x="100" y="30" width="30" height="14" rx="3" fill="#d9ff2e"/>
+        </g>
+        <!-- rage sauce + cup -->
+        <g transform="translate(20,540)">
+          <path d="M0 0 h44 v40 q16 14 16 40 v58 q0 12 -16 12 h-44 q-16 0 -16 -12 v-58 q0 -26 16 -40 z" fill="#8a3a12" stroke="#2a1206" stroke-width="5"/>
+          <rect x="-12" y="64" width="66" height="34" rx="4" fill="#ffc93c"/>
+          <text x="21" y="88" font-family="Trebuchet MS,sans-serif" font-size="15" font-weight="700" text-anchor="middle" fill="#8a1a06">RAGE</text>
+        </g>
+        <!-- right: mountains + flags + minibus -->
+        <path d="M800 560 L960 340 L1090 500 L1240 300 L1420 540 L1600 380 L1600 700 L800 700 Z" fill="#2b3f7a"/>
+        <path d="M1240 300 L1292 366 L1188 366 Z" fill="#e8f2ff"/>
+        <path d="M960 340 L1004 398 L916 398 Z" fill="#e8f2ff" opacity=".9"/>
+        <path d="M810 200 q200 90 400 40 q200 -50 390 30" fill="none" stroke="#6a7ab0" stroke-width="3"/>
+        <g class="puls">
+          <path d="M880 224 l30 0 l-15 30 z" fill="#ff2ea6"/><path d="M980 240 l30 0 l-15 30 z" fill="#d9ff2e"/>
+          <path d="M1080 244 l30 0 l-15 30 z" fill="#28e0ff"/><path d="M1180 234 l30 0 l-15 30 z" fill="#ffc93c"/>
+          <path d="M1300 226 l30 0 l-15 30 z" fill="#4dff7a"/><path d="M1420 232 l30 0 l-15 30 z" fill="#ff6a3d"/>
+        </g>
+        <g transform="translate(1350,590)">
+          <rect x="0" y="0" width="230" height="90" rx="14" fill="#f3efe6" stroke="#0a1228" stroke-width="6"/>
+          <rect x="0" y="0" width="230" height="26" rx="12" fill="#2f7bff" stroke="#0a1228" stroke-width="6"/>
+          <text x="115" y="19" font-family="ui-monospace,monospace" font-size="12" font-weight="700" text-anchor="middle" fill="#d9ff2e">DAGESTAN EXPRESS</text>
+          <rect x="16" y="36" width="48" height="30" rx="5" fill="#7dd3fc" stroke="#0a1228" stroke-width="4"/>
+          <rect x="74" y="36" width="48" height="30" rx="5" fill="#7dd3fc" stroke="#0a1228" stroke-width="4"/>
+          <rect x="132" y="36" width="48" height="30" rx="5" fill="#7dd3fc" stroke="#0a1228" stroke-width="4"/>
+          <circle cx="52" cy="90" r="20" fill="#141018" stroke="#0a1228" stroke-width="5"/>
+          <circle cx="180" cy="90" r="20" fill="#141018" stroke="#0a1228" stroke-width="5"/>
+        </g>
+        <!-- kettlebell -->
+        <g transform="translate(1280,720)">
+          <path d="M-30 -34 q30 -30 60 0" fill="none" stroke="#1a1a22" stroke-width="14"/>
+          <ellipse cx="0" cy="10" rx="48" ry="42" fill="#1a1a22"/>
+          <text x="0" y="18" font-family="Trebuchet MS,sans-serif" font-size="19" font-weight="700" text-anchor="middle" fill="#8b93a8">32KG</text>
+        </g>
+        <!-- ground -->
+        <rect x="0" y="700" width="1600" height="200" fill="#1a0a24"/>
+        <rect x="800" y="700" width="800" height="200" fill="#0a142e"/>
+        <!-- RED DOOR -->
+        <g transform="translate(400,240)">
+          <rect x="-14" y="-14" width="268" height="588" rx="10" fill="#ff2d55" opacity=".22"/>
+          <rect x="0" y="0" width="240" height="560" rx="6" fill="#5a0a1e" stroke="#ff2d55" stroke-width="9"/>
+          <rect x="18" y="18" width="204" height="524" rx="4" fill="none" stroke="#ff6b8a" stroke-width="4"/>
+          <path d="M120 190 l-36 46 h24 v54 h24 v-54 h24 z" fill="#ff2d55" opacity=".35"/>
+          <circle cx="206" cy="284" r="10" fill="#ffc0cd"/>
+        </g>
+        <!-- BLUE DOOR -->
+        <g transform="translate(960,240)">
+          <rect x="-14" y="-14" width="268" height="588" rx="10" fill="#2f7bff" opacity=".22"/>
+          <rect x="0" y="0" width="240" height="560" rx="6" fill="#0a2560" stroke="#2f7bff" stroke-width="9"/>
+          <rect x="18" y="18" width="204" height="524" rx="4" fill="none" stroke="#7fb0ff" stroke-width="4"/>
+          <path d="M60 300 L110 210 L150 270 L196 190 L196 320 L60 320 Z" fill="#8fc4ff" opacity=".4"/>
+          <circle cx="34" cy="284" r="10" fill="#c9e2ff"/>
+        </g>
+        <!-- bear from behind -->
+        <g transform="translate(800,320)">
+          <ellipse cx="0" cy="470" rx="140" ry="18" fill="#000" opacity=".45"/>
+          <rect x="-74" y="292" width="66" height="130" rx="26" fill="#2f7bff" stroke="#0a0610" stroke-width="8"/>
+          <rect x="8" y="292" width="66" height="130" rx="26" fill="#2f7bff" stroke="#0a0610" stroke-width="8"/>
+          <rect x="-92" y="406" width="90" height="38" rx="16" fill="#f3efe6" stroke="#0a0610" stroke-width="7"/>
+          <rect x="2" y="406" width="90" height="38" rx="16" fill="#f3efe6" stroke="#0a0610" stroke-width="7"/>
+          <path d="M0 108 q104 8 112 68 q10 60 -14 96 q-38 30 -98 30 q-60 0 -98 -30 q-24 -36 -14 -96 q8 -60 112 -68 z"
+                fill="#2f7bff" stroke="#0a0610" stroke-width="9"/>
+          <path d="M-58 176 q58 -18 116 0 l-10 62 q-48 -16 -96 0 z" fill="#ff2ea6" opacity=".9"/>
+          <text x="0" y="228" font-family="Trebuchet MS,sans-serif" font-size="46" font-weight="700"
+                text-anchor="middle" fill="#f7d0e6" opacity=".95">$SB</text>
+          <path d="M-104 156 q-40 30 -32 84" fill="none" stroke="#2f7bff" stroke-width="30" stroke-linecap="round"/>
+          <path d="M104 156 q40 30 32 84" fill="none" stroke="#2f7bff" stroke-width="30" stroke-linecap="round"/>
+          <circle cx="-74" cy="-56" r="34" fill="#7a5334" stroke="#0a0610" stroke-width="8"/>
+          <circle cx="74" cy="-56" r="34" fill="#7a5334" stroke="#0a0610" stroke-width="8"/>
+          <rect x="-92" y="-72" width="184" height="164" rx="66" fill="#8a5f3a" stroke="#0a0610" stroke-width="9"/>
+          <rect x="-96" y="-40" width="192" height="44" rx="12" fill="#a855f7" stroke="#0a0610" stroke-width="7"/>
+          <g font-family="Trebuchet MS,sans-serif" font-size="19" font-weight="700" fill="#f3efe6">
+            <text x="-70" y="-8">$SB</text><text x="-22" y="-8">$SB</text><text x="26" y="-8">$SB</text>
+          </g>
+          <path d="M-96 -52 q96 -70 192 0 q-8 -68 -96 -68 q-88 0 -96 68 z" fill="#5b3f28" stroke="#0a0610" stroke-width="7"/>
+          <g stroke="#0a0610" stroke-width="2.5">
+            <circle cx="-52" cy="-82" r="11" fill="#ff2ea6"/><circle cx="-18" cy="-98" r="11" fill="#28e0ff"/>
+            <circle cx="18" cy="-98" r="11" fill="#d9ff2e"/><circle cx="52" cy="-82" r="11" fill="#ffc93c"/>
+          </g>
+        </g>
+        <!-- labels -->
+        <g transform="translate(120,190)">
+          <text x="0" y="0" font-family="Trebuchet MS,sans-serif" font-size="46" font-weight="700" fill="#f3efe6">GANGSTA</text>
+        </g>
+        <g transform="translate(1300,190)">
+          <text x="0" y="0" font-family="Trebuchet MS,sans-serif" font-size="46" font-weight="700" fill="#f3efe6">DAGESTAN</text>
+        </g>
+      </svg>
+      <div class="scrim" style="background:linear-gradient(180deg,rgba(8,4,20,.35) 0%,transparent 34%,rgba(8,4,20,.86) 78%)"></div>
+    </div>
 
-    <div class="layer">
-      <div class="modes">
-        <div class="mode">
-          <h3 class="brush" style="font-size:clamp(1.1rem,2.5vw,2rem);color:var(--mag)">Gangsta<br>mode</h3>
-          <p style="font-size:.82rem;opacity:.85;margin:.3rem 0 .6rem">Get drunk and rule nothing.</p>
-          <div class="chip" style="--cc:var(--mag)"><span>☠</span> Hardbass &amp; chaos</div>
-          <div class="chip" style="--cc:var(--red)"><span>⚡</span> Short-term highs</div>
-          <div class="chip" style="--cc:var(--violet)"><span>👻</span> No legacy</div>
-        </div>
-
-        <div style="flex:1;text-align:center;padding-top:.4rem">
-          <h2 class="brush" style="font-size:clamp(1.7rem,5vw,4.2rem)">
-            <span style="color:var(--mag)">Two</span> <span style="color:var(--gold)">Fu</span><span style="color:var(--cyan)">tures</span>
-          </h2>
-          <p style="font-size:clamp(.8rem,1.15vw,1.05rem);opacity:.9;margin:.3rem 0 0">
-            Every choice shapes your legend.<br>Where will you lead <b style="color:var(--mag)">$SB</b>?
-          </p>
-        </div>
-
-        <div class="mode r">
-          <h3 class="brush" style="font-size:clamp(1.1rem,2.5vw,2rem);color:var(--cyan)">Dagestan<br>mode</h3>
-          <p style="font-size:.82rem;opacity:.85;margin:.3rem 0 .6rem">Train. Return stronger.</p>
-          <div class="chip" style="--cc:var(--cyan)"><span>🏋</span> Discipline &amp; honor</div>
-          <div class="chip" style="--cc:var(--blue)"><span>🏔</span> Long-term legacy</div>
-          <div class="chip" style="--cc:var(--green)"><span>🏆</span> Respect earned</div>
-        </div>
-      </div>
-
-      <div class="box" style="--accent:var(--cyan);--boxbg:linear-gradient(135deg,rgba(32,14,72,.7),rgba(62,10,52,.62));width:min(660px,94%)">
-        <span class="eyebrow">Chapter Three · The night of the two doors</span>
-        <div class="stage"></div>
-        <div class="pline"><i></i></div>
-      </div>
-
-      <div style="width:100%;display:flex;flex-direction:column;align-items:center;gap:.55rem">
-        <div class="slider">
-          <span class="mono" style="color:var(--mag)">Chaos</span>
-          <input id="futureSlider" type="range" min="0" max="100" value="50" aria-label="Choose your future: chaos or discipline">
-          <span class="mono" style="color:var(--cyan)">Discipline</span>
-        </div>
-        <div class="choose">
-          <button class="btn buy" data-choose="chaos"><i>☠</i><span>Choose chaos</span></button>
-          <span class="hint" id="chooseHint">Drag the slider or pick a side</span>
-          <button class="btn tg" data-choose="discipline"><i>🏔</i><span>Choose discipline</span></button>
-        </div>
-      </div>
+    <div class="box" style="--bx:50%;--by:auto;--accent:var(--cyan);
+         --boxbg:linear-gradient(135deg,rgba(30,14,70,.68),rgba(60,10,50,.6));
+         left:50%;top:auto;bottom:6vh;transform:translateX(-50%);width:min(680px,calc(100% - 3rem))">
+      <span class="eyebrow">Chapter Three · Two Futures</span>
+      <h2>The night of the two doors</h2>
+      <div class="stage"></div>
+      <div class="pline"><i></i></div>
     </div>
   </div>
 </section>
 
-<!-- ══════════ 4 · TRAINING ARC ══════════ ═-->
-<section class="page" id="p4" data-title="Training Arc">
+<!-- ══════════ PAGE 4 — FAILURE AND DAGESTAN ══════════ -->
+<section class="page" id="p4" data-title="2–3 Years">
   <div class="pin">
-    <div class="bgimg"></div>
-    <div class="bgfallback"><svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-label="Neon gym at altitude">
-      <rect width="1600" height="900" fill="#2b1050"/>
-      <radialGradient id="g4" cx="50%" cy="40%" r="72%"><stop offset="0" stop-color="#6a2090"/><stop offset="1" stop-color="#180a30"/></radialGradient>
-      <rect width="1600" height="900" fill="url(#g4)"/>
-    </svg></div>
-    <div class="scrim" style="background:linear-gradient(180deg,rgba(10,4,24,.72) 0%,rgba(10,4,24,.35) 40%,rgba(10,4,24,.8) 100%)"></div>
+    <div class="scene">
+      <div class="photo"></div>
+      <svg class="art" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-label="A neon gym where the bear trains, with six numbered training cards along the bottom and a year timeline">
+        <rect width="1600" height="900" fill="#2b1050"/>
+        <rect y="0" width="1600" height="420" fill="#3d1568"/>
+        <!-- mountain window -->
+        <rect x="1120" y="80" width="460" height="330" rx="12" fill="#1b2f6a"/>
+        <path d="M1120 340 L1250 200 L1330 300 L1430 170 L1560 340 L1560 410 L1120 410 Z" fill="#4a63a8"/>
+        <path d="M1430 170 L1466 216 L1394 216 Z" fill="#eaf2ff"/>
+        <!-- neon signs -->
+        <g transform="translate(40,150)" class="puls">
+          <text x="0" y="0" font-family="Trebuchet MS,sans-serif" font-size="42" font-weight="700" fill="#d9ff2e">NO</text>
+          <text x="0" y="46" font-family="Trebuchet MS,sans-serif" font-size="42" font-weight="700" fill="#d9ff2e">PAIN</text>
+          <text x="0" y="92" font-family="Trebuchet MS,sans-serif" font-size="42" font-weight="700" fill="#ff2ea6">ONLY</text>
+          <text x="0" y="138" font-family="Trebuchet MS,sans-serif" font-size="34" font-weight="700" fill="#ff2ea6">HARDBLYAT</text>
+        </g>
+        <g transform="translate(1330,470)" class="puls">
+          <rect x="-20" y="-40" width="270" height="110" rx="10" fill="#1d0b36" opacity=".7"/>
+          <text x="0" y="0" font-family="Trebuchet MS,sans-serif" font-size="30" font-weight="700" fill="#4dff7a">DISCIPLINE</text>
+          <text x="0" y="34" font-family="Trebuchet MS,sans-serif" font-size="30" font-weight="700" fill="#4dff7a">CREATES</text>
+          <text x="0" y="66" font-family="Trebuchet MS,sans-serif" font-size="30" font-weight="700" fill="#d9ff2e">LEGENDS</text>
+        </g>
+        <!-- six training cards -->
+        <g>
+          <g transform="translate(80,470)">
+            <rect width="220" height="330" rx="16" fill="#3a1a68" stroke="#a855f7" stroke-width="5"/>
+            <circle cx="34" cy="34" r="17" fill="#1d0b36" stroke="#a855f7" stroke-width="3"/>
+            <text x="34" y="40" font-family="ui-monospace,monospace" font-size="14" font-weight="700" text-anchor="middle" fill="#e9d5ff">01</text>
+            <text x="110" y="46" font-family="Trebuchet MS,sans-serif" font-size="30" font-weight="700" text-anchor="middle" fill="#fff">LADA</text>
+            <rect x="30" y="150" width="160" height="56" rx="10" fill="#1b2f6a"/>
+            <circle cx="66" cy="212" r="16" fill="#12101a"/><circle cx="154" cy="212" r="16" fill="#12101a"/>
+          </g>
+          <g transform="translate(320,470)">
+            <rect width="220" height="330" rx="16" fill="#173a5e" stroke="#28e0ff" stroke-width="5"/>
+            <circle cx="34" cy="34" r="17" fill="#0b1d36" stroke="#28e0ff" stroke-width="3"/>
+            <text x="34" y="40" font-family="ui-monospace,monospace" font-size="14" font-weight="700" text-anchor="middle" fill="#c9f0ff">02</text>
+            <text x="118" y="46" font-family="Trebuchet MS,sans-serif" font-size="30" font-weight="700" text-anchor="middle" fill="#fff">SHEEP</text>
+            <ellipse cx="110" cy="190" rx="58" ry="42" fill="#f3efe6"/>
+            <circle cx="158" cy="176" r="22" fill="#3a3a44"/>
+          </g>
+          <g transform="translate(560,470)">
+            <rect width="220" height="330" rx="16" fill="#2a1a58" stroke="#a855f7" stroke-width="5"/>
+            <circle cx="34" cy="34" r="17" fill="#160a30" stroke="#a855f7" stroke-width="3"/>
+            <text x="34" y="40" font-family="ui-monospace,monospace" font-size="14" font-weight="700" text-anchor="middle" fill="#e9d5ff">03</text>
+            <text x="118" y="46" font-family="Trebuchet MS,sans-serif" font-size="30" font-weight="700" text-anchor="middle" fill="#fff">CLOUD</text>
+            <g fill="#dfe6f5"><circle cx="90" cy="190" r="38"/><circle cx="136" cy="196" r="30"/><circle cx="62" cy="204" r="26"/></g>
+          </g>
+          <g transform="translate(800,470)">
+            <rect width="220" height="330" rx="16" fill="#4a0f45" stroke="#ff2ea6" stroke-width="5"/>
+            <circle cx="34" cy="34" r="17" fill="#2a0626" stroke="#ff2ea6" stroke-width="3"/>
+            <text x="34" y="40" font-family="ui-monospace,monospace" font-size="14" font-weight="700" text-anchor="middle" fill="#ffd0ec">04</text>
+            <text x="126" y="46" font-family="Trebuchet MS,sans-serif" font-size="27" font-weight="700" text-anchor="middle" fill="#fff">HARDBASS</text>
+            <rect x="40" y="160" width="140" height="66" rx="8" fill="#1a0a18"/>
+            <circle cx="76" cy="193" r="20" fill="#ff2ea6"/><circle cx="146" cy="193" r="20" fill="#28e0ff"/>
+          </g>
+          <g transform="translate(1040,470)">
+            <rect width="220" height="330" rx="16" fill="#4a3a10" stroke="#ffc93c" stroke-width="5"/>
+            <circle cx="34" cy="34" r="17" fill="#2a2006" stroke="#ffc93c" stroke-width="3"/>
+            <text x="34" y="40" font-family="ui-monospace,monospace" font-size="14" font-weight="700" text-anchor="middle" fill="#ffe9a8">05</text>
+            <text x="118" y="46" font-family="Trebuchet MS,sans-serif" font-size="30" font-weight="700" text-anchor="middle" fill="#fff">GOAT</text>
+            <ellipse cx="110" cy="196" rx="42" ry="34" fill="#f3efe6"/>
+            <path d="M84 168 q-14 -30 4 -38 M136 168 q14 -30 -4 -38" fill="none" stroke="#3a2a18" stroke-width="8" stroke-linecap="round"/>
+          </g>
+          <g transform="translate(1280,470)">
+            <rect width="220" height="330" rx="16" fill="#153d2a" stroke="#4dff7a" stroke-width="5"/>
+            <circle cx="34" cy="34" r="17" fill="#08240f" stroke="#4dff7a" stroke-width="3"/>
+            <text x="34" y="40" font-family="ui-monospace,monospace" font-size="14" font-weight="700" text-anchor="middle" fill="#c8ffd8">06</text>
+            <text x="118" y="46" font-family="Trebuchet MS,sans-serif" font-size="30" font-weight="700" text-anchor="middle" fill="#fff">PEAK</text>
+            <path d="M40 230 L110 130 L180 230 Z" fill="#5a7a4a"/>
+            <path d="M110 130 L134 164 L86 164 Z" fill="#eaf7ea"/>
+          </g>
+        </g>
+        <!-- year timeline -->
+        <g transform="translate(0,846)">
+          <path d="M100 0 H1500" stroke="#7a5aa8" stroke-width="4" stroke-dasharray="14 12"/>
+          <g font-family="Trebuchet MS,sans-serif" font-size="17" font-weight="700" text-anchor="middle" fill="#0d0618">
+            <circle cx="190" cy="0" r="21" fill="#ff2ea6"/><text x="190" y="6">Y1</text>
+            <circle cx="430" cy="0" r="21" fill="#28e0ff"/><text x="430" y="6">Y1</text>
+            <circle cx="670" cy="0" r="21" fill="#a855f7"/><text x="670" y="6">Y2</text>
+            <circle cx="910" cy="0" r="21" fill="#ff2ea6"/><text x="910" y="6">Y2</text>
+            <circle cx="1150" cy="0" r="21" fill="#ff9f1c"/><text x="1150" y="6">Y3</text>
+            <circle cx="1390" cy="0" r="21" fill="#4dff7a"/><text x="1390" y="6">Y3</text>
+          </g>
+        </g>
+        <!-- training bear -->
+        <g transform="translate(1130,190) scale(.86)">
+          <path d="M0 96 q106 8 116 70 q10 62 -14 98 q-40 30 -102 30 q-62 0 -102 -30 q-24 -36 -14 -98 q10 -62 116 -70 z"
+                fill="#2f7bff" stroke="#0a0610" stroke-width="9"/>
+          <path d="M-26 104 q26 -10 52 4 l-12 56 q-22 -10 -44 -2 z" fill="#ff2ea6"/>
+          <path d="M-52 106 q52 42 104 0" fill="none" stroke="#ffc93c" stroke-width="10" stroke-linecap="round"/>
+          <rect x="-28" y="136" width="58" height="32" rx="8" fill="#ffc93c" stroke="#0a0610" stroke-width="5"/>
+          <text x="1" y="159" font-family="Trebuchet MS,sans-serif" font-size="23" font-weight="700" text-anchor="middle" fill="#0a0610">$SB</text>
+          <path d="M-108 136 q-46 26 -38 84" fill="none" stroke="#2f7bff" stroke-width="32" stroke-linecap="round"/>
+          <path d="M108 136 q52 -22 58 -84" fill="none" stroke="#2f7bff" stroke-width="32" stroke-linecap="round"/>
+          <g transform="translate(174,26)">
+            <rect x="-26" y="-40" width="52" height="96" rx="14" fill="#a855f7" stroke="#0a0610" stroke-width="6"/>
+            <rect x="-20" y="-54" width="40" height="18" rx="6" fill="#12081e" stroke="#0a0610" stroke-width="5"/>
+            <text x="0" y="18" font-family="Trebuchet MS,sans-serif" font-size="17" font-weight="700" text-anchor="middle" fill="#f7d0ff">$SB</text>
+          </g>
+          <circle cx="-78" cy="-62" r="34" fill="#7a5334" stroke="#0a0610" stroke-width="8"/>
+          <circle cx="78" cy="-62" r="34" fill="#7a5334" stroke="#0a0610" stroke-width="8"/>
+          <rect x="-94" y="-78" width="188" height="166" rx="66" fill="#9a6c42" stroke="#0a0610" stroke-width="9"/>
+          <rect x="-98" y="-48" width="196" height="42" rx="12" fill="#a855f7" stroke="#0a0610" stroke-width="7"/>
+          <g font-family="Trebuchet MS,sans-serif" font-size="18" font-weight="700" fill="#f3efe6">
+            <text x="-72" y="-18">$SB</text><text x="-24" y="-18">$SB</text><text x="24" y="-18">$SB</text>
+          </g>
+          <circle cx="-38" cy="8" r="18" fill="#f7f3ea" stroke="#0a0610" stroke-width="5"/>
+          <path d="M-38 8 m-9 0 a9 9 0 1 1 14 7 a6 6 0 1 1 -8 -9" fill="none" stroke="#a855f7" stroke-width="5"/>
+          <path d="M28 -6 l20 20 M48 -6 l-20 20" stroke="#0a0610" stroke-width="7" stroke-linecap="round"/>
+          <ellipse cx="0" cy="52" rx="58" ry="38" fill="#c49a68" stroke="#0a0610" stroke-width="7"/>
+          <ellipse cx="0" cy="32" rx="24" ry="16" fill="#0a0610"/>
+          <path d="M-26 64 q26 24 52 0" fill="none" stroke="#0a0610" stroke-width="6" stroke-linecap="round"/>
+          <path d="M8 70 q13 24 -2 32 q-15 -8 -6 -32 z" fill="#ff5f8f" stroke="#0a0610" stroke-width="4"/>
+          <rect x="-22" y="64" width="16" height="18" rx="3" fill="#ffc93c" stroke="#0a0610" stroke-width="4"/>
+        </g>
+      </svg>
+      <div class="scrim" style="background:linear-gradient(90deg,rgba(12,4,26,.86) 0%,rgba(12,4,26,.45) 40%,transparent 62%)"></div>
+    </div>
 
-    <div class="layer">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap">
-        <div>
-          <h2 class="brush" style="font-size:clamp(1.6rem,4.2vw,3.4rem)">
-            <span style="color:var(--lime)">2–3 Years</span><br>in Dagestan
-          </h2>
-          <div class="tagband" style="margin-top:.4rem">Chapter Four · Training Arc</div>
-        </div>
-        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
-          <div class="statpill" style="--sc:var(--violet)"><i>☠</i><div><b>+1000</b><span>Discipline unlocked</span></div></div>
-          <div class="statpill" style="--sc:var(--gold)"><i>☣</i><div><b>+2000</b><span>Hardened soul</span></div></div>
-        </div>
-      </div>
-
-      <div class="box" style="--accent:var(--cyan);--boxbg:linear-gradient(135deg,rgba(42,14,90,.68),rgba(16,8,42,.62))">
-        <span class="eyebrow">Nothing soft survives · Bear becomes legend</span>
-        <div class="stage"></div>
-        <div class="pline"><i></i></div>
-      </div>
-
-      <div class="rail" id="trainRail">
-        <div class="tcard" style="--kc:var(--mag)"><span class="no">01</span><h4>Lada Deadlift</h4>
-          <span class="cap">Lift heavy. Drive heavier.</span><span class="unlock">Unlocked · Raw strength</span></div>
-        <div class="tcard" style="--kc:var(--cyan)"><span class="no">02</span><h4>Sheep Chase</h4>
-          <span class="cap">Cardio is chasing dinner.</span><span class="unlock">Unlocked · Stamina</span></div>
-        <div class="tcard" style="--kc:var(--violet)"><span class="no">03</span><h4>Wrestle Cloud</h4>
-          <span class="cap">Weather doesn't submit easy.</span><span class="unlock">Cloud defeated · Almost</span></div>
-        <div class="tcard" style="--kc:var(--mag)"><span class="no">04</span><h4>Hardbass Education</h4>
-          <span class="cap">Nokia. Hardbass. Focus.</span><span class="unlock">Unlocked · Mental fortitude</span></div>
-        <div class="tcard" style="--kc:var(--gold)"><span class="no">05</span><h4>Goat Coach</h4>
-          <span class="cap">Wisdom from the G.O.A.T.</span><span class="unlock">Unlocked · Strategy</span></div>
-        <div class="tcard" style="--kc:var(--green)"><span class="no">06</span><h4>Mountain Stand</h4>
-          <span class="cap">Top of the world. Still not soft.</span><span class="unlock">Arc complete · Bear is forged</span></div>
-      </div>
-
-      <div class="years">
-        <span style="color:var(--mag)">Year 1 · Foundation</span>
-        <span style="color:var(--cyan)">Year 2 · Evolution</span>
-        <span style="color:var(--gold)">Year 3 · Ascension</span>
-      </div>
-      <div class="hint" style="text-align:center">Legends are built, not born</div>
+    <div class="box" style="--bx:4.5vw;--by:44%;--accent:var(--cyan);
+         --boxbg:linear-gradient(135deg,rgba(40,14,88,.66),rgba(14,8,40,.6))">
+      <span class="eyebrow">Chapter Four · 2–3 Years in Dagestan</span>
+      <h2>Legend loading</h2>
+      <div class="stage"></div>
+      <div class="pline"><i></i></div>
     </div>
   </div>
 </section>
 
-<!-- ══════════ 5 · HE CAME BACK STRONGER ══════════ -->
+<!-- ══════════ PAGE 5 — TRANSFORMATION AND RETURN ══════════ -->
 <section class="page" id="p5" data-title="He Came Back Stronger">
   <div class="pin">
-    <div class="revealwrap">
-      <div class="after">
-        <div class="bgimg" data-slot="after"></div>
-        <div class="bgfallback"><svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-label="The restored courtyard">
-          <rect width="1600" height="900" fill="#4a1478"/>
-          <rect y="560" width="1600" height="340" fill="#2b0e46"/>
-          <g fill="#ffb43c"><rect x="200" y="180" width="56" height="44"/><rect x="420" y="240" width="56" height="44"/>
-            <rect x="1100" y="180" width="56" height="44"/><rect x="1340" y="250" width="56" height="44"/></g>
-          <g fill="#ff2ea6"><circle cx="900" cy="700" r="16"/><circle cx="1000" cy="730" r="13"/></g>
-        </svg></div>
-      </div>
-      <div class="before">
-        <div class="bgimg" data-slot="before"></div>
-        <div class="bgfallback"><svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-label="The ruined courtyard">
-          <rect width="1600" height="900" fill="#46464e"/>
-          <rect y="560" width="1600" height="340" fill="#2a2a30"/>
-          <g fill="#1a1a20"><rect x="200" y="180" width="56" height="44"/><rect x="420" y="240" width="56" height="44"/>
-            <rect x="1100" y="180" width="56" height="44"/><rect x="1340" y="250" width="56" height="44"/></g>
-        </svg></div>
-      </div>
-      <div class="handle" id="revealHandle" role="slider" tabindex="0"
-           aria-label="Drag to reveal the rebuilt Dvor" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"></div>
-      <div class="lbl" style="left:5%">Before</div>
-      <div class="lbl" style="right:5%;color:var(--lime)">After</div>
+    <div class="scene">
+      <div class="photo"></div>
+      <svg class="art" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-label="A split image: the ruined grey courtyard on the left, the restored colourful courtyard on the right, the bear standing in the middle">
+        <!-- BEFORE -->
+        <rect x="0" y="0" width="800" height="900" fill="#3a3a42"/>
+        <rect x="0" y="0" width="800" height="560" fill="#4a4a54"/>
+        <g fill="#2e2e36">
+          <rect x="40" y="120" width="300" height="440"/><rect x="380" y="80" width="340" height="480"/>
+        </g>
+        <g fill="#1a1a20">
+          <rect x="70" y="160" width="52" height="44"/><rect x="160" y="160" width="52" height="44"/>
+          <rect x="250" y="230" width="52" height="44"/><rect x="420" y="140" width="52" height="44"/>
+          <rect x="520" y="220" width="52" height="44"/><rect x="620" y="140" width="52" height="44"/>
+        </g>
+        <rect x="0" y="560" width="800" height="340" fill="#2a2a30"/>
+        <path d="M40 700 L150 560 L250 700 Z" fill="#3a3a44"/>
+        <g stroke="#1a1a20" stroke-width="12" fill="none" stroke-linecap="round">
+          <path d="M420 800 L470 640 L620 640 L670 800"/><path d="M470 640 L620 640"/>
+          <path d="M510 640 L510 726"/>
+        </g>
+        <rect x="60" y="756" width="200" height="16" fill="#1a1a20"/>
+        <!-- AFTER -->
+        <rect x="800" y="0" width="800" height="900" fill="#3b1466"/>
+        <rect x="800" y="0" width="800" height="560" fill="#5a1f8a"/>
+        <g fill="#2a0f4a"><rect x="820" y="110" width="320" height="450"/><rect x="1180" y="70" width="380" height="490"/></g>
+        <g fill="#ffb43c">
+          <rect x="850" y="150" width="52" height="44"/><rect x="940" y="150" width="52" height="44" opacity=".5"/>
+          <rect x="1040" y="220" width="52" height="44"/><rect x="1220" y="130" width="52" height="44"/>
+          <rect x="1320" y="210" width="52" height="44" opacity=".6"/><rect x="1430" y="130" width="52" height="44"/>
+        </g>
+        <rect x="800" y="560" width="800" height="340" fill="#2b0e46"/>
+        <!-- restored playground -->
+        <g transform="translate(1180,590)">
+          <rect x="60" y="0" width="96" height="26" rx="9" fill="#ff2ea6"/>
+          <path d="M60 26 L-10 230 L44 230 L108 60 Z" fill="#28c8ff"/>
+          <rect x="66" y="26" width="14" height="204" fill="#ffc93c"/>
+          <rect x="140" y="26" width="14" height="204" fill="#ffc93c"/>
+          <rect x="170" y="70" width="96" height="14" rx="7" fill="#4dff7a"/>
+        </g>
+        <!-- flowers -->
+        <g class="puls">
+          <circle cx="880" cy="806" r="13" fill="#ff2ea6"/><circle cx="930" cy="826" r="11" fill="#d9ff2e"/>
+          <circle cx="990" cy="812" r="12" fill="#ffc93c"/><circle cx="1490" cy="820" r="13" fill="#4dff7a"/>
+          <circle cx="1540" cy="800" r="11" fill="#28e0ff"/>
+        </g>
+        <!-- disco ball -->
+        <g transform="translate(1160,120)">
+          <path d="M0 -60 L0 -34" stroke="#c9c4d8" stroke-width="5"/>
+          <circle cx="0" cy="0" r="34" fill="#b8c4e0"/>
+          <g stroke="#7a86a8" stroke-width="1.5">
+            <path d="M-34 -12 H34 M-34 0 H34 M-34 12 H34 M-12 -32 V32 M0 -34 V34 M12 -32 V32"/>
+          </g>
+        </g>
+        <!-- neon IN $SB WE TRUST -->
+        <g transform="translate(1330,330)" class="puls">
+          <text x="0" y="0" font-family="Trebuchet MS,sans-serif" font-size="36" font-weight="700" fill="#ff2ea6">IN $SB</text>
+          <text x="0" y="42" font-family="Trebuchet MS,sans-serif" font-size="36" font-weight="700" fill="#4dff7a">WE TRUST</text>
+        </g>
+        <!-- divider -->
+        <rect x="796" y="0" width="8" height="900" fill="#c9f7ff" opacity=".8"/>
+        <!-- BEFORE / AFTER labels -->
+        <g transform="translate(300,300)">
+          <rect x="-104" y="-34" width="208" height="52" rx="6" fill="#0a0a0c"/>
+          <text x="0" y="4" font-family="Trebuchet MS,sans-serif" font-size="36" font-weight="700" text-anchor="middle" fill="#f3efe6">BEFORE</text>
+        </g>
+        <g transform="translate(1290,300)">
+          <rect x="-96" y="-34" width="192" height="52" rx="6" fill="#0a0a0c"/>
+          <text x="0" y="4" font-family="Trebuchet MS,sans-serif" font-size="36" font-weight="700" text-anchor="middle" fill="#d9ff2e">AFTER</text>
+        </g>
+        <!-- returned bear -->
+        <g transform="translate(800,250) scale(1.06)">
+          <ellipse cx="0" cy="470" rx="170" ry="20" fill="#000" opacity=".4"/>
+          <rect x="-96" y="300" width="84" height="136" rx="30" fill="#2f7bff" stroke="#0a0610" stroke-width="8"/>
+          <rect x="12" y="300" width="84" height="136" rx="30" fill="#2f7bff" stroke="#0a0610" stroke-width="8"/>
+          <rect x="-118" y="420" width="112" height="42" rx="18" fill="#f3efe6" stroke="#0a0610" stroke-width="8"/>
+          <rect x="6" y="420" width="112" height="42" rx="18" fill="#f3efe6" stroke="#0a0610" stroke-width="8"/>
+          <path d="M0 116 q126 8 136 80 q10 70 -16 112 q-46 34 -120 34 q-74 0 -120 -34 q-26 -42 -16 -112 q10 -72 136 -80 z"
+                fill="#2f7bff" stroke="#0a0610" stroke-width="9"/>
+          <path d="M-30 124 q30 -10 60 4 l-14 62 q-24 -12 -48 -2 z" fill="#ff2ea6"/>
+          <path d="M-110 174 q-8 62 6 112 M-88 166 q-8 64 6 116 M-66 160 q-8 66 6 120"
+                stroke="#f3efe6" stroke-width="9" fill="none" stroke-linecap="round"/>
+          <path d="M-58 128 q58 46 116 0" fill="none" stroke="#ffc93c" stroke-width="11" stroke-linecap="round"/>
+          <rect x="-32" y="162" width="64" height="34" rx="8" fill="#ffc93c" stroke="#0a0610" stroke-width="5"/>
+          <text x="0" y="187" font-family="Trebuchet MS,sans-serif" font-size="25" font-weight="700" text-anchor="middle" fill="#0a0610">$SB</text>
+          <path d="M-122 166 q-48 32 -36 94" fill="none" stroke="#2f7bff" stroke-width="34" stroke-linecap="round"/>
+          <path d="M122 166 q56 -8 62 -74" fill="none" stroke="#2f7bff" stroke-width="34" stroke-linecap="round"/>
+          <g transform="translate(190,80)">
+            <circle cx="0" cy="0" r="24" fill="#9a6c42" stroke="#0a0610" stroke-width="7"/>
+            <rect x="-8" y="-46" width="17" height="34" rx="8" fill="#9a6c42" stroke="#0a0610" stroke-width="6"/>
+          </g>
+          <g transform="translate(-160,262)">
+            <rect x="-34" y="-34" width="68" height="66" rx="8" fill="#f7f3ea" stroke="#0a0610" stroke-width="6"/>
+            <path d="M-34 -14 q-22 0 -22 18 q0 18 22 18" fill="none" stroke="#0a0610" stroke-width="6"/>
+            <text x="0" y="-4" font-family="ui-monospace,monospace" font-size="10" text-anchor="middle" fill="#3a2a18">DOBRYM</text>
+            <text x="0" y="10" font-family="ui-monospace,monospace" font-size="10" text-anchor="middle" fill="#3a2a18">UTROM,</text>
+            <text x="0" y="26" font-family="Trebuchet MS,sans-serif" font-size="13" font-weight="700" text-anchor="middle" fill="#e8332f">DVOR!</text>
+          </g>
+          <circle cx="-84" cy="-58" r="38" fill="#7a5334" stroke="#0a0610" stroke-width="8"/>
+          <circle cx="84" cy="-58" r="38" fill="#7a5334" stroke="#0a0610" stroke-width="8"/>
+          <rect x="-104" y="-76" width="208" height="180" rx="72" fill="#9a6c42" stroke="#0a0610" stroke-width="9"/>
+          <path d="M-112 -34 q112 -86 224 0 q-8 -84 -112 -84 q-104 0 -112 84 z" fill="#5b3f28" stroke="#0a0610" stroke-width="8"/>
+          <g stroke="#0a0610" stroke-width="2.5">
+            <circle cx="-64" cy="-70" r="12" fill="#ff2ea6"/><circle cx="-30" cy="-88" r="12" fill="#28e0ff"/>
+            <circle cx="4" cy="-94" r="12" fill="#d9ff2e"/><circle cx="38" cy="-88" r="12" fill="#ffc93c"/>
+            <circle cx="70" cy="-70" r="12" fill="#4dff7a"/>
+          </g>
+          <circle cx="-42" cy="6" r="20" fill="#f7f3ea" stroke="#0a0610" stroke-width="5"/>
+          <path d="M-42 6 m-11 0 a11 11 0 1 1 16 9 a7 7 0 1 1 -9 -11" fill="none" stroke="#a855f7" stroke-width="5"/>
+          <path d="M32 -8 l22 22 M54 -8 l-22 22" stroke="#0a0610" stroke-width="7" stroke-linecap="round"/>
+          <ellipse cx="0" cy="54" rx="64" ry="42" fill="#c49a68" stroke="#0a0610" stroke-width="7"/>
+          <ellipse cx="0" cy="34" rx="26" ry="17" fill="#0a0610"/>
+          <path d="M-30 66 q30 26 60 0" fill="none" stroke="#0a0610" stroke-width="6" stroke-linecap="round"/>
+          <path d="M8 72 q14 26 -2 34 q-16 -8 -6 -34 z" fill="#ff5f8f" stroke="#0a0610" stroke-width="4"/>
+          <rect x="-26" y="66" width="17" height="20" rx="3" fill="#ffc93c" stroke="#0a0610" stroke-width="4"/>
+        </g>
+        <!-- stat pills -->
+        <g transform="translate(0,820)" font-family="Trebuchet MS,sans-serif" font-weight="700">
+          <g transform="translate(90,0)"><rect width="230" height="66" rx="16" fill="#1a0a2e" stroke="#a855f7" stroke-width="4"/>
+            <text x="115" y="44" font-size="30" text-anchor="middle" fill="#e9d5ff">12.4K</text></g>
+          <g transform="translate(360,0)"><rect width="230" height="66" rx="16" fill="#0a2416" stroke="#4dff7a" stroke-width="4"/>
+            <text x="115" y="44" font-size="30" text-anchor="middle" fill="#c8ffd8">98.7%</text></g>
+          <g transform="translate(630,0)"><rect width="230" height="66" rx="16" fill="#0a1c34" stroke="#28e0ff" stroke-width="4"/>
+            <text x="115" y="44" font-size="30" text-anchor="middle" fill="#c9f0ff">256+</text></g>
+          <g transform="translate(900,0)"><rect width="230" height="66" rx="16" fill="#2a2006" stroke="#ffc93c" stroke-width="4"/>
+            <text x="115" y="44" font-size="30" text-anchor="middle" fill="#ffe9a8">3.4K</text></g>
+          <g transform="translate(1170,0)"><rect width="230" height="66" rx="16" fill="#2a0620" stroke="#ff2ea6" stroke-width="4"/>
+            <text x="115" y="44" font-size="30" text-anchor="middle" fill="#ffd0ec">100%</text></g>
+        </g>
+      </svg>
+      <div class="scrim" style="background:linear-gradient(90deg,rgba(8,6,14,.88) 0%,rgba(8,6,14,.5) 36%,transparent 56%)"></div>
     </div>
-    <div class="scrim" style="background:linear-gradient(180deg,rgba(8,6,16,.55) 0%,transparent 26%,rgba(8,6,16,.86) 84%);z-index:5"></div>
 
-    <div class="layer" style="z-index:20">
-      <div style="width:100%;text-align:center">
-        <h2 class="brush" style="font-size:clamp(1.5rem,4.2vw,3.4rem)">
-          He came back<br><span style="color:var(--lime)">stronger</span> for the Dvor
-        </h2>
-      </div>
-
-      <div style="display:flex;justify-content:center;width:100%">
-        <div class="box" style="--accent:var(--lime);--boxbg:linear-gradient(135deg,rgba(26,20,44,.72),rgba(54,14,84,.62));width:min(620px,94%)">
-          <span class="eyebrow">Chapter Five · Now we build</span>
-          <div class="stage"></div>
-          <div class="pline"><i></i></div>
-        </div>
-      </div>
-
-      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:.5rem;width:100%">
-        <div class="statpill" style="--sc:var(--mag)"><i>👥</i><div><b>12,420+</b><span>Block members</span></div></div>
-        <div class="statpill" style="--sc:var(--green)"><i>🛡</i><div><b>98.7%</b><span>Dvor safety</span></div></div>
-        <div class="statpill" style="--sc:var(--cyan)"><i>🔧</i><div><b>256+</b><span>Rebuilt spots</span></div></div>
-        <div class="statpill" style="--sc:var(--gold)"><i>🕊</i><div><b>3,412</b><span>Proud pigeons</span></div></div>
-        <div class="statpill" style="--sc:var(--mag)"><i>❤</i><div><b>100%</b><span>Dvor love</span></div></div>
-      </div>
+    <div class="box" style="--bx:4.5vw;--by:46%;--accent:var(--lime);
+         --boxbg:linear-gradient(135deg,rgba(24,20,40,.7),rgba(50,14,80,.6))">
+      <span class="eyebrow">Chapter Five · He Came Back Stronger</span>
+      <h2>Now we build</h2>
+      <div class="stage"></div>
+      <div class="pline"><i></i></div>
     </div>
   </div>
 </section>
 
-<!-- ══════════ 6 · CHOOSE YOUR FUTURE ══════════ -->
-<section class="page" id="p6" data-title="Choose Your Future">
+<!-- ══════════ PAGE 6 — FINAL $SB ══════════ -->
+<section class="page" id="p6" data-title="Join the Dvor">
   <div class="pin">
-    <div class="bgimg"></div>
-    <div class="bgfallback"><svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-label="The Dvor crowd celebrating">
-      <rect width="1600" height="900" fill="#1e0a3c"/>
-      <radialGradient id="g6" cx="50%" cy="50%" r="72%"><stop offset="0" stop-color="#6d1fa8"/><stop offset="1" stop-color="#120620"/></radialGradient>
-      <rect width="1600" height="900" fill="url(#g6)"/>
-    </svg></div>
-    <div class="scrim" style="background:linear-gradient(90deg,rgba(8,4,18,.86) 0%,rgba(8,4,18,.38) 46%,rgba(8,4,18,.72) 100%)"></div>
+    <div class="scene">
+      <div class="photo"></div>
+      <svg class="art" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-label="A celebratory courtyard crowd scene under neon lights">
+        <rect width="1600" height="900" fill="#1e0a3c"/>
+        <radialGradient id="p6g" cx="50%" cy="52%" r="72%">
+          <stop offset="0" stop-color="#6d1fa8"/><stop offset="1" stop-color="#12061f"/>
+        </radialGradient>
+        <rect width="1600" height="900" fill="url(#p6g)"/>
+        <g fill="#3a1466" opacity=".7">
+          <rect x="0" y="120" width="240" height="480"/><rect x="280" y="80" width="220" height="520"/>
+          <rect x="1100" y="90" width="240" height="510"/><rect x="1380" y="130" width="220" height="470"/>
+        </g>
+        <g fill="#ffb43c" opacity=".8">
+          <rect x="40" y="180" width="46" height="38"/><rect x="140" y="260" width="46" height="38" opacity=".5"/>
+          <rect x="320" y="160" width="46" height="38"/><rect x="420" y="300" width="46" height="38" opacity=".6"/>
+          <rect x="1140" y="170" width="46" height="38" opacity=".6"/><rect x="1260" y="280" width="46" height="38"/>
+          <rect x="1420" y="200" width="46" height="38"/><rect x="1520" y="320" width="46" height="38" opacity=".5"/>
+        </g>
+        <path d="M0 150 q400 100 800 50 q400 -50 800 40" fill="none" stroke="#5a3a7a" stroke-width="3"/>
+        <g class="puls">
+          <circle cx="200" cy="188" r="8" fill="#ff2ea6"/><circle cx="440" cy="204" r="8" fill="#d9ff2e"/>
+          <circle cx="680" cy="200" r="8" fill="#28e0ff"/><circle cx="920" cy="188" r="8" fill="#ffc93c"/>
+          <circle cx="1160" cy="180" r="8" fill="#4dff7a"/><circle cx="1400" cy="192" r="8" fill="#a855f7"/>
+        </g>
+        <!-- crowd of small bears -->
+        <g fill="#2f7bff" stroke="#0a0610" stroke-width="6">
+          <g transform="translate(220,660)"><circle cx="-30" cy="-72" r="20" fill="#7a5334"/><circle cx="30" cy="-72" r="20" fill="#7a5334"/>
+            <rect x="-42" y="-84" width="84" height="76" rx="30" fill="#9a6c42"/><rect x="-56" y="-6" width="112" height="110" rx="40"/></g>
+          <g transform="translate(430,690) scale(.85)"><circle cx="-30" cy="-72" r="20" fill="#7a5334"/><circle cx="30" cy="-72" r="20" fill="#7a5334"/>
+            <rect x="-42" y="-84" width="84" height="76" rx="30" fill="#9a6c42"/><rect x="-56" y="-6" width="112" height="110" rx="40" fill="#ff2ea6"/></g>
+          <g transform="translate(1180,690) scale(.85)"><circle cx="-30" cy="-72" r="20" fill="#7a5334"/><circle cx="30" cy="-72" r="20" fill="#7a5334"/>
+            <rect x="-42" y="-84" width="84" height="76" rx="30" fill="#9a6c42"/><rect x="-56" y="-6" width="112" height="110" rx="40" fill="#a855f7"/></g>
+          <g transform="translate(1390,660)"><circle cx="-30" cy="-72" r="20" fill="#7a5334"/><circle cx="30" cy="-72" r="20" fill="#7a5334"/>
+            <rect x="-42" y="-84" width="84" height="76" rx="30" fill="#9a6c42"/><rect x="-56" y="-6" width="112" height="110" rx="40" fill="#4dff7a"/></g>
+        </g>
+        <rect x="0" y="760" width="1600" height="140" fill="#150726"/>
+        <g fill="#7a3fd0" opacity=".5"><ellipse cx="400" cy="830" rx="200" ry="26"/><ellipse cx="1200" cy="840" rx="220" ry="26"/></g>
 
-    <div class="layer">
-      <div class="lcol">
-        <h2 class="brush" style="font-size:clamp(1.9rem,5.4vw,4.4rem)">
-          Choose<br><span style="color:var(--lime)">your future</span>
-        </h2>
-        <div class="tagband">The Dvor awaits.</div>
-        <p style="margin:.1rem 0 .3rem;font-size:clamp(.85rem,1.2vw,1.1rem)">
-          Two futures. One cult. One coin. <span style="color:var(--violet)">Infinite chaos.</span>
-        </p>
+        <!-- disco ball -->
+        <g transform="translate(1120,110)">
+          <path d="M0 -70 L0 -40" stroke="#c9c4d8" stroke-width="5"/>
+          <circle cx="0" cy="0" r="42" fill="#b06fd8"/>
+          <circle cx="0" cy="0" r="42" fill="#28e0ff" opacity=".35"/>
+          <g stroke="#5a2a7a" stroke-width="1.6" opacity=".8">
+            <path d="M-42 -16 H42 M-42 0 H42 M-42 16 H42 M-16 -39 V39 M0 -42 V42 M16 -39 V39"/>
+          </g>
+          <g class="puls" opacity=".5">
+            <path d="M-42 0 L-140 -60 M42 0 L150 -50 M0 42 L-70 150 M0 42 L90 140"
+                  stroke="#e9c7ff" stroke-width="3"/>
+          </g>
+        </g>
 
-        <div class="btns">
-          <a class="btn buy" href="#" data-cta="buy"><i>🛒</i><span>Buy $SB<small>set DEX link</small></span></a>
-          <a class="btn tg" href="#" data-cta="telegram"><i>✈</i><span>Join Telegram<small>join the cult</small></span></a>
-          <a class="btn x" href="#" data-cta="x"><i>𝕏</i><span>Follow on X<small>follow the chaos</small></span></a>
-          <a class="btn enter" href="#p1"><i>🐾</i><span>Enter the Dvor<small>read it again</small></span></a>
-        </div>
+        <!-- neon IN $SB WE TRUST (left) -->
+        <g transform="translate(60,250)" class="puls">
+          <rect x="-24" y="-52" width="270" height="118" rx="12" fill="none" stroke="#ff2ea6" stroke-width="5"/>
+          <text x="0" y="0" font-family="Trebuchet MS,sans-serif" font-size="42" font-weight="700" fill="#ff2ea6">IN $SB</text>
+          <text x="0" y="48" font-family="Trebuchet MS,sans-serif" font-size="42" font-weight="700" fill="#4dff7a">WE TRUST</text>
+        </g>
 
-        <div class="ca">
-          <label>Contract address</label>
-          <div class="row">
-            <code id="caText">— set CONTRACT in config —</code>
-            <button id="copyCa" type="button" aria-label="Copy contract address">⧉</button>
-          </div>
-        </div>
+        <!-- neon $SB ARMY (right) -->
+        <g transform="translate(1400,250)" class="puls">
+          <rect x="-26" y="-52" width="180" height="118" rx="12" fill="none" stroke="#4dff7a" stroke-width="5"/>
+          <text x="0" y="0" font-family="Trebuchet MS,sans-serif" font-size="42" font-weight="700" fill="#4dff7a">$SB</text>
+          <text x="0" y="48" font-family="Trebuchet MS,sans-serif" font-size="42" font-weight="700" fill="#ff2ea6">ARMY</text>
+        </g>
 
-        <div class="charts">
-          <a class="chart" href="#" data-cta="dextools">DEXTools<small>live charts</small></a>
-          <a class="chart" href="#" data-cta="dexscreener">DexScreener<small>live charts</small></a>
-          <a class="chart" href="#" data-cta="coingecko">CoinGecko<small>$SB</small></a>
-          <a class="chart" href="#" data-cta="cmc">CoinMarketCap<small>$SB</small></a>
-        </div>
-      </div>
+        <!-- $SB ARMY banner -->
+        <g transform="translate(1180,330)">
+          <path d="M0 0 L170 -20 L170 150 L0 176 Z" fill="#c9a227" stroke="#3a2a06" stroke-width="5"/>
+          <path d="M170 -20 L170 150" stroke="#8a6a10" stroke-width="4"/>
+          <text x="86" y="52" font-family="Trebuchet MS,sans-serif" font-size="17" font-weight="700" text-anchor="middle" fill="#3a2a06">♛</text>
+          <text x="86" y="94" font-family="Trebuchet MS,sans-serif" font-size="36" font-weight="700" text-anchor="middle" fill="#3a2a06">$SB</text>
+          <text x="86" y="134" font-family="Trebuchet MS,sans-serif" font-size="30" font-weight="700" text-anchor="middle" fill="#3a2a06">ARMY</text>
+        </g>
 
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.7rem;justify-content:center">
-        <div class="rcol">
-          <div class="statpill" style="--sc:var(--gold)"><i>🐻</i><div><b>42.0K+</b><span>Dvor army</span></div></div>
-          <div class="statpill" style="--sc:var(--mag)"><i>💀</i><div><b>420.69B</b><span>$SB played</span></div></div>
-          <div class="statpill" style="--sc:var(--violet)"><i>◎</i><div><b>100%</b><span>Chaos level</span></div></div>
-          <div class="statpill" style="--sc:var(--gold)"><i>☺</i><div><b>∞</b><span>Meme power</span></div></div>
-        </div>
-        <div class="thanks" style="color:var(--lime)">Thank you for believing in the chaos ♥</div>
-        <div class="see">
-          <span>See</span> <span style="color:var(--lime)">you</span>
-          <span style="color:var(--cyan)">in</span> <span style="color:var(--violet)">the</span>
-          <span style="color:var(--mag)">Dvor</span>
-          <u></u>
-        </div>
-      </div>
+        <!-- confetti -->
+        <g class="drift">
+          <rect x="240" y="120" width="16" height="16" fill="#d9ff2e" transform="rotate(24 248 128)"/>
+          <rect x="480" y="86" width="14" height="14" fill="#ff2ea6" transform="rotate(-18 487 93)"/>
+          <rect x="700" y="150" width="16" height="16" fill="#28e0ff" transform="rotate(38 708 158)"/>
+          <rect x="880" y="104" width="14" height="14" fill="#ffc93c" transform="rotate(-28 887 111)"/>
+          <rect x="1040" y="176" width="16" height="16" fill="#4dff7a" transform="rotate(12 1048 184)"/>
+          <rect x="1300" y="130" width="14" height="14" fill="#a855f7" transform="rotate(44 1307 137)"/>
+          <rect x="360" y="420" width="14" height="14" fill="#ff6a3d" transform="rotate(-34 367 427)"/>
+          <rect x="1240" y="470" width="14" height="14" fill="#d9ff2e" transform="rotate(28 1247 477)"/>
+          <rect x="620" y="560" width="12" height="12" fill="#28e0ff" transform="rotate(-12 626 566)"/>
+          <rect x="980" y="600" width="12" height="12" fill="#ff2ea6" transform="rotate(52 986 606)"/>
+        </g>
+      </svg>
+      <div class="scrim" style="background:radial-gradient(ellipse at 50% 50%,rgba(10,6,20,.5) 0%,rgba(10,6,20,.86) 78%)"></div>
     </div>
 
-    <div id="foot">
-      <span>© 2026 Suka Blyat $SB. All rights reserved.</span>
-      <span>Not financial advice. Just hardbass.</span>
-      <span id="chainLabel">Built on <b>Solana</b></span>
+    <div class="final">
+      <h2>Choose<br><span class="b">your future</span></h2>
+      <div class="sub">Join the Dvor.</div>
+
+      <div class="deck">
+        <div class="col">
+          <a class="btn buy" href="#" data-cta="buy"><i>🛒</i><span>Buy $SB<small>set DEX link</small></span></a>
+          <a class="btn tg" href="#" data-cta="telegram"><i>✈</i><span>Telegram<small>set invite</small></span></a>
+        </div>
+
+        <div class="mid">
+          <svg class="throne" viewBox="0 0 300 340" role="img" aria-label="Mishka the bear sitting on a golden throne holding a mug and making a peace sign">
+            <ellipse cx="150" cy="330" rx="118" ry="10" fill="#000" opacity=".45"/>
+            <!-- throne -->
+            <rect x="52" y="96" width="196" height="216" rx="12" fill="#a8721e" stroke="#3a2406" stroke-width="7"/>
+            <path d="M52 96 q98 -56 196 0 z" fill="#c68f28" stroke="#3a2406" stroke-width="7" stroke-linejoin="round"/>
+            <rect x="18" y="164" width="38" height="140" rx="12" fill="#c68f28" stroke="#3a2406" stroke-width="6"/>
+            <rect x="244" y="164" width="38" height="140" rx="12" fill="#c68f28" stroke="#3a2406" stroke-width="6"/>
+            <!-- body -->
+            <path d="M150 138 q76 6 82 50 q7 44 -10 70 q-30 22 -72 22 q-42 0 -72 -22 q-17 -26 -10 -70 q6 -44 82 -50 z"
+                  fill="#2f7bff" stroke="#0a0610" stroke-width="7"/>
+            <path d="M132 144 q18 -7 36 3 l-9 40 q-15 -7 -31 -1 z" fill="#ff2ea6"/>
+            <path d="M100 172 q-6 40 4 72 M114 166 q-6 42 4 76" stroke="#f3efe6" stroke-width="6" fill="none" stroke-linecap="round"/>
+            <path d="M114 148 q36 30 72 0" fill="none" stroke="#ffc93c" stroke-width="7" stroke-linecap="round"/>
+            <rect x="132" y="168" width="40" height="22" rx="6" fill="#ffc93c" stroke="#0a0610" stroke-width="4"/>
+            <text x="152" y="185" font-family="Trebuchet MS,sans-serif" font-size="15" font-weight="700" text-anchor="middle" fill="#0a0610">$SB</text>
+            <!-- legs -->
+            <rect x="98" y="240" width="46" height="70" rx="18" fill="#2f7bff" stroke="#0a0610" stroke-width="6"/>
+            <rect x="156" y="240" width="46" height="70" rx="18" fill="#2f7bff" stroke="#0a0610" stroke-width="6"/>
+            <rect x="86" y="296" width="66" height="24" rx="10" fill="#f3efe6" stroke="#0a0610" stroke-width="6"/>
+            <rect x="148" y="296" width="66" height="24" rx="10" fill="#f3efe6" stroke="#0a0610" stroke-width="6"/>
+            <!-- left arm + mug -->
+            <path d="M76 168 q-26 22 -20 54" fill="none" stroke="#2f7bff" stroke-width="22" stroke-linecap="round"/>
+            <g transform="translate(56,232)">
+              <rect x="-22" y="-22" width="44" height="42" rx="6" fill="#f7f3ea" stroke="#0a0610" stroke-width="5"/>
+              <path d="M22 -10 q14 0 14 11 q0 11 -14 11" fill="none" stroke="#0a0610" stroke-width="5"/>
+              <circle cx="0" cy="4" r="7" fill="none" stroke="#e8a020" stroke-width="3"/>
+              <circle cx="-3" cy="2" r="1.4" fill="#e8a020"/><circle cx="3" cy="2" r="1.4" fill="#e8a020"/>
+            </g>
+            <!-- right arm, peace sign -->
+            <path d="M224 168 q30 -26 30 -66" fill="none" stroke="#2f7bff" stroke-width="22" stroke-linecap="round"/>
+            <g transform="translate(254,96)">
+              <circle cx="0" cy="6" r="17" fill="#9a6c42" stroke="#0a0610" stroke-width="5"/>
+              <rect x="-13" y="-26" width="11" height="26" rx="5" fill="#9a6c42" stroke="#0a0610" stroke-width="4.5"/>
+              <rect x="3" y="-30" width="11" height="30" rx="5" fill="#9a6c42" stroke="#0a0610" stroke-width="4.5"/>
+            </g>
+            <!-- head -->
+            <circle cx="112" cy="52" r="24" fill="#7a5334" stroke="#0a0610" stroke-width="6"/>
+            <circle cx="188" cy="52" r="24" fill="#7a5334" stroke="#0a0610" stroke-width="6"/>
+            <rect x="98" y="40" width="104" height="94" rx="38" fill="#9a6c42" stroke="#0a0610" stroke-width="7"/>
+            <path d="M94 62 q56 -46 112 0 q-4 -44 -56 -44 q-52 0 -56 44 z" fill="#3f2c1c" stroke="#0a0610" stroke-width="6"/>
+            <g stroke="#0a0610" stroke-width="2">
+              <circle cx="118" cy="44" r="7.5" fill="#ff2ea6"/><circle cx="136" cy="34" r="7.5" fill="#28e0ff"/>
+              <circle cx="154" cy="31" r="7.5" fill="#d9ff2e"/><circle cx="172" cy="34" r="7.5" fill="#ffc93c"/>
+              <circle cx="188" cy="44" r="7.5" fill="#4dff7a"/>
+            </g>
+            <circle cx="130" cy="76" r="11" fill="#f7f3ea" stroke="#0a0610" stroke-width="4"/>
+            <path d="M130 76 m-6 0 a6 6 0 1 1 9 5 a4 4 0 1 1 -5 -6" fill="none" stroke="#a855f7" stroke-width="3.5"/>
+            <path d="M168 68 l13 13 M181 68 l-13 13" stroke="#0a0610" stroke-width="5" stroke-linecap="round"/>
+            <ellipse cx="150" cy="102" rx="34" ry="22" fill="#c49a68" stroke="#0a0610" stroke-width="5"/>
+            <ellipse cx="150" cy="91" rx="14" ry="9" fill="#0a0610"/>
+            <path d="M134 110 q16 14 32 0" fill="none" stroke="#0a0610" stroke-width="5" stroke-linecap="round"/>
+            <path d="M158 114 q8 15 -1 20 q-9 -5 -4 -20 z" fill="#ff5f8f" stroke="#0a0610" stroke-width="3"/>
+            <rect x="136" y="110" width="10" height="12" rx="2" fill="#ffc93c" stroke="#0a0610" stroke-width="3"/>
+          </svg>
+        </div>
+
+        <div class="col">
+          <a class="btn x" href="#" data-cta="x"><i>𝕏</i><span>X<small>set handle</small></span></a>
+          <button class="btn copy" id="copyCa" type="button"><i>🐾</i><span>Enter<small id="caLabel">copy contract</small></span></button>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat" style="--sc:#ff2ea6"><i>🐻</i><div><b>42.0K+</b><span>Cult members</span></div></div>
+        <div class="stat" style="--sc:#a855f7"><i>💀</i><div><b>420.69B</b><span>$SB played</span></div></div>
+        <div class="stat" style="--sc:#ff2ea6"><i>◎</i><div><b>100%</b><span>Chaos level</span></div></div>
+        <div class="stat" style="--sc:#ffc93c"><i>☺</i><div><b>∞</b><span>Meme power</span></div></div>
+      </div>
+
+      <div class="see">
+        <span class="w">See</span> <span class="l">you</span> <span class="c">in</span> <span class="v">the</span> <span class="m">Dvor</span>
+        <u></u>
+      </div>
     </div>
   </div>
 </section>
 
 <script>
-/* ══════════════════════════════════════════════════════════════
-   CONFIG
-   ══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════
+   CONFIG — drop your real artwork + links in here
+   ═══════════════════════════════════════════════════════════ */
 const ART = {
   p1: 'img/scene-1.webp',
   p2: 'img/scene-2.webp',
   p3: 'img/scene-3.webp',
   p4: 'img/scene-4.webp',
   p5: 'img/scene-5.webp',
-  p5before: null,
   p6: 'img/scene-6.webp'
 };
-
 const LINKS = {
-  buy:'', telegram:'https://t.me/sbmemetoken', x:'https://x.com/sbmemecoin',
-  discord:'', dextools:'', dexscreener:'', coingecko:'', cmc:''
+  buy:      '',                              // ← paste your DEX / buy link
+  telegram: 'https://t.me/sbmemetoken',
+  x:        'https://x.com/sbmemecoin'
 };
-const CONTRACT = '';
+const CONTRACT = '';                         // ← paste your token contract address
 
-/* ══════════════════════════════════════════════════════════════
-   STORY — original wording. w = scroll weight (punchlines get more)
-   ══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════
+   STORY — original wording, unchanged.
+   w = scroll weight. Punchlines get more room to land.
+   ═══════════════════════════════════════════════════════════ */
 const STORY = {
   p1:[
     {w:1,   h:'There is a place called the Dvor.', t:['Somewhere behind the last normal building…']},
@@ -743,103 +1223,116 @@ const STORY = {
 };
 
 (function(){
-  var reduce   = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var pages    = [].slice.call(document.querySelectorAll('.page'));
-  var STEP_VH  = 38, PAGE_MIN = 560, PAGE_MAX = 700;
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var pages  = Array.prototype.slice.call(document.querySelectorAll('.page'));
+  var STEP_VH  = 38;   /* scroll distance per weight unit — lower = faster story */
+  var PAGE_MIN = 560;  /* every story page is clamped into this band so no chapter */
+  var PAGE_MAX = 700;  /* drags. Weights still decide pacing *within* a page.      */
 
-  /* ── artwork slots ── */
+  /* ── swap in real artwork if configured ── */
   pages.forEach(function(pg){
     var src = ART[pg.id];
-    if (!src) return;
-    pg.classList.add('has-img');
-    pg.querySelectorAll('.bgimg').forEach(function(el){
-      var slot = el.dataset.slot;
-      var use  = slot === 'before' ? (ART.p5before || src) : src;
-      el.style.backgroundImage = 'url("' + use + '")';
-    });
+    if (src){
+      pg.querySelector('.photo').style.backgroundImage = 'url("' + src + '")';
+      pg.classList.add('has-photo');
+    }
   });
 
-  /* ── build steps, size pages ── */
+  /* ── build steps + size each page from its weighted content ── */
   var model = [];
-  pages.forEach(function(pg){
+  pages.forEach(function(pg, pi){
     var steps = STORY[pg.id] || [];
     var stage = pg.querySelector('.stage');
     var nodes = [];
 
-    if (stage){
-      steps.forEach(function(s,i){
+    if (stage && steps.length){
+      steps.forEach(function(s, i){
         var d = document.createElement('div');
         d.className = 'step' + (i === 0 ? ' on' : '');
         var html = '';
-        if (s.t) s.t.forEach(function(x){ html += '<p>' + x + '</p>'; });
+        if (s.t) s.t.forEach(function(line){ html += '<p>' + line + '</p>'; });
         if (s.h) html += '<p class="hit">' + s.h + '</p>';
-        if (s.l){ html += '<ul class="list">'; s.l.forEach(function(x){ html += '<li>' + x + '</li>'; }); html += '</ul>'; }
+        if (s.l){
+          html += '<ul class="list">';
+          s.l.forEach(function(li){ html += '<li>' + li + '</li>'; });
+          html += '</ul>';
+        }
         d.innerHTML = html;
-        stage.appendChild(d); nodes.push(d);
+        stage.appendChild(d);
+        nodes.push(d);
       });
+
+      /* lock the stage to its tallest step so the panel never jumps size */
       requestAnimationFrame(function(){
-        var tall = 0;
+        var tallest = 0;
         nodes.forEach(function(n){
           var was = n.classList.contains('on');
-          n.classList.add('on'); tall = Math.max(tall, n.offsetHeight);
+          n.classList.add('on');
+          tallest = Math.max(tallest, n.offsetHeight);
           if (!was) n.classList.remove('on');
         });
-        if (tall) stage.style.minHeight = tall + 'px';
+        stage.style.minHeight = tallest + 'px';
       });
     }
 
-    var w = steps.map(function(s){ return s.w || 1; });
-    var total = w.reduce(function(a,b){ return a+b; }, 0) || 1;
-    var acc = 0, bounds = [];
-    w.forEach(function(x){ acc += x; bounds.push(acc/total); });
+    /* weighted segment boundaries */
+    var weights = steps.map(function(s){ return s.w || 1; });
+    var total   = weights.reduce(function(a,b){ return a+b; }, 0) || 1;
+    var bounds  = [], acc = 0;
+    weights.forEach(function(w){ acc += w; bounds.push(acc / total); });
 
-    var len = steps.length
-      ? Math.min(Math.max(Math.round(total * STEP_VH), PAGE_MIN), PAGE_MAX)
-      : 110;
+    var len = 90;
+    if (steps.length){
+      len = Math.round(total * STEP_VH);
+      len = Math.min(Math.max(len, PAGE_MIN), PAGE_MAX);
+    }
     pg.style.height = (len + 100) + 'svh';
 
-    model.push({ el:pg, nodes:nodes, bounds:bounds, idx:0, fill:pg.querySelector('.pline i') });
+    model.push({ el:pg, nodes:nodes, bounds:bounds, idx:0,
+                 fill:pg.querySelector('.pline i'), index:pi });
   });
 
-  /* ── dots ── */
+  /* ── chapter dots ── */
   var dotsWrap = document.getElementById('dots'), dots = [];
-  pages.forEach(function(pg,i){
+  pages.forEach(function(pg, i){
     var b = document.createElement('button');
     b.type = 'button';
-    b.title = (i+1) + ' / ' + pages.length + ' · ' + pg.dataset.title;
-    b.setAttribute('aria-label','Go to ' + pg.dataset.title);
-    b.onclick = function(){ scrollTo({ top: pg.offsetTop + 4, behavior: reduce ? 'auto' : 'smooth' }); };
-    dotsWrap.appendChild(b); dots.push(b);
+    b.title = (i+1) + ' / 6 · ' + pg.dataset.title;
+    b.setAttribute('aria-label', 'Go to ' + pg.dataset.title);
+    b.addEventListener('click', function(){
+      window.scrollTo({ top: pg.offsetTop + 4, behavior: reduce ? 'auto' : 'smooth' });
+    });
+    dotsWrap.appendChild(b);
+    dots.push(b);
   });
 
-  var hudN = document.querySelector('#hud .n'), hudBar = document.querySelector('#hud .bar i');
-  var menuLinks = [].slice.call(document.querySelectorAll('#menu a'));
+  var countEl = document.getElementById('count');
   var ticking = false;
 
   function frame(){
-    var vh = innerHeight, y = scrollY;
-    var docH = document.documentElement.scrollHeight - vh;
-    if (hudBar) hudBar.style.width = (docH > 0 ? (y/docH)*100 : 0) + '%';
+    var vh = window.innerHeight, y = window.scrollY;
 
     for (var i = 0; i < model.length; i++){
       var m = model[i], pg = m.el;
       var top = pg.offsetTop, span = pg.offsetHeight - vh;
-      var active = y >= top - vh*0.6 && y < top + pg.offsetHeight;
+      var active = y >= top - vh * 0.6 && y < top + pg.offsetHeight;
+
+      pg.classList.toggle('live', active);
       if (!active) continue;
 
-      hudN.textContent = (i+1) + ' / ' + model.length;
+      countEl.textContent = (i + 1) + ' / ' + model.length;
       for (var d = 0; d < dots.length; d++) dots[d].classList.toggle('on', d === i);
-      menuLinks.forEach(function(a){
-        if (a.getAttribute('href') === '#' + pg.id) a.setAttribute('aria-current','page');
-        else a.removeAttribute('aria-current');
-      });
 
       if (!m.nodes.length) continue;
-      var p = span > 0 ? Math.min(Math.max((y-top)/span, 0), 1) : 0;
-      if (m.fill) m.fill.style.width = (p*100).toFixed(1) + '%';
 
+      var p = span > 0 ? Math.min(Math.max((y - top) / span, 0), 1) : 0;
+      if (m.fill) m.fill.style.width = (p * 100).toFixed(1) + '%';
+
+      /* which weighted segment are we in? */
       var next = m.bounds.length - 1;
-      for (var b = 0; b < m.bounds.length; b++){ if (p <= m.bounds[b]){ next = b; break; } }
+      for (var b = 0; b < m.bounds.length; b++){
+        if (p <= m.bounds[b]){ next = b; break; }
+      }
       if (next !== m.idx){
         m.nodes[m.idx].classList.remove('on');
         m.nodes[next].classList.add('on');
@@ -848,88 +1341,38 @@ const STORY = {
     }
     ticking = false;
   }
-  addEventListener('scroll', function(){ if (!ticking){ ticking = true; requestAnimationFrame(frame); } }, {passive:true});
+
+  addEventListener('scroll', function(){
+    if (!ticking){ ticking = true; requestAnimationFrame(frame); }
+  }, {passive:true});
   addEventListener('resize', function(){ requestAnimationFrame(frame); });
   frame();
 
-  /* ── page 3: choose your future ── */
-  var slider = document.getElementById('futureSlider');
-  var hint   = document.getElementById('chooseHint');
-  function setChoice(v){
-    if (slider) slider.value = v;
-    var label = v < 35 ? 'Chaos it is. Good luck, suka blyat.'
-              : v > 65 ? 'Dagestan. See you in 2–3 years.'
-              : 'Drag the slider or pick a side';
-    if (hint) hint.textContent = label;
-    try { localStorage.setItem('sb-future', v); } catch(e){}
-  }
-  if (slider) slider.addEventListener('input', function(){ setChoice(+this.value); });
-  document.querySelectorAll('[data-choose]').forEach(function(btn){
-    btn.onclick = function(){ setChoice(btn.dataset.choose === 'chaos' ? 0 : 100); };
-  });
-  try { var sv = localStorage.getItem('sb-future'); if (sv !== null) setChoice(+sv); } catch(e){}
-
-  /* ── page 5: before / after reveal ── */
-  var wrap = document.querySelector('#p5 .revealwrap');
-  var handle = document.getElementById('revealHandle');
-  if (wrap && handle){
-    var dragging = false;
-    function setSplit(clientX){
-      var r = wrap.getBoundingClientRect();
-      var pct = Math.min(Math.max(((clientX - r.left)/r.width)*100, 4), 96);
-      wrap.style.setProperty('--split', pct + '%');
-      handle.setAttribute('aria-valuenow', Math.round(pct));
-    }
-    handle.addEventListener('pointerdown', function(e){
-      dragging = true; handle.setPointerCapture(e.pointerId); e.preventDefault();
-    });
-    addEventListener('pointermove', function(e){ if (dragging) setSplit(e.clientX); });
-    addEventListener('pointerup', function(){ dragging = false; });
-    wrap.addEventListener('click', function(e){ if (e.target !== handle) setSplit(e.clientX); });
-    handle.addEventListener('keydown', function(e){
-      var cur = parseFloat(getComputedStyle(wrap).getPropertyValue('--split')) || 50;
-      if (e.key === 'ArrowLeft'){ wrap.style.setProperty('--split', Math.max(cur-4,4) + '%'); e.preventDefault(); }
-      if (e.key === 'ArrowRight'){ wrap.style.setProperty('--split', Math.min(cur+4,96) + '%'); e.preventDefault(); }
-    });
-  }
-
-  /* ── page 4: horizontal rail via wheel ── */
-  var rail = document.getElementById('trainRail');
-  if (rail){
-    rail.addEventListener('wheel', function(e){
-      if (Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
-      var atStart = rail.scrollLeft <= 0 && e.deltaY < 0;
-      var atEnd   = rail.scrollLeft >= rail.scrollWidth - rail.clientWidth - 1 && e.deltaY > 0;
-      if (atStart || atEnd) return;          /* let the page keep scrolling */
-      rail.scrollLeft += e.deltaY;
-      e.preventDefault();
-    }, {passive:false});
-  }
-
-  /* ── links ── */
+  /* ── wire every link target (nav icons + page-6 buttons) ── */
   Object.keys(LINKS).forEach(function(k){
     var url = LINKS[k];
     document.querySelectorAll('[data-cta="' + k + '"]').forEach(function(a){
       if (url){
         a.href = url; a.target = '_blank'; a.rel = 'noopener';
         var s = a.querySelector('small');
-        if (s) s.textContent = url.replace(/^https?:\/\//,'').replace(/\/$/,'');
+        if (s){
+          /* show the real handle instead of the placeholder hint */
+          s.textContent = url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+        }
       } else {
-        a.setAttribute('aria-disabled','true');
+        a.setAttribute('aria-disabled', 'true');
       }
     });
   });
-
-  /* ── contract ── */
-  var caText = document.getElementById('caText');
-  if (CONTRACT) caText.textContent = CONTRACT;
-  document.getElementById('copyCa').onclick = function(){
-    if (!CONTRACT){ caText.textContent = '— set CONTRACT in config —'; return; }
+  var caLabel = document.getElementById('caLabel');
+  if (CONTRACT) caLabel.textContent = CONTRACT.slice(0,6) + '…' + CONTRACT.slice(-4);
+  document.getElementById('copyCa').addEventListener('click', function(){
+    if (!CONTRACT){ caLabel.textContent = 'add CONTRACT in config'; return; }
     navigator.clipboard.writeText(CONTRACT).then(function(){
-      var old = caText.textContent;
-      caText.textContent = 'Copied ✓';
-      setTimeout(function(){ caText.textContent = old; }, 1500);
+      var was = caLabel.textContent;
+      caLabel.textContent = 'Copied';
+      setTimeout(function(){ caLabel.textContent = was; }, 1600);
     });
-  };
+  });
 })();
 </script>
