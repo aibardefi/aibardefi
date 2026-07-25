@@ -1,10 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Header } from "@/components/Header";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import { LanguageProvider } from "@/i18n/LanguageContext";
-import SolanaProviderDynamic from "@/providers/SolanaProviderDynamic";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,11 +14,16 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AlphaDEX",
-  description: "Decentralized perpetual trading on Solana",
-  manifest: "/manifest.json",
-  themeColor: "#0a0a0a",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
+  title: "SUKA BLYAT | The Meme Powered by Memes",
+  description: "SUKA BLYAT - Lock Memes. Borrow the Meme. The ultimate memecoin on Solana.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  themeColor: "#0a0a12",
 };
 
 export default function RootLayout({
@@ -33,17 +35,12 @@ export default function RootLayout({
     <html
       lang="en"
       data-theme="dark"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-screen flex flex-col bg-bg-primary text-text-primary">
+      <body className="min-h-screen bg-bg-primary text-text-primary overflow-x-hidden">
         <ThemeProvider>
-          <LanguageProvider>
-            <SolanaProviderDynamic>
-              <Header />
-              <main className="flex-1 flex flex-col">{children}</main>
-            </SolanaProviderDynamic>
-          </LanguageProvider>
+          {children}
         </ThemeProvider>
       </body>
     </html>
