@@ -81,9 +81,15 @@ export function ClaimSection() {
             animate={
               reduced
                 ? undefined
-                : { scaleY: [1, 1.012, 1], scaleX: [1, 1.008, 1], y: [0, -3, 0] }
+                : {
+                    scaleY: [1, 1.012, 1],
+                    scaleX: [1, 1.008, 1],
+                    y: [0, -3, 0],
+                    // Gentle sway so the key and ticket move naturally with him.
+                    rotate: [0, 0.7, 0, -0.7, 0],
+                  }
             }
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1.3 }}
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1.3 }}
             style={{ transformOrigin: "bottom center" }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -103,14 +109,14 @@ export function ClaimSection() {
             aria-label="Replay: watch the memecoin claim"
             className="inline-flex cursor-pointer items-center gap-2.5 whitespace-nowrap text-[11px] font-bold uppercase tracking-[0.22em] text-navy/85 transition-colors hover:text-navy lg:text-[13px]"
           >
-            Enter The Door
+            Watch Again
             <motion.span
               aria-hidden
-              animate={reduced ? undefined : { y: [0, 5, 0] }}
-              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+              animate={reduced ? undefined : { rotate: [0, 360] }}
+              transition={{ duration: 2.2, repeat: Infinity, ease: "linear" }}
               className="text-base leading-none"
             >
-              ↓
+              ↻
             </motion.span>
           </button>
         </div>
