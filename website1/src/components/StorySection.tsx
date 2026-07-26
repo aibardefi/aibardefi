@@ -97,7 +97,7 @@ export function StorySection() {
       ref={ref}
     >
       <div className="top" data-ent="fade" data-ent-delay="0">
-        <div className="eyebrow">Kapibara Blyatovich · Lending Co.</div>
+        <div className="eyebrow">Capybara Blyatovich · Lending Co.</div>
         <div className="count">05 / 07</div>
       </div>
 
@@ -241,7 +241,7 @@ export function StorySection() {
         <div className={s.mascotWrap}>
           <Mascot
             className="breathe grounded"
-            alt="Kapibara Blyatovich"
+            alt="Capybara Blyatovich"
           />
         </div>
       </div>

@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 /**
- * Kapibara Blyatovich.
+ * Capybara Blyatovich.
  *
  * One place that knows where the artwork lives and what its real aspect ratio
  * is, so no section has to hardcode either. The backdrop was cut out of the
@@ -43,7 +43,7 @@ export const EYES = {
 export function Mascot({
   className,
   priority = false,
-  alt = "Kapibara Blyatovich",
+  alt = "Capybara Blyatovich",
   sizes = "(max-width: 640px) 60vw, 320px",
 }: {
   className?: string;

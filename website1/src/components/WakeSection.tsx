@@ -105,7 +105,7 @@ export function WakeSection() {
       ref={ref}
     >
       <div className="top" data-ent="fade" data-ent-delay="0">
-        <div className="eyebrow">Kapibara Blyatovich · Lending Co.</div>
+        <div className="eyebrow">Capybara Blyatovich · Lending Co.</div>
         <div className="count">04 / 07</div>
       </div>
 
@@ -132,7 +132,7 @@ export function WakeSection() {
             viewBox="0 196 700 292"
             ref={sceneRef}
             role="img"
-            aria-label="Kapibara Blyatovich asleep, an alarm clock ringing beside him"
+            aria-label="Capybara Blyatovich asleep, an alarm clock ringing beside him"
           >
             <g stroke="var(--ink)" strokeWidth="6" strokeLinejoin="round">
               {/* A bedside lamp, not a pendant. Hanging from the ceiling left

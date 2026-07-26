@@ -387,7 +387,7 @@ export function VaultSection() {
       ref={setRefs}
     >
       <div className="top" data-ent="fade" data-ent-delay="0">
-        <div className="eyebrow">Kapibara Blyatovich · Lending Co.</div>
+        <div className="eyebrow">Capybara Blyatovich · Lending Co.</div>
         <div className="count">02 / 07</div>
       </div>
 

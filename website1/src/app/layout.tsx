@@ -8,7 +8,7 @@ const sb = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "$SB — Kapibara Blyatovich",
+  title: "$SB — Capybara Blyatovich",
   description: "Lock memes. Borrow the meme.",
 };
 

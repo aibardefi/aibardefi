@@ -111,7 +111,7 @@ export function JoinSection() {
   return (
     <section className="stage" ref={ref}>
       <div className="top" data-ent="fade" data-ent-delay="0">
-        <div className="eyebrow">Kapibara Blyatovich &middot; Lending Co.</div>
+        <div className="eyebrow">Capybara Blyatovich &middot; Lending Co.</div>
         <div className="count">07 / 07</div>
       </div>
 
@@ -150,7 +150,7 @@ export function JoinSection() {
             <div className={s.tip}>
               <Mascot
                 className={`grounded ${s.tipImg}`}
-                alt="Kapibara Blyatovich tipping his hat"
+                alt="Capybara Blyatovich tipping his hat"
               />
             </div>
           </div>

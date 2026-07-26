@@ -171,7 +171,7 @@ export function HeroSection() {
   return (
     <section className="stage" ref={ref}>
       <div className="top" data-ent="fade" data-ent-delay="0">
-        <div className="eyebrow">Kapibara Blyatovich · Lending Co.</div>
+        <div className="eyebrow">Capybara Blyatovich · Lending Co.</div>
         <div className="count">01 / 07</div>
       </div>
 
@@ -203,7 +203,7 @@ export function HeroSection() {
           <Mascot
             className="breathe"
             priority
-            alt="Kapibara Blyatovich, who eats your memecoins"
+            alt="Capybara Blyatovich, who eats your memecoins"
           />
         </div>
       </div>
