@@ -2,6 +2,7 @@
 
 import { useCallback, useRef, useState } from "react";
 import { useEntrance, prefersReducedMotion } from "@/lib/useEntrance";
+import { useReplay } from "@/lib/useReplay";
 import s from "./WakeSection.module.css";
 
 const MAX = 4;
@@ -25,6 +26,15 @@ export function WakeSection() {
 
   const ringing = stage < MAX;
   const dead = stage >= MAX;
+
+  // Back to fast asleep with the alarm going, so the room is worth walking
+  // into a second time.
+  const rearm = useCallback(() => {
+    setStage(0);
+    bubbleRef.current?.classList.remove("show");
+  }, []);
+
+  useReplay(ref, rearm);
 
   const say = useCallback((text: string) => {
     const el = bubbleRef.current;
@@ -145,7 +155,9 @@ export function WakeSection() {
               />
             </g>
 
-            <g fontWeight="900" fontSize="34" fill="var(--cream)">
+            {/* Ink, not cream: these drift across open ground, and cream on the
+                page's own background left them all but invisible. */}
+            <g fontWeight="900" fontSize="34" fill="var(--ink)" opacity="0.75">
               <text className={s.zzz} x="516" y="372">
                 z
               </text>
@@ -207,7 +219,7 @@ export function WakeSection() {
             <path
               className={s.blanket}
               d="M300 420 q130 -34 300 -8 l0 46 l-300 0 z"
-              fill="var(--cream)"
+              fill="var(--linen)"
               stroke="var(--ink)"
               strokeWidth="7"
               strokeLinejoin="round"

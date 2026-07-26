@@ -3,6 +3,7 @@
 import { useCallback, useRef, useState } from "react";
 import { Mascot } from "./Mascot";
 import { useEntrance, prefersReducedMotion } from "@/lib/useEntrance";
+import { useReplay } from "@/lib/useReplay";
 import s from "./JoinSection.module.css";
 
 const CONTRACT: string | null = null;
@@ -18,6 +19,18 @@ export function JoinSection() {
   const [signoff, setSignoff] = useState("He is expecting you.");
   const [toastText, setToastText] = useState("Copied");
   const [showToast, setShowToast] = useState(false);
+  const [run, setRun] = useState(0);
+
+  // The hat tip, the gold and the three buttons are CSS animations that fire on
+  // mount, so replaying them means remounting: bumping this key is what lets
+  // him greet you again instead of being frozen mid-welcome on every return.
+  const rearm = useCallback(() => {
+    setRun((n) => n + 1);
+    setSignoff("He is expecting you.");
+    setShowToast(false);
+  }, []);
+
+  useReplay(ref, rearm);
 
   const ready = typeof CONTRACT === "string" && CONTRACT.length > 0;
 
@@ -68,7 +81,7 @@ export function JoinSection() {
       </div>
 
       <div className={`middle ${s.middle}`} data-ent="up" data-ent-delay="240">
-        <div className={s.final}>
+        <div className={s.final} key={run}>
           <div className={s.hero}>
             <svg
               viewBox="0 0 200 40"

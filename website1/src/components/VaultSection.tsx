@@ -310,9 +310,9 @@ export function VaultSection() {
               strokeLinejoin="round"
               strokeLinecap="round"
             >
-              <path d="M212 86 L448 86 L372 158 L288 158 Z" fill="var(--fur-dark)" />
-              <rect x="150" y="152" width="360" height="300" rx="28" fill="var(--fur)" />
-              <rect x="198" y="196" width="264" height="168" rx="16" fill="#3d2a19" />
+              <path d="M212 86 L448 86 L372 158 L288 158 Z" fill="var(--machine-dark)" />
+              <rect x="150" y="152" width="360" height="300" rx="28" fill="var(--machine)" />
+              <rect x="198" y="196" width="264" height="168" rx="16" fill="var(--machine-deep)" />
 
               <g opacity="0.9">
                 <circle cx="268" cy="300" r="21" fill="#b9b3a6" stroke="#12110c" strokeWidth="4" />
@@ -344,8 +344,8 @@ export function VaultSection() {
               />
               <rect x="236" y="380" width="188" height="30" rx="9" fill="none" />
 
-              <rect x="176" y="452" width="58" height="34" rx="12" fill="var(--fur-dark)" />
-              <rect x="426" y="452" width="58" height="34" rx="12" fill="var(--fur-dark)" />
+              <rect x="176" y="452" width="58" height="34" rx="12" fill="var(--machine-dark)" />
+              <rect x="426" y="452" width="58" height="34" rx="12" fill="var(--machine-dark)" />
             </g>
 
             <g className={s.padlock} stroke="#12110c" strokeWidth="7" strokeLinejoin="round">
@@ -376,7 +376,7 @@ export function VaultSection() {
                 width="26"
                 height="26"
                 rx="6"
-                fill="var(--fur-dark)"
+                fill="var(--machine-dark)"
                 stroke="#12110c"
                 strokeWidth="6"
               />
@@ -387,7 +387,7 @@ export function VaultSection() {
                   width="15"
                   height="100"
                   rx="7"
-                  fill="var(--fur-dark)"
+                  fill="var(--machine-dark)"
                   stroke="#12110c"
                   strokeWidth="6"
                 />

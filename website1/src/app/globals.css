@@ -21,11 +21,19 @@
   --gold-deep: #b07d14;
   --stamp: #c4392b;
 
-  /* The safe. Deep green with gold hardware, so the thing holding your memes
-     stops being another brown box next to a brown bear. */
+  /* Each screen gets its own object colour so the seven do not read as one
+     long brown page. The ground never changes; the thing standing on it does.
+     Machine is cold slate, safe is bank green, and the bedroom stays warm wood
+     — the warmth is the point right after two rooms of metal. */
+  --machine: #3f4d63;
+  --machine-dark: #2c374a;
+  --machine-deep: #1e2634;
+
   --safe: #2f6157;
   --safe-dark: #21473f;
   --safe-deep: #16332d;
+
+  --linen: #5b7b93;
 
   /* One background for every page, per the brief. */
   --ground: #e7e4dc;

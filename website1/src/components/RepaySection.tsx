@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { MASCOT_SRC } from "./Mascot";
 import { useEntrance, prefersReducedMotion } from "@/lib/useEntrance";
+import { useReplay } from "@/lib/useReplay";
 import s from "./RepaySection.module.css";
 
 const TOTAL = 42000;
@@ -141,6 +142,28 @@ export function RepaySection() {
   }, [p, freed]);
 
   useEffect(() => () => window.clearTimeout(bubbleTimer.current), []);
+
+  // Cancelling the door and meme animations is what actually rebuilds the
+  // vault — the state alone would leave it standing open and empty.
+  const rearm = useCallback(() => {
+    [doorLRef.current, doorRRef.current].forEach((d) =>
+      d?.getAnimations().forEach((a) => a.cancel())
+    );
+    insideRef.current?.querySelectorAll(`.${s.memeOut}`).forEach((m) => {
+      const el = m as SVGGElement;
+      el.getAnimations().forEach((a) => a.cancel());
+      el.style.opacity = "";
+    });
+    if (doorLRef.current) doorLRef.current.style.transform = "";
+    if (doorRRef.current) doorRRef.current.style.transform = "";
+    bubbleRef.current?.classList.remove("show");
+    setFreed(false);
+    setSnap(false);
+    setP(0);
+    setHint("Drag all the way to repay");
+  }, []);
+
+  useReplay(ref, rearm, () => dragging.current);
 
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (freed) return;

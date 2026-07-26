@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Mascot } from "./Mascot";
 import { useEntrance, prefersReducedMotion } from "@/lib/useEntrance";
+import { useReplay } from "@/lib/useReplay";
 import s from "./StorySection.module.css";
 
 type CardState = "idle" | "lifting" | "flipped";
@@ -35,6 +36,13 @@ export function StorySection() {
   const ref = useEntrance<HTMLElement>();
   const [cards, setCards] = useState<CardState[]>(["idle", "idle", "idle"]);
   const [showPayoff, setShowPayoff] = useState(false);
+
+  const rearm = useCallback(() => {
+    setCards(["idle", "idle", "idle"]);
+    setShowPayoff(false);
+  }, []);
+
+  useReplay(ref, rearm);
 
   const flipCard = useCallback((i: number) => {
     setCards((prev) => {
@@ -166,24 +174,27 @@ export function StorySection() {
                             d="M12 40 L50 16 L88 40 Z"
                             fill="var(--cream)"
                           />
+                          {/* Wider than they look like they need to be: at 12
+                              across, a 6-wide stroke leaves 6 of fill and the
+                              pillars render as three black bars. */}
                           <rect
                             x="20"
                             y="44"
-                            width="12"
+                            width="16"
                             height="34"
                             fill="var(--cream)"
                           />
                           <rect
-                            x="44"
+                            x="42"
                             y="44"
-                            width="12"
+                            width="16"
                             height="34"
                             fill="var(--cream)"
                           />
                           <rect
-                            x="68"
+                            x="64"
                             y="44"
-                            width="12"
+                            width="16"
                             height="34"
                             fill="var(--cream)"
                           />
