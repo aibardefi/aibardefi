@@ -192,3 +192,15 @@
   outline-offset: 2px;
   border-radius: 6px;
 }
+
+/* One per row on a narrow screen. Three pills of unequal width wrapped 2-then-1
+   and read as ragged rather than composed. */
+@media (max-width: 430px) {
+  .links {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .link {
+    justify-content: center;
+  }
+}

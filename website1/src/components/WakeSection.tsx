@@ -299,6 +299,7 @@ export function WakeSection() {
                 tabIndex={0}
                 role="button"
                 aria-label="Hit the alarm clock"
+              aria-disabled={dead || undefined}
                 onClick={hit}
                 onKeyDown={onHitKey}
               />

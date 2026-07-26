@@ -50,6 +50,7 @@ export function VaultSection() {
   const feedRef = useRef<SVGGElement>(null);
   const bubbleRef = useRef<HTMLDivElement>(null);
   const timers = useRef<number[]>([]);
+  const rollRaf = useRef<number | null>(null);
   const busy = useRef(false);
 
   const [pulled, setPulled] = useState(false);
@@ -78,6 +79,12 @@ export function VaultSection() {
   const clearTimers = useCallback(() => {
     timers.current.forEach(clearTimeout);
     timers.current = [];
+    // The counter runs on rAF, not a timeout, so it survived this and would
+    // drive a freshly-zeroed readout straight back up to the full amount.
+    if (rollRaf.current !== null) {
+      cancelAnimationFrame(rollRaf.current);
+      rollRaf.current = null;
+    }
   }, []);
 
   useEffect(() => clearTimers, [clearTimers]);
@@ -206,9 +213,9 @@ export function VaultSection() {
     const step = (now: number) => {
       const p = Math.min(1, (now - start) / 1430);
       setBorrowed(Math.round(TOTAL * (1 - Math.pow(1 - p, 3))));
-      if (p < 1) requestAnimationFrame(step);
+      rollRaf.current = p < 1 ? requestAnimationFrame(step) : null;
     };
-    requestAnimationFrame(step);
+    rollRaf.current = requestAnimationFrame(step);
   }, []);
 
   const reset = useCallback(
@@ -287,7 +294,7 @@ export function VaultSection() {
       setSpent(true);
 
       coins.forEach((g, i) => {
-        window.setTimeout(() => {
+        after(i * 35, () => {
           if (prefersReducedMotion()) {
             g.remove();
             return;
@@ -304,15 +311,15 @@ export function VaultSection() {
             ],
             { duration: 520, easing: "cubic-bezier(.5,0,.9,.4)", fill: "forwards" }
           ).onfinish = () => g.remove();
-        }, i * 35);
+        });
       });
 
-      window.setTimeout(() => {
+      after(600, () => {
         say(SPEND_LINE[kind]);
         setHint(kind === "memes" ? "And now you owe him." : "That was fast.");
-        // MORE MEMES is the joke and the hand-off into page 3: back to the top.
-        if (kind === "memes") window.setTimeout(() => reset(false), 1400);
-      }, 600);
+        // MORE MEMES is the joke and the hand-off into the next screen.
+        if (kind === "memes") after(1400, () => reset(false));
+      });
     },
     [reset, say, spendOpen, spent]
   );

@@ -336,7 +336,10 @@ export function RepaySection() {
              made it feel like the handle kept slipping out of your hand. */
           onPointerDown={(e) => {
             if (freed) return;
-            e.preventDefault();
+            // Deliberately no preventDefault: cancelling pointerdown leaves
+            // activeElement on <body>, so this slider never took focus by being
+            // used and its arrow-key handler was unreachable without tabbing.
+            e.currentTarget.focus();
             dragging.current = true;
             setSnap(false);
             e.currentTarget.setPointerCapture(e.pointerId);
