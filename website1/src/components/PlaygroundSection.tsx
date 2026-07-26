@@ -92,8 +92,6 @@ export function PlaygroundSection() {
   const lastPoke = useRef<MoodKey | null>(null);
   const rafId = useRef<number | null>(null);
   const target = useRef({ x: 0, y: 0 });
-
-  const [activeMood, setActiveMood] = useState<MoodKey | null>(null);
   const [moodCls, setMoodCls] = useState<string>("");
   const [busy, setBusy] = useState(false);
   const [hint, setHint] = useState("Move your cursor — then press one");
@@ -121,23 +119,25 @@ export function PlaygroundSection() {
     setActiveBtn(null);
     setBusy(false);
 
-    // Force reflow so re-pressing the same button replays from frame zero
-    void document.body.offsetWidth;
+    // The class has to come off and go back on across two commits. Reading
+    // offsetWidth here used to stand in for that, but React has committed
+    // nothing at this point for the read to flush — so the class went from
+    // mJump straight back to mJump, no attribute change, no restart, and
+    // pressing a button a second time did nothing at all.
+    requestAnimationFrame(() => {
+      setMoodCls(m.cls);
+      setBusy(true);
+      setActiveBtn(name);
+      say(m.say);
+      setHint(m.hint);
 
-    setActiveMood(name);
-    setMoodCls(m.cls);
-    setBusy(true);
-    setActiveBtn(name);
-    say(m.say);
-    setHint(m.hint);
-
-    moodTimer.current = window.setTimeout(() => {
-      setMoodCls("");
-      setBusy(false);
-      setActiveBtn(null);
-      setActiveMood(null);
-      setHint("Pick another");
-    }, reduced ? 60 : m.ms);
+      moodTimer.current = window.setTimeout(() => {
+        setMoodCls("");
+        setBusy(false);
+        setActiveBtn(null);
+        setHint("Pick another");
+      }, reduced ? 60 : m.ms);
+    });
   }, [say]);
 
   const handleSceneClick = useCallback(() => {
@@ -261,7 +261,11 @@ export function PlaygroundSection() {
             {/* Over on the left, because tipping onto his side carries his head
                 across to about x=260 — off his right shoulder these drifted up
                 from his feet. */}
-            <g className={s.fx} fontWeight="900" fontSize="34" fill="var(--ink)">
+            {/* No .fx on this wrapper: it carries opacity 0 and group opacity
+                multiplies with the children's, so the z's could never appear no
+                matter what their own animation did. Dust, steam and swoosh
+                escape it because their .fx sits on the animated element. */}
+            <g fontWeight="900" fontSize="34" fill="var(--ink)" opacity="0.8">
               <text className={s.fxZzz} x="252" y="318" opacity="0">z</text>
               <text className={s.fxZzz} x="252" y="318" opacity="0">z</text>
               <text className={s.fxZzz} x="252" y="318" opacity="0">z</text>

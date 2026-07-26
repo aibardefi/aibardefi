@@ -52,8 +52,10 @@
 
 /* The jolt when the padlock snaps. On the stage, not <body>, so it can't
    fight the page's own scrolling. */
+/* Not stepped. steps(2, end) quantises progress to {0, 0.5}, so three of the
+   five stops below never rendered and the "shake" was a single shove and back. */
 .jolt {
-  animation: jolt 140ms steps(2, end) 2;
+  animation: jolt 280ms ease-in-out 2;
 }
 @keyframes jolt {
   0% { transform: translate(0, 0); }

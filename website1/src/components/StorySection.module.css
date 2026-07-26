@@ -34,8 +34,10 @@
 .card.flipped {
   transform: rotateY(180deg);
 }
+/* Short of edge-on deliberately: at exactly 90deg, backface-visibility hides
+   both faces and the lift stage is a blank gap in the middle of the flip. */
 .card.lift {
-  transform: rotateY(90deg) translateZ(40px) scale(1.06);
+  transform: rotateY(74deg) translateZ(40px) scale(1.06);
 }
 
 .face {
@@ -134,7 +136,7 @@
   }
 }
 
-.card:hover:not(.flipped) {
+.card:hover:not(.flipped):not(.lift) {
   animation: none;
   transform: translateY(-9px) rotate(-1deg);
 }

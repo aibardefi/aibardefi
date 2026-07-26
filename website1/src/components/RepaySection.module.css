@@ -111,9 +111,16 @@
   opacity: 0;
   transition: opacity 200ms ease;
 }
-.doorL,
+/* Each door swings on its own outer edge, where the brass is drawn. With no
+   origin they defaulted to the centre of the vault — the shared inner edge —
+   so both sagged away from their own hinges. */
+.doorL {
+  transform-box: view-box;
+  transform-origin: 122px 261px;
+}
 .doorR {
   transform-box: view-box;
+  transform-origin: 498px 261px;
 }
 .lockBody {
   transform-box: view-box;

@@ -64,16 +64,17 @@ export function StorySection() {
     }
   }, []);
 
-  const allTriggered = cards.every((c) => c !== "idle");
+  const allFlipped = cards.every((c) => c === "flipped");
 
   useEffect(() => {
-    if (!allTriggered || showPayoff) return;
+    if (!allFlipped || showPayoff) return;
     const delay = prefersReducedMotion() ? 0 : 700;
     const timer = setTimeout(() => setShowPayoff(true), delay);
     return () => clearTimeout(timer);
-  }, [allTriggered, showPayoff]);
+  }, [allFlipped, showPayoff]);
 
   const flippedCount = cards.filter((c) => c !== "idle").length;
+  const allTriggered = cards.every((c) => c !== "idle");
   const hintText = showPayoff
     ? "And that is page five."
     : allTriggered

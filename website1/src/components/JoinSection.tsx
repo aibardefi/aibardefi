@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Mascot } from "./Mascot";
 import { useEntrance, prefersReducedMotion } from "@/lib/useEntrance";
 import { useReplay } from "@/lib/useReplay";
@@ -28,9 +28,12 @@ export function JoinSection() {
     setRun((n) => n + 1);
     setSignoff("He is expecting you.");
     setShowToast(false);
+    window.clearTimeout(flashTimer.current);
   }, []);
 
   useReplay(ref, rearm);
+
+  useEffect(() => () => window.clearTimeout(flashTimer.current), []);
 
   const ready = typeof CONTRACT === "string" && CONTRACT.length > 0;
 

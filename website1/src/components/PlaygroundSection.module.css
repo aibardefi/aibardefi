@@ -150,7 +150,11 @@
 }
 
 /* While a mood plays, the ambient lean stands down so they don't compete. */
-.busy .lean {
+/* The shadow reads the same pointer value as the lean, so standing only the
+   lean down left the shadow offset and squashed under a centred bear for the
+   whole of every mood. */
+.busy .lean,
+.busy .shadow {
   transition: transform 300ms ease;
   transform: none;
 }
@@ -171,15 +175,20 @@
 
 /* Held back until he is actually down — z's rising off a bear still on his
    feet read as a bug rather than as sleep. */
-.mSleep .fxZzz { animation: zzz6 1900ms ease-out 900ms; }
-.mSleep .fxZzz:nth-of-type(2) { animation-delay: 1350ms; }
-.mSleep .fxZzz:nth-of-type(3) { animation-delay: 1800ms; }
+.fxZzz { opacity: 0; }
+/* All three have to finish inside the nap's own 3000ms — the last one used to
+   end at 3700 and was cut mid-rise when the class came off. */
+.mSleep .fxZzz { animation: zzz6 1400ms ease-out 1000ms; }
+.mSleep .fxZzz:nth-of-type(2) { animation-delay: 1300ms; }
+.mSleep .fxZzz:nth-of-type(3) { animation-delay: 1600ms; }
 @keyframes zzz6 {
   0%   { opacity: 0; transform: translate(0, 0) scale(0.6); }
   30%  { opacity: 1; }
   100% { opacity: 0; transform: translate(44px, -68px) scale(1.2); }
 }
-.fxZzz { transform-box: view-box; transform-origin: 470px 300px; }
+/* Follows the glyphs, which moved to his other side when the nap was
+   rewritten; the pivot was left behind. */
+.fxZzz { transform-box: view-box; transform-origin: 252px 318px; }
 
 .mJump .fxDust, .mFat .fxDust { animation: dust 620ms ease-out; }
 @keyframes dust {

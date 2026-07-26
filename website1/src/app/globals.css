@@ -306,7 +306,12 @@ h1 {
    -------------------------------------------------------------------------- */
 
 .breathe {
-  transform-box: view-box;
+  /* fill-box, so "50% 100%" means the bottom-centre of *this element*. Under
+     view-box the percentages resolve against the whole viewBox instead —
+     measured at (190, 360) on the playground, which is off his body entirely,
+     so he slid sideways and sank through the ground on every breath rather
+     than breathing where he stood. */
+  transform-box: fill-box;
   transform-origin: 50% 100%;
   animation: breathe 4.2s ease-in-out infinite;
 }
@@ -365,6 +370,11 @@ h1 {
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+    /* Delays have to go too, not just durations. Several entrances animate from
+       opacity 0 with `both` fill, so leaving the delay in place kept the exit
+       screen's buttons blank for 1.1s and its address for 1.25s — reduced
+       motion was hiding content rather than revealing it. */
+    animation-delay: 0ms !important;
     transition-duration: 0.01ms !important;
     transition-delay: 0ms !important;
   }
@@ -373,5 +383,7 @@ h1 {
   }
   html {
     scroll-snap-type: none;
+    /* Otherwise every anchor and programmatic scroll still animates. */
+    scroll-behavior: auto;
   }
 }

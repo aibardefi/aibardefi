@@ -51,7 +51,9 @@
 
 .clockBody {
   transform-box: view-box;
-  transform-origin: 128px 300px;
+  /* Its feet, not the middle of its face. Pivoting on the dial swung the feet
+     through a 26px arc five times a second — it skated instead of rocking. */
+  transform-origin: 128px 448px;
 }
 .ringing .clockBody {
   animation: ring 180ms ease-in-out infinite;

@@ -58,10 +58,6 @@ export function VaultSection() {
   const [spendOpen, setSpendOpen] = useState(false);
   const [spent, setSpent] = useState(false);
   const [jolt, setJolt] = useState(false);
-  // Keyed onto the lever arm purely to restart its animation. pull() clears and
-  // re-sets `pulled` in one handler, which React batches into no DOM change at
-  // all, so on a second pull the handle would never move again.
-  const [pullRun, setPullRun] = useState(0);
   /** How many memes have made it into the vault. Drives the chamber filling. */
   const [landed, setLanded] = useState(0);
 
@@ -172,6 +168,11 @@ export function VaultSection() {
         const lx = 330 + lane * 38 + tier * 19;
         const ly = 528 - tier * 24;
         g.setAttribute("transform", `translate(330 400)`);
+        // Where it ends up. The payout animation is fill:forwards, so the
+        // attribute still reads the chute position — spending needs the real
+        // resting place to lift from, not the corner of the viewBox.
+        g.dataset.lx = String(lx);
+        g.dataset.ly = String(ly);
         host.appendChild(g);
 
         if (prefersReducedMotion()) {
@@ -237,14 +238,7 @@ export function VaultSection() {
     [clearTimers]
   );
 
-  const pull = useCallback(() => {
-    if (busy.current) return;
-    busy.current = true;
-    reset(true);
-
-    setPulled(true);
-    setPullRun((n) => n + 1);
-    setHint("");
+  const startSequence = useCallback(() => {
     dropCoins();
 
     // The jolt lands with the padlock, not the door — that's the heavy beat.
@@ -264,7 +258,26 @@ export function VaultSection() {
       setHint("Now go spend it.");
       busy.current = false;
     });
-  }, [after, dropCoins, payOut, reset, rollCounter, say]);
+  }, [after, dropCoins, payOut, rollCounter, say]);
+
+  const pull = useCallback(() => {
+    if (busy.current) return;
+    busy.current = true;
+    reset(true);
+    setHint("");
+
+    // Across two commits, not one. React batches a false-then-true inside a
+    // single handler into no DOM change at all, so every `.pulled` rule stayed
+    // parked in its end state: from the second pull onward the door never
+    // re-closed, the padlock never dropped, the machine never shuddered and the
+    // chute never lit. Only the lever moved, because only the lever had been
+    // given a key to force it. Letting the class genuinely go off and back on
+    // restarts all of them, and needs no keys at all.
+    requestAnimationFrame(() => {
+      setPulled(true);
+      startSequence();
+    });
+  }, [reset, startSequence]);
 
   const spendOn = useCallback(
     (kind: string) => {
@@ -279,10 +292,15 @@ export function VaultSection() {
             g.remove();
             return;
           }
+          // Absolute viewBox coordinates, not a relative rise: written as
+          // translate(0,-260) every coin converged on the top-left corner and
+          // the whole pile slewed left as it faded.
+          const cx = Number(g.dataset.lx ?? 330);
+          const cy = Number(g.dataset.ly ?? 400);
           g.animate(
             [
-              { opacity: 1 },
-              { transform: "translate(0px,-260px) scale(0.2)", opacity: 0 },
+              { transform: `translate(${cx}px,${cy}px)`, opacity: 1 },
+              { transform: `translate(${cx}px,${cy - 260}px) scale(0.2)`, opacity: 0 },
             ],
             { duration: 520, easing: "cubic-bezier(.5,0,.9,.4)", fill: "forwards" }
           ).onfinish = () => g.remove();
@@ -498,7 +516,7 @@ export function VaultSection() {
                 stroke="#12110c"
                 strokeWidth="6"
               />
-              <g className={s.leverArm} key={pullRun}>
+              <g className={s.leverArm}>
                 <rect
                   x="133"
                   y="150"

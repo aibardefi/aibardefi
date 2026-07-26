@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useEntrance, prefersReducedMotion } from "@/lib/useEntrance";
 import { useReplay } from "@/lib/useReplay";
 import s from "./WakeSection.module.css";
@@ -35,6 +35,8 @@ export function WakeSection() {
   }, []);
 
   useReplay(ref, rearm);
+
+  useEffect(() => () => window.clearTimeout(bubbleTimer.current), []);
 
   const say = useCallback((text: string) => {
     const el = bubbleRef.current;

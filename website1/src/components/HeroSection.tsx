@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { Mascot } from "./Mascot";
 import { COINS, CoinGlyph, type Coin } from "./coins";
@@ -26,12 +26,19 @@ export function HeroSection() {
   const bubbleTimer = useRef<number | undefined>(undefined);
 
   const [fed, setFed] = useState(0);
+  /* Counted when a coin is launched, not when it lands. `fed` only catches up
+     620ms later, so guarding on it let rapid taps put more than MAX coins in
+     the air — the surplus re-fired the "full. stop." line and skipped the
+     lines in between. */
+  const inFlight = useRef(0);
 
   /** Width outruns height — that is what makes him read as fat, not zoomed. */
   const shape = (n: number) => {
     const sy = 1 + n * 0.032;
     return { sx: sy * (1 + n * 0.038), sy };
   };
+
+  useEffect(() => () => window.clearTimeout(bubbleTimer.current), []);
 
   const say = useCallback((text: string) => {
     const el = bubbleRef.current;
@@ -121,7 +128,7 @@ export function HeroSection() {
       { duration: DUR, easing: "cubic-bezier(.3,.7,.5,1)", fill: "forwards" }
     );
 
-    const fade = outer.animate([{ opacity: 1 }, { opacity: 0.85 }], {
+    const fade = outer.animate([{ opacity: 1 }, { opacity: 0 }], {
       duration: DUR,
     });
     fade.onfinish = () => {
@@ -132,19 +139,19 @@ export function HeroSection() {
   }, []);
 
   const feed = (coin: Coin, e: React.MouseEvent<HTMLButtonElement>) => {
-    if (fed >= MAX) return;
+    if (inFlight.current >= MAX) return;
     const rect = (
       e.currentTarget.querySelector(`.disc`) as HTMLElement
     )?.getBoundingClientRect();
     if (!rect) return;
 
+    inFlight.current += 1;
     fly(coin, rect, () => {
-      setFed((n) => {
-        const next = Math.min(MAX, n + 1);
-        gulp(next);
-        if (LINES[next]) say(LINES[next]);
-        return next;
-      });
+      // Side effects out of the updater: React may run one more than once.
+      const next = Math.min(MAX, inFlight.current);
+      setFed(next);
+      gulp(next);
+      if (LINES[next]) say(LINES[next]);
     });
   };
 
@@ -220,6 +227,7 @@ export function HeroSection() {
           type="button"
           className={`${s.reset} ${fed > 0 ? s.show : ""}`}
           onClick={() => {
+            inFlight.current = 0;
             setFed(0);
             say("no.");
           }}
