@@ -149,18 +149,35 @@ body {
 
 .eyebrow,
 .count {
-  font-size: clamp(0.6rem, 1.6vw, 0.72rem);
+  font-size: clamp(0.72rem, 1.7vw, 0.82rem);
   font-weight: 700;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--text-dim);
 }
 .count {
   font-variant-numeric: tabular-nums;
+  /* "01 / 07" is one token — squeezed by the eyebrow it was breaking after the
+     slash and pushing the page number onto its own line. */
+  white-space: nowrap;
+}
+
+/* At 360px the masthead ran to two lines and took the counter with it. The
+   tracking is what costs the width here, not the letters. */
+@media (max-width: 400px) {
+  .eyebrow,
+  .count {
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+  }
 }
 
 .head {
   text-align: center;
+  /* The headline used to sit almost against the eyebrow row, which read as the
+     type having been pushed off the top of the screen. Viewport-relative so
+     short phone screens do not spend their scarce height on it. */
+  padding-top: clamp(0.5rem, 3vh, 2rem);
 }
 
 h1 {
@@ -203,7 +220,7 @@ h1 {
 }
 
 .hint {
-  font-size: clamp(0.68rem, 2vw, 0.8rem);
+  font-size: clamp(0.82rem, 2.2vw, 0.95rem);
   font-weight: 700;
   color: var(--text-dim);
   min-height: 1.2em;
@@ -280,16 +297,16 @@ h1 {
 }
 .slabel {
   font-weight: 900;
-  font-size: clamp(0.5rem, 1.5vw, 0.62rem);
-  letter-spacing: 0.06em;
+  font-size: clamp(0.72rem, 1.6vw, 0.74rem);
+  letter-spacing: 0.05em;
   color: var(--text-dim);
   white-space: nowrap;
 }
 
 .cue {
-  font-size: 0.62rem;
+  font-size: clamp(0.72rem, 1.7vw, 0.78rem);
   font-weight: 700;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--text-dim);
 }

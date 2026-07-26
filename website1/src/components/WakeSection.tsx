@@ -124,7 +124,7 @@ export function WakeSection() {
           <div
             className={`${s.verdict} sticker`}
           >
-            Suka blya enough, I want a different life
+            Suka blyat enough, I need a different life
           </div>
 
           <svg

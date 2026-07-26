@@ -104,7 +104,7 @@
 .cardJob {
   font-weight: 900;
   text-transform: uppercase;
-  font-size: clamp(0.56rem, 1.5vw, 0.8rem);
+  font-size: clamp(0.72rem, 1.5vw, 0.8rem);
   letter-spacing: 0.04em;
   text-align: center;
   color: var(--ink);
@@ -114,7 +114,7 @@
 .punch {
   font-weight: 900;
   text-transform: uppercase;
-  font-size: clamp(0.62rem, 1.7vw, 1rem);
+  font-size: clamp(0.72rem, 1.7vw, 1rem);
   line-height: 1.12;
   text-align: center;
   color: var(--cream);
@@ -134,7 +134,7 @@
   top: 6%;
   left: 8%;
   font-weight: 900;
-  font-size: clamp(0.5rem, 1.3vw, 0.66rem);
+  font-size: clamp(0.72rem, 1.3vw, 0.82rem);
   color: var(--text-dim);
   letter-spacing: 0.1em;
 }

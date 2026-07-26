@@ -21,6 +21,9 @@ export type Coin = {
 
 export const COINS: Coin[] = [
   {
+    // Cash + cat, so the money has to be on the face. Dollar-sign eyes are the
+    // oldest cartoon shorthand there is and survive being shrunk to a 36px
+    // button better than a banknote or a money bag would.
     ticker: "CASHCAT",
     bg: "#b9b3a6",
     glyphOn: "#12110c",
@@ -29,10 +32,28 @@ export const COINS: Coin[] = [
         <path d="M24 38 L17 11 L41 26 Z" />
         <path d="M76 38 L83 11 L59 26 Z" />
         <ellipse cx="50" cy="58" rx="33" ry="29" />
-        <circle cx="38" cy="54" r="5" fill="#b9b3a6" />
-        <circle cx="62" cy="54" r="5" fill="#b9b3a6" />
+        <text
+          x="37"
+          y="63"
+          fontSize="24"
+          fontWeight="900"
+          textAnchor="middle"
+          fill="#b9b3a6"
+        >
+          $
+        </text>
+        <text
+          x="63"
+          y="63"
+          fontSize="24"
+          fontWeight="900"
+          textAnchor="middle"
+          fill="#b9b3a6"
+        >
+          $
+        </text>
         <path
-          d="M42 70 q8 7 16 0"
+          d="M43 74 q7 6 14 0"
           stroke="#b9b3a6"
           strokeWidth="4"
           fill="none"
@@ -42,64 +63,126 @@ export const COINS: Coin[] = [
     ),
   },
   {
+    // Same money eyes as the cat — they are a pair, and the ears are what tell
+    // them apart: his hang, hers point.
     ticker: "CASH DOG",
     bg: "#7fb3dd",
     glyphOn: "#12110c",
     glyph: (
       <>
-        <path d="M22 32 q-15 8 -11 36 q3 15 16 8 z" />
-        <path d="M78 32 q15 8 11 36 q-3 15 -16 8 z" />
-        <ellipse cx="50" cy="56" rx="30" ry="28" />
-        <circle cx="39" cy="52" r="5" fill="#7fb3dd" />
-        <circle cx="61" cy="52" r="5" fill="#7fb3dd" />
-        <ellipse cx="50" cy="70" rx="9" ry="6" fill="#7fb3dd" />
+        <path d="M22 30 q-16 10 -12 38 q3 16 17 8 z" />
+        <path d="M78 30 q16 10 12 38 q-3 16 -17 8 z" />
+        <ellipse cx="50" cy="54" rx="30" ry="27" />
+        <text
+          x="38"
+          y="58"
+          fontSize="22"
+          fontWeight="900"
+          textAnchor="middle"
+          fill="#7fb3dd"
+        >
+          $
+        </text>
+        <text
+          x="62"
+          y="58"
+          fontSize="22"
+          fontWeight="900"
+          textAnchor="middle"
+          fill="#7fb3dd"
+        >
+          $
+        </text>
+        <ellipse cx="50" cy="70" rx="13" ry="9" fill="#7fb3dd" />
+        <ellipse cx="50" cy="66" rx="5" ry="3.5" />
       </>
     ),
   },
   {
-    // Robin Hood's man: the feathered cap does the work at coin size, where a
-    // whole figure would collapse into a smudge.
+    // The Robinhood feather, not a hooded figure. A whole character collapses
+    // into a smudge at this size, and the feather is the mark everyone already
+    // reads as Robinhood — which is the joke, since this is its chain.
     ticker: "LITTLE JOHN",
     bg: "#2f6f4f",
     glyphOn: "#f7edd9",
     glyph: (
       <>
-        <path d="M16 62 q4 -30 34 -30 q30 0 34 30 q-34 10 -68 0 z" />
-        <path d="M14 62 q36 12 72 0 l0 9 q-36 12 -72 0 z" />
+        {/* Vane, then a quill that runs past the bottom of it. Both details are
+            what separate a feather from a leaf: veins angle down from a leaf's
+            midrib and the stem meets the blade, where a feather's barbs sweep
+            up toward the tip and the shaft continues below the vane. The first
+            pass had it the leaf way round and read as one. */}
+        <path d="M50 6 q25 25 23 47 q-2 19 -23 27 q-21 -8 -23 -27 q-2 -22 23 -47 z" />
         <path
-          d="M70 34 q16 -14 20 -30 q-18 4 -26 20"
-          fill="#f7edd9"
-          stroke="#12110c"
-          strokeWidth="4"
-          strokeLinejoin="round"
+          d="M50 92 V14"
+          stroke="#2f6f4f"
+          strokeWidth="5"
+          strokeLinecap="round"
         />
+        <g stroke="#2f6f4f" strokeWidth="4" strokeLinecap="round">
+          <path d="M50 42 L33 32" />
+          <path d="M50 42 L67 32" />
+          <path d="M50 58 L30 48" />
+          <path d="M50 58 L70 48" />
+          <path d="M50 73 L34 64" />
+          <path d="M50 73 L66 64" />
+        </g>
       </>
     ),
   },
   {
+    // Three actual tenders in a row. The single lumpy shape it used to be read
+    // as a chocolate-chip cookie — the count is what makes it chicken.
     ticker: "TENDIES",
     bg: "#e0a33c",
     glyphOn: "#12110c",
     glyph: (
       <>
-        <path d="M26 48 q-6 -24 22 -27 q28 -3 34 17 q9 24 -11 34 q-26 14 -40 -3 q-8 -10 -5 -21 z" />
-        <circle cx="44" cy="46" r="4" fill="#e0a33c" />
-        <circle cx="62" cy="58" r="4" fill="#e0a33c" />
-        <circle cx="48" cy="68" r="3.5" fill="#e0a33c" />
+        <g>
+          <rect
+            x="12"
+            y="30"
+            width="22"
+            height="46"
+            rx="11"
+            transform="rotate(-13 23 53)"
+          />
+          <rect x="39" y="22" width="22" height="56" rx="11" />
+          <rect
+            x="66"
+            y="30"
+            width="22"
+            height="46"
+            rx="11"
+            transform="rotate(13 77 53)"
+          />
+        </g>
+        <g fill="#e0a33c">
+          <circle cx="22" cy="44" r="3" />
+          <circle cx="26" cy="60" r="2.6" />
+          <circle cx="46" cy="38" r="3" />
+          <circle cx="53" cy="55" r="2.6" />
+          <circle cx="47" cy="68" r="2.4" />
+          <circle cx="78" cy="44" r="3" />
+          <circle cx="74" cy="60" r="2.6" />
+        </g>
       </>
     ),
   },
   {
+    // A rocket that reads as a rocket. The old one had a 44-unit nose cone on a
+    // straight-sided body with no flame, which at button size was the letter A.
     ticker: "YOLO",
     bg: "#c4392b",
     glyphOn: "#f7edd9",
     glyph: (
       <>
-        <path d="M50 8 q18 18 18 44 l-36 0 q0 -26 18 -44 z" />
-        <path d="M32 52 l-14 18 l14 4 z" />
-        <path d="M68 52 l14 18 l-14 4 z" />
-        <circle cx="50" cy="38" r="7" fill="#c4392b" />
-        <path d="M40 76 q10 16 20 0 q-10 8 -20 0 z" />
+        <path d="M50 6 q17 17 17 38 v20 h-34 v-20 q0 -21 17 -38 z" />
+        <path d="M33 46 l-15 24 l15 -5 z" />
+        <path d="M67 46 l15 24 l-15 -5 z" />
+        <circle cx="50" cy="34" r="8" fill="#c4392b" />
+        <path d="M38 66 h24 l-12 26 z" />
+        <path d="M46 66 h8 l-4 14 z" fill="#c4392b" />
       </>
     ),
   },
@@ -113,15 +196,15 @@ export const COINS: Coin[] = [
         <path d="M22 36 L15 10 L40 25 Z" />
         <path d="M78 36 L85 10 L60 25 Z" />
         <ellipse cx="50" cy="58" rx="32" ry="28" />
-        <rect x="24" y="48" width="52" height="13" rx="5" fill="#f7edd9" />
+        <rect x="20" y="47" width="60" height="15" rx="6" fill="#f7edd9" />
         <path
-          d="M50 48 v13"
+          d="M50 47 v15"
           stroke="#8b6fd4"
-          strokeWidth="4"
+          strokeWidth="5"
           strokeLinecap="round"
         />
         <path
-          d="M42 72 q8 6 16 0"
+          d="M43 74 q7 6 14 0"
           stroke="#8b6fd4"
           strokeWidth="4"
           fill="none"
