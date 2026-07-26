@@ -29,11 +29,6 @@
     rotate(calc(var(--px, 0) * 2.4deg));
 }
 
-.pupils {
-  transition: transform 420ms var(--swift);
-  transform: translate(calc(var(--px, 0) * 7px), calc(var(--py, 0) * 1.2px));
-}
-
 .shadow {
   transform-box: view-box;
   transform-origin: 380px 452px;

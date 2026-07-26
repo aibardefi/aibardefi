@@ -280,10 +280,13 @@ export function PlaygroundSection() {
                     preserveAspectRatio="xMidYMax meet"
                   />
 
-                  <g className={s.pupils}>
-                    <circle cx="342.8" cy="319.2" r="3.6" fill="var(--ink)" />
-                    <circle cx="414.4" cy="319.2" r="3.6" fill="var(--ink)" />
-                  </g>
+                  {/* No overlay pupils. He is drawn with his own — the black
+                      half-disc under each lid — so a tracking dot on top was a
+                      second pupil in every eye. It hid inside the painted one at
+                      rest and slid out from under it the moment the cursor
+                      moved, which is the two dots that were showing. The scene
+                      still follows the cursor: the whole of him leans and his
+                      shadow shifts, both off the same --px. */}
 
                 </g>
               </g>
