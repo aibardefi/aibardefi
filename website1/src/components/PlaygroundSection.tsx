@@ -281,10 +281,6 @@ export function PlaygroundSection() {
                     <circle cx="414.4" cy="319.2" r="3.6" fill="var(--ink)" />
                   </g>
 
-                  <g className={`${s.fx} ${s.fxBlush}`} opacity="0">
-                    <ellipse cx="316" cy="336" rx="19" ry="11" fill="var(--cheek)" />
-                    <ellipse cx="444" cy="336" rx="19" ry="11" fill="var(--cheek)" />
-                  </g>
                 </g>
               </g>
             </g>

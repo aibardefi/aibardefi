@@ -165,11 +165,9 @@
 }
 .fxSteam { transform-box: view-box; transform-origin: 380px 300px; }
 
-.mShy .fxBlush { animation: blush 1900ms ease-in-out; }
-@keyframes blush {
-  0%, 100% { opacity: 0; }
-  28%, 76% { opacity: 0.85; }
-}
+/* No blush overlay for the shy mood. He is drawn with pink cheeks already, so
+   a second saturated pass landed just under his eyes and read as tears. The
+   shrink and the turn carry the mood on their own. */
 
 /* Held back until he is actually down — z's rising off a bear still on his
    feet read as a bug rather than as sleep. */
