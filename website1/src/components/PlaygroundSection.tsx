@@ -16,11 +16,13 @@ interface MoodDef {
 
 const MOODS: Record<MoodKey, MoodDef> = {
   jump:  { ms: 950,  say: "up.",             hint: "Again?",               cls: s.mJump },
-  spin:  { ms: 1100, say: "dizzy now.",      hint: "Do not do that again.", cls: s.mSpin },
+  // These must not undershoot the CSS durations: the class comes off when the
+  // timer fires, and pulling it mid-move snaps him back to his resting pose.
+  spin:  { ms: 1150, say: "dizzy now.",      hint: "Do not do that again.", cls: s.mSpin },
   rage:  { ms: 3040, say: "i am very calm.", hint: "He is not calm.",       cls: s.mRage },
   fat:   { ms: 1600, say: "this is muscle.", hint: "Sure.",                 cls: s.mFat },
-  shy:   { ms: 1500, say: "stop looking.",   hint: "He is embarrassed.",    cls: s.mShy },
-  sleep: { ms: 2800, say: "later.",          hint: "Let him rest.",         cls: s.mSleep },
+  shy:   { ms: 1900, say: "stop looking.",   hint: "He is embarrassed.",    cls: s.mShy },
+  sleep: { ms: 3000, say: "later.",          hint: "Let him rest.",         cls: s.mSleep },
 };
 
 const ALL_KEYS = Object.keys(MOODS) as MoodKey[];
@@ -256,10 +258,13 @@ export function PlaygroundSection() {
               <path d="M460 250 q14 -22 -2 -40" />
             </g>
 
+            {/* Over on the left, because tipping onto his side carries his head
+                across to about x=260 — off his right shoulder these drifted up
+                from his feet. */}
             <g className={s.fx} fontWeight="900" fontSize="34" fill="var(--ink)">
-              <text className={s.fxZzz} x="470" y="300" opacity="0">z</text>
-              <text className={s.fxZzz} x="470" y="300" opacity="0">z</text>
-              <text className={s.fxZzz} x="470" y="300" opacity="0">z</text>
+              <text className={s.fxZzz} x="252" y="318" opacity="0">z</text>
+              <text className={s.fxZzz} x="252" y="318" opacity="0">z</text>
+              <text className={s.fxZzz} x="252" y="318" opacity="0">z</text>
             </g>
 
             <g className={s.mood}>

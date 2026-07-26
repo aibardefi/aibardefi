@@ -162,9 +162,20 @@ export function JoinSection() {
 
       <div className="bottom">
         <div className="hint" data-ent="up" data-ent-delay="430">&nbsp;</div>
-        <div className="cue" data-ent="up" data-ent-delay="500">
+        <button
+          type="button"
+          className={`cue ${s.toTop}`}
+          data-ent="up"
+          data-ent-delay="500"
+          onClick={() =>
+            window.scrollTo({
+              top: 0,
+              behavior: prefersReducedMotion() ? "auto" : "smooth",
+            })
+          }
+        >
           <span>Back to top &uarr;</span>
-        </div>
+        </button>
       </div>
     </section>
   );

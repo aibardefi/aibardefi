@@ -67,18 +67,25 @@
   100% { transform: translateY(0) scale(1, 1); }
 }
 
+/* Turning on the spot, done as a width sweep through zero rather than a
+   rotateY: perspective only ever applies to an element's children, so a
+   rotateY here had no depth to work with and just squashed him sideways.
+   Passing scaleX through 0 to -1 and back is the turn, and it needs no 3D. */
 .mSpin .mood {
-  animation: mSpin 1100ms cubic-bezier(0.4, 0, 0.2, 1);
-  transform-style: preserve-3d;
+  animation: mSpin 1150ms cubic-bezier(0.45, 0.05, 0.3, 1);
 }
 @keyframes mSpin {
-  0%   { transform: rotateY(0deg) scale(1); }
-  12%  { transform: rotateY(-28deg) scale(0.96, 1.04); }
-  25%  { transform: rotateY(0deg) scale(0.98); }
-  65%  { transform: rotateY(380deg) scale(1.03, 0.96); }
-  80%  { transform: rotateY(365deg) scale(1.01); }
-  90%  { transform: rotateY(358deg) scale(1); }
-  100% { transform: rotateY(360deg) scale(1); }
+  0%   { transform: scale(1, 1); }
+  10%  { transform: scale(1.07, 0.96); }
+  22%  { transform: scale(0.62, 1.03); }
+  32%  { transform: scale(0.08, 1.06); }
+  42%  { transform: scale(-0.58, 1.03); }
+  52%  { transform: scale(-1, 1); }
+  62%  { transform: scale(-0.55, 1.02); }
+  72%  { transform: scale(0.06, 1.05); }
+  82%  { transform: scale(0.68, 1.02); }
+  92%  { transform: scale(1.06, 0.97); }
+  100% { transform: scale(1, 1); }
 }
 
 .mRage .mood { animation: mRage 760ms steps(2, end) 4; }
@@ -103,30 +110,43 @@
   100% { transform: scale(1, 1); }
 }
 
-.mShy .mood { animation: mShy 1500ms cubic-bezier(0.4, 0, 0.2, 1); }
+/* Shrinking away from being looked at: he turns half away, sinks into himself
+   and holds there before daring to come back. The old version moved so little
+   it read as a wobble rather than as embarrassment. */
+.mShy .mood { animation: mShy 1900ms cubic-bezier(0.4, 0, 0.25, 1); }
 @keyframes mShy {
-  0%   { transform: translateY(0) rotate(0) scale(1); }
-  15%  { transform: translateY(4px) rotate(-2deg) scale(0.98); }
-  35%  { transform: translateY(22px) rotate(-9deg) scale(0.82); }
-  50%  { transform: translateY(26px) rotate(-11deg) scale(0.78); }
-  65%  { transform: translateY(24px) rotate(-10deg) scale(0.80); }
-  80%  { transform: translateY(12px) rotate(-4deg) scale(0.90); }
-  92%  { transform: translateY(2px) rotate(1deg) scale(0.98); }
-  100% { transform: translateY(0) rotate(0) scale(1); }
+  /* Barely any translate: the scale is anchored at his feet, so shrinking
+     already drops him. Adding a real drop on top walked him out of frame. */
+  0%   { transform: translateY(0) rotate(0deg) scale(1, 1); }
+  12%  { transform: translateY(2px) rotate(-2deg) scale(0.96, 0.97); }
+  30%  { transform: translateY(8px) rotate(-13deg) scale(0.56, 0.66); }
+  42%  { transform: translateY(11px) rotate(-16deg) scale(0.46, 0.58); }
+  62%  { transform: translateY(11px) rotate(-15deg) scale(0.45, 0.57); }
+  74%  { transform: translateY(9px) rotate(-12deg) scale(0.54, 0.64); }
+  87%  { transform: translateY(4px) rotate(-5deg) scale(0.82, 0.86); }
+  95%  { transform: translateY(1px) rotate(1deg) scale(0.98, 0.99); }
+  100% { transform: translateY(0) rotate(0deg) scale(1, 1); }
 }
 
-.mSleep .mood { animation: mSleep 2800ms cubic-bezier(0.4, 0, 0.2, 1); }
+/* Lying down pivots on his middle, not his feet. About the feet he swung out
+   sideways like a felled tree and landed with his head off in the grass;
+   about the centre he simply tips over onto the ground where he stood. */
+.mSleep .mood {
+  transform-origin: 380px 330px;
+  animation: mSleep 3000ms cubic-bezier(0.45, 0.05, 0.35, 1);
+}
 @keyframes mSleep {
-  0%   { transform: translateY(0) rotate(0) scale(1); }
-  8%   { transform: translateY(4px) rotate(-3deg) scale(0.99); }
-  18%  { transform: translateY(18px) rotate(-42deg) scale(0.97); }
-  28%  { transform: translateY(32px) rotate(-78deg) scale(0.96); }
-  35%  { transform: translateY(36px) rotate(-82deg) scale(0.96); }
-  70%  { transform: translateY(36px) rotate(-80deg) scale(0.96); }
-  80%  { transform: translateY(24px) rotate(-44deg) scale(0.97); }
-  90%  { transform: translateY(8px) rotate(-10deg) scale(0.99); }
-  96%  { transform: translateY(-2px) rotate(3deg) scale(1); }
-  100% { transform: translateY(0) rotate(0) scale(1); }
+  0%   { transform: translateY(0) rotate(0deg); }
+  7%   { transform: translateY(-4px) rotate(4deg); }
+  20%  { transform: translateY(6px) rotate(-38deg); }
+  30%  { transform: translateY(14px) rotate(-76deg); }
+  36%  { transform: translateY(16px) rotate(-84deg); }
+  40%  { transform: translateY(16px) rotate(-82deg); }
+  72%  { transform: translateY(16px) rotate(-83deg); }
+  80%  { transform: translateY(12px) rotate(-58deg); }
+  89%  { transform: translateY(6px) rotate(-22deg); }
+  95%  { transform: translateY(-3px) rotate(5deg); }
+  100% { transform: translateY(0) rotate(0deg); }
 }
 
 /* While a mood plays, the ambient lean stands down so they don't compete. */
@@ -145,15 +165,17 @@
 }
 .fxSteam { transform-box: view-box; transform-origin: 380px 300px; }
 
-.mShy .fxBlush { animation: blush 1400ms ease-in-out; }
+.mShy .fxBlush { animation: blush 1900ms ease-in-out; }
 @keyframes blush {
   0%, 100% { opacity: 0; }
-  40%, 70% { opacity: 0.85; }
+  28%, 76% { opacity: 0.85; }
 }
 
-.mSleep .fxZzz { animation: zzz6 2800ms ease-out; }
-.mSleep .fxZzz:nth-of-type(2) { animation-delay: 400ms; }
-.mSleep .fxZzz:nth-of-type(3) { animation-delay: 800ms; }
+/* Held back until he is actually down — z's rising off a bear still on his
+   feet read as a bug rather than as sleep. */
+.mSleep .fxZzz { animation: zzz6 1900ms ease-out 900ms; }
+.mSleep .fxZzz:nth-of-type(2) { animation-delay: 1350ms; }
+.mSleep .fxZzz:nth-of-type(3) { animation-delay: 1800ms; }
 @keyframes zzz6 {
   0%   { opacity: 0; transform: translate(0, 0) scale(0.6); }
   30%  { opacity: 1; }

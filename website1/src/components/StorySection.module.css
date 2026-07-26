@@ -203,6 +203,11 @@
   .deck {
     gap: 0.45rem;
   }
+  /* Three across is a hard width budget on a phone, so the only room left to
+     grow into is downward — at 3/4 they come out barely bigger than a stamp. */
+  .card {
+    aspect-ratio: 1 / 1.72;
+  }
   .mascotWrap {
     bottom: 26%;
     width: 60px;

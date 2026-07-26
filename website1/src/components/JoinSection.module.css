@@ -177,3 +177,18 @@
   color: var(--text-dim);
   text-align: center;
 }
+
+/* The cue is a real control on the last screen — it is the only way back up
+   without scrolling the whole page by hand. */
+.toTop {
+  background: none;
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+  padding: 0.4rem 0.6rem;
+}
+.toTop:focus-visible {
+  outline: 3px solid var(--stamp);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
