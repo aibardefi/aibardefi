@@ -87,7 +87,7 @@
   transform: scale(0.4);
 }
 .insideIn {
-  opacity: 0.95;
+  opacity: 1;
   transform: none;
   transition: opacity 200ms ease, transform 420ms var(--spring-big);
 }
@@ -137,11 +137,13 @@
   94% { transform: scale(0.97); }
 }
 
+/* Hinged on the right, in user units — the barrel hinges are drawn at x=428,
+   so the door has to pivot there and not on its own left edge. */
 .door {
-  transform-box: fill-box;
-  transform-origin: 0% 50%;
+  transform-box: view-box;
+  transform-origin: 438px 274px;
   transform: scaleX(0);
-  /* A shutter has mass: slow to break away, fast across, then it arrives
+  /* A safe door has mass: slow to break away, fast across, then it arrives
      rather than stopping dead. */
   transition: transform 598ms cubic-bezier(0.5, 0.05, 0.25, 1) 1.45s;
 }
@@ -149,17 +151,39 @@
   transform: scaleX(1);
 }
 
-.padlock {
-  transform-box: fill-box;
-  transform-origin: 50% 0%;
+/* The lock itself. Each bolt lives inside the door and shoots left into the
+   frame, one after another — four visible stages instead of one padlock
+   appearing from nowhere. */
+.bolt {
+  transform-box: view-box;
+  transform: translateX(26px);
   opacity: 0;
-  transform: translateY(-46px) scale(0.7);
-  transition: opacity 156ms linear 1.55s,
-    transform 390ms cubic-bezier(0.34, 1.9, 0.64, 1) 1.55s;
+  transition: transform 240ms cubic-bezier(0.3, 1.5, 0.5, 1)
+      calc(2s + var(--i) * 90ms),
+    opacity 90ms linear calc(2s + var(--i) * 90ms);
 }
-.pulled .padlock {
+.pulled .bolt {
+  transform: translateX(0);
   opacity: 1;
-  transform: none;
+}
+
+/* Two full turns as the bolts go home. */
+.dial {
+  transform-box: view-box;
+  transform-origin: 392px 236px;
+  transition: transform 900ms cubic-bezier(0.35, 0, 0.2, 1) 2.05s;
+}
+.pulled .dial {
+  transform: rotate(720deg);
+}
+
+.handle {
+  transform-box: view-box;
+  transform-origin: 392px 318px;
+  transition: transform 620ms cubic-bezier(0.4, 0, 0.3, 1) 2.1s;
+}
+.pulled .handle {
+  transform: rotate(120deg);
 }
 
 .shell {
@@ -167,7 +191,7 @@
   transform-origin: 50% 100%;
 }
 .pulled .shell {
-  animation: shudder 806ms ease-in-out 1.75s;
+  animation: shudder 806ms ease-in-out 2.4s;
 }
 /* Decaying, not three even swings — a machine that has taken a hit settles. */
 @keyframes shudder {
@@ -182,7 +206,7 @@
 
 .chuteGlow {
   opacity: 0;
-  transition: opacity 338ms ease 2.15s;
+  transition: opacity 338ms ease 2.7s;
 }
 .pulled .chuteGlow {
   opacity: 1;
@@ -191,14 +215,14 @@
 /* Both labels start dim — nothing is locked and nothing has paid out yet. */
 .labelLocked {
   opacity: 0.3;
-  transition: opacity 338ms ease 1.6s;
+  transition: opacity 338ms ease 2.2s;
 }
 .pulled .labelLocked {
   opacity: 1;
 }
 .labelOut {
   opacity: 0.3;
-  transition: opacity 338ms ease 2.15s;
+  transition: opacity 338ms ease 2.7s;
 }
 .pulled .labelOut {
   opacity: 1;

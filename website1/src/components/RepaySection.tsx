@@ -16,12 +16,12 @@ const TOTAL = 42000;
  * so they cannot be a different five.
  */
 const INSIDE_AT = [
-  { x: 206, y: 226 },
-  { x: 292, y: 210 },
-  { x: 378, y: 226 },
-  { x: 216, y: 316 },
-  { x: 300, y: 330 },
-  { x: 386, y: 316 },
+  { x: 136, y: 182 },
+  { x: 206, y: 172 },
+  { x: 276, y: 182 },
+  { x: 136, y: 292 },
+  { x: 206, y: 302 },
+  { x: 276, y: 292 },
 ];
 
 export function RepaySection() {
@@ -30,8 +30,7 @@ export function RepaySection() {
   const knobRef = useRef<HTMLDivElement>(null);
   const bubbleRef = useRef<HTMLDivElement>(null);
   const insideRef = useRef<SVGGElement>(null);
-  const doorLRef = useRef<SVGRectElement>(null);
-  const doorRRef = useRef<SVGRectElement>(null);
+  const doorLRef = useRef<SVGGElement>(null);
   const bubbleTimer = useRef<number | undefined>(undefined);
   const releaseTimers = useRef<number[]>([]);
   const dragging = useRef(false);
@@ -59,39 +58,31 @@ export function RepaySection() {
     setHint("Unlocked. They are yours again.");
     say("we are square.");
 
-    const reduced = prefersReducedMotion();
-    const dl = doorLRef.current;
-    const dr = doorRRef.current;
-
-    if (reduced) {
-      if (dl) dl.style.transform = "translateX(-190px)";
-      if (dr) dr.style.transform = "translateX(190px)";
+    // The door itself is driven by `freed` through an inline transform, so all
+    // that is left here is what happens after it has swung: the memes climb out
+    // one at a time, in the order they went in.
+    if (prefersReducedMotion()) {
       insideRef.current?.querySelectorAll(`.${s.memeOut}`).forEach((m) => {
         (m as SVGGElement).style.opacity = "0";
       });
       return;
     }
 
-    dl?.animate(
-      [{ transform: "none" }, { transform: "translateX(-196px) skewY(-2deg)" }],
-      { duration: 950, easing: "cubic-bezier(.3,.8,.3,1)", fill: "forwards" }
-    );
-    dr?.animate(
-      [{ transform: "none" }, { transform: "translateX(196px) skewY(2deg)" }],
-      { duration: 950, easing: "cubic-bezier(.3,.8,.3,1)", fill: "forwards" }
-    );
-
     insideRef.current?.querySelectorAll(`.${s.memeOut}`).forEach((m, i) => {
-      releaseTimers.current.push(window.setTimeout(() => {
-        (m as SVGGElement).animate(
-          [
-            { transform: "translateY(0) scale(1)", opacity: 1 },
-            { transform: "translateY(-40px) scale(1.12)", opacity: 1, offset: 0.4 },
-            { transform: "translateY(-230px) scale(0.6)", opacity: 0 },
-          ],
-          { duration: 1200, easing: "cubic-bezier(.4,0,.6,1)", fill: "forwards" }
-        );
-      }, 760 + i * 150));
+      releaseTimers.current.push(
+        window.setTimeout(() => {
+          (m as SVGGElement).animate(
+            [
+              { transform: "translate(0,0) scale(1)", opacity: 1 },
+              // Out through the opening first, then up and away — going
+              // straight up would take them through the door frame.
+              { transform: "translate(70px,-30px) scale(1.1)", opacity: 1, offset: 0.4 },
+              { transform: "translate(150px,-210px) scale(0.55)", opacity: 0 },
+            ],
+            { duration: 1200, easing: "cubic-bezier(.4,0,.6,1)", fill: "forwards" }
+          );
+        }, 820 + i * 150)
+      );
     });
   }, [say]);
 
@@ -167,16 +158,11 @@ export function RepaySection() {
     releaseTimers.current.forEach(clearTimeout);
     releaseTimers.current = [];
     window.clearTimeout(bubbleTimer.current);
-    [doorLRef.current, doorRRef.current].forEach((d) =>
-      d?.getAnimations().forEach((a) => a.cancel())
-    );
     insideRef.current?.querySelectorAll(`.${s.memeOut}`).forEach((m) => {
       const el = m as SVGGElement;
       el.getAnimations().forEach((a) => a.cancel());
       el.style.opacity = "";
     });
-    if (doorLRef.current) doorLRef.current.style.transform = "";
-    if (doorRRef.current) doorRRef.current.style.transform = "";
     bubbleRef.current?.classList.remove("show");
     setFreed(false);
     setSnap(false);
@@ -240,8 +226,55 @@ export function RepaySection() {
             aria-label="A vault holding your locked memecoins"
           >
             <g stroke="var(--ink)" strokeWidth="7" strokeLinejoin="round" strokeLinecap="round">
-              <rect x="86" y="96" width="448" height="330" rx="26" fill="var(--safe)" />
-              <rect x="122" y="130" width="376" height="262" rx="16" fill="var(--safe-deep)" />
+              {/* The same glass safe as the machine screen, one screen later.
+                  Walls transparent, hardware brass — and here the drag drives
+                  the hardware in reverse: dial back, bolts out, door open. */}
+              <rect
+                x="50"
+                y="70"
+                width="420"
+                height="356"
+                rx="22"
+                fill="var(--glass)"
+                fillOpacity="0.07"
+              />
+              <path
+                d="M50 400 L222 70 L288 70 L116 426 L50 426 Z"
+                fill="#ffffff"
+                fillOpacity="0.5"
+                stroke="none"
+              />
+              <rect
+                x="50"
+                y="70"
+                width="420"
+                height="356"
+                rx="22"
+                fill="none"
+                stroke="var(--glass-lit)"
+                strokeOpacity="0.75"
+                strokeWidth="4"
+              />
+              <rect
+                x="88"
+                y="108"
+                width="344"
+                height="280"
+                rx="14"
+                fill="var(--glass-deep)"
+                fillOpacity="0.07"
+              />
+              <rect
+                x="88"
+                y="108"
+                width="344"
+                height="280"
+                rx="14"
+                fill="none"
+                stroke="var(--glass-lit)"
+                strokeOpacity="0.5"
+                strokeWidth="3"
+              />
 
               <g ref={insideRef}>
                 {/* Outer group holds the place in the vault, inner one flies.
@@ -263,53 +296,99 @@ export function RepaySection() {
                 ))}
               </g>
 
-              <rect
+              {/* The door, hinged right. Shut at rest; it swings clear of the
+                  memes only once the last bolt is out. */}
+              <g
                 ref={doorLRef}
-                className={s.doorL}
-                x="122"
-                y="130"
-                width="188"
-                height="262"
-                fill="var(--safe-dark)"
-              />
-              <rect
-                ref={doorRRef}
-                className={s.doorR}
-                x="310"
-                y="130"
-                width="188"
-                height="262"
-                fill="var(--safe-dark)"
-              />
+                className={s.safeDoor}
+                style={{ transform: freed ? "scaleX(0)" : "scaleX(1)" }}
+              >
+                <rect
+                  x="88"
+                  y="108"
+                  width="344"
+                  height="280"
+                  rx="14"
+                  fill="var(--glass)"
+                  fillOpacity="0.16"
+                />
+                <path
+                  d="M110 372 L196 122 L232 122 L146 372 Z"
+                  fill="#ffffff"
+                  fillOpacity="0.4"
+                  stroke="none"
+                />
+              </g>
 
-              <rect x="104" y="160" width="20" height="40" rx="6" fill="var(--gold)" />
-              <rect x="104" y="322" width="20" height="40" rx="6" fill="var(--gold)" />
-              <rect x="496" y="160" width="20" height="40" rx="6" fill="var(--gold)" />
-              <rect x="496" y="322" width="20" height="40" rx="6" fill="var(--gold)" />
+              {/* Four throw bolts, one per quarter of the repayment. Each pulls
+                  back into the door as its own quarter is paid, so the drag has
+                  four things to show you instead of one number going down. */}
+              {[150, 208, 266, 324].map((y, i) => {
+                const local = Math.max(0, Math.min(1, (p - i * 0.25) / 0.25));
+                return (
+                  <rect
+                    key={y}
+                    x="72"
+                    y={y}
+                    width="30"
+                    height="18"
+                    rx="6"
+                    fill="var(--gold)"
+                    strokeWidth="5"
+                    style={{
+                      transform: `translateX(${(local * 28).toFixed(1)}px)`,
+                      transition: "transform 120ms linear",
+                    }}
+                  />
+                );
+              })}
 
-              <rect x="112" y="426" width="66" height="34" rx="12" fill="var(--safe-deep)" />
-              <rect x="442" y="426" width="66" height="34" rx="12" fill="var(--safe-deep)" />
+              <g fill="var(--gold)" strokeWidth="5">
+                <rect x="422" y="132" width="22" height="34" rx="9" />
+                <rect x="422" y="231" width="22" height="34" rx="9" />
+                <rect x="422" y="330" width="22" height="34" rx="9" />
+              </g>
+
+              <rect x="90" y="426" width="72" height="26" rx="10" fill="#12110c" />
+              <rect x="358" y="426" width="72" height="26" rx="10" fill="#12110c" />
             </g>
 
-            {/* The shackle lifts out of the lock body in step with your drag. */}
-            <g stroke="var(--ink)" strokeWidth="8" strokeLinejoin="round">
+            {/* Dial and handle: solid brass over the glass, and the only parts
+                that answer the drag directly. */}
+            <g
+              className={s.rdial}
+              stroke="var(--ink)"
+              strokeWidth="6"
+              style={{ transform: `rotate(${(-p * 720).toFixed(1)}deg)` }}
+            >
+              <circle cx="362" cy="186" r="38" fill="var(--gold)" />
+              <circle cx="362" cy="186" r="21" fill="var(--gold-deep)" />
+              <path d="M362 186 L362 155" strokeWidth="7" />
+            </g>
+            <g stroke="var(--ink)" strokeWidth="4" strokeLinecap="round">
+              <path d="M362 140 v9 M362 223 v9 M316 186 h9 M399 186 h9" />
+            </g>
+
+            <g
+              className={s.rhandle}
+              stroke="var(--ink)"
+              strokeWidth="5"
+              style={{ transform: freed ? "rotate(-120deg)" : "rotate(0deg)" }}
+            >
+              <circle cx="362" cy="306" r="30" fill="none" />
               <path
-                className={`${s.shackle} ${freed ? s.shackleGone : ""}`}
-                d="M284 258 v-26 a26 26 0 0 1 52 0 v26"
-                fill="none"
-                style={{ transform: `translateY(${(-30 * p).toFixed(1)}px)` }}
+                d="M362 306 V276 M362 306 L388 321 M362 306 L336 321"
+                stroke="var(--gold)"
+                strokeWidth="10"
+                strokeLinecap="round"
               />
-              <g className={s.lockBody}>
-                <rect x="270" y="254" width="80" height="64" rx="13" fill="var(--gold)" />
-                <circle cx="310" cy="280" r="8" fill="var(--ink)" stroke="none" />
-                <path d="M310 286 v13" strokeWidth="6" strokeLinecap="round" />
-              </g>
+              <circle cx="362" cy="306" r="11" fill="var(--gold)" />
             </g>
 
             <image
               className="breathe grounded"
               href={MASCOT_HREF}
-              x="428"
+              x="440"
               y="222"
               width="184"
               height="234"

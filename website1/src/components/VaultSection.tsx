@@ -36,14 +36,20 @@ const FEED_AT = [
   { x: 451, y: 30 },
 ];
 
-/** The same six, at rest inside the vault once the door shuts over them. */
+/**
+ * Where each meme comes to rest inside the safe.
+ *
+ * Two rows of three in the left two-thirds of the door, because the right third
+ * is now occupied by the dial and the handle — hardware that has to stay clear
+ * of the coins or the door reads as a pile of overlapping circles.
+ */
 const INSIDE_AT = [
-  { x: 270, y: 286 },
-  { x: 330, y: 278 },
-  { x: 390, y: 286 },
-  { x: 250, y: 330 },
-  { x: 310, y: 336 },
-  { x: 370, y: 330 },
+  { x: 216, y: 234 },
+  { x: 268, y: 224 },
+  { x: 320, y: 234 },
+  { x: 216, y: 302 },
+  { x: 268, y: 310 },
+  { x: 320, y: 302 },
 ];
 
 const SPEND_LINE: Record<string, string> = {
@@ -108,7 +114,7 @@ export function VaultSection() {
   const dropCoins = useCallback(() => {
     const coins = feedRef.current?.querySelectorAll(`.${s.drop}`);
     coins?.forEach((c, i) => {
-      after(195 + i * 104, () => {
+      after(195 + i * 100, () => {
         const el = c as SVGGElement;
         if (prefersReducedMotion()) {
           el.style.opacity = "0";
@@ -125,30 +131,39 @@ export function VaultSection() {
         // carries no position of its own — its parent holds the translate. Put
         // both on one element and the animation replaces the attribute, which
         // is what used to fling every coin over to the lever and drop it there.
-        const dx = FUNNEL_NECK_X - (FEED_AT[i].x + FEED_COIN_R);
+        // The whole journey, in one animation: across to the funnel neck, down
+        // through it, into the safe, and onto the exact spot it will sit. It
+        // used to fade out at the neck and a second copy popped into existence
+        // inside, so you never actually saw a meme enter the safe — which is
+        // the one thing this screen is meant to explain.
+        const sx = FEED_AT[i].x + FEED_COIN_R;
+        const sy = FEED_AT[i].y + FEED_COIN_R;
+        const neckDx = FUNNEL_NECK_X - sx;
+        const neckDy = 172 - sy;
+        const restDx = INSIDE_AT[i].x - sx;
+        const restDy = INSIDE_AT[i].y - sy;
+        const f = (n: number) => n.toFixed(1);
+
         const fall = el.animate(
           [
-            { transform: "translate(0,0) scale(1)", opacity: 1 },
-            {
-              transform: `translate(${(dx * 0.12).toFixed(1)}px,66px) scale(0.97)`,
-              opacity: 1,
-              offset: 0.34,
-            },
-            {
-              transform: `translate(${(dx * 0.92).toFixed(1)}px,142px) scale(0.82)`,
-              opacity: 1,
-              offset: 0.72,
-            },
-            {
-              transform: `translate(${dx.toFixed(1)}px,206px) scaleY(0.55) scaleX(1.15)`,
-              opacity: 0,
-            },
+            { transform: "translate(0,0) scale(1)" },
+            // Most of the sideways drift happens while it is still above the
+            // mouth; a coin that falls straight down hits the sloped wall.
+            { transform: `translate(${f(neckDx * 0.55)}px,${f(neckDy * 0.42)}px)`, offset: 0.28 },
+            // Through the throat, narrow enough to squeeze.
+            { transform: `translate(${f(neckDx)}px,${f(neckDy)}px) scale(0.84)`, offset: 0.5 },
+            { transform: `translate(${f(restDx)}px,${f(restDy - 30)}px) scale(0.95)`, offset: 0.8 },
+            { transform: `translate(${f(restDx)}px,${f(restDy)}px) scaleY(0.8) scaleX(1.14)`, offset: 0.9 },
+            { transform: `translate(${f(restDx)}px,${f(restDy)}px) scale(1)` },
           ],
-          { duration: 598, easing: "cubic-bezier(.42,0,.7,.35)", fill: "forwards" }
+          { duration: 700, easing: "cubic-bezier(.4,0,.55,1)", fill: "forwards" }
         );
-        // The coin inside the vault appears as this one arrives, so the chamber
-        // fills a coin at a time instead of being full before you touched it.
-        fall.onfinish = () => setLanded((n) => Math.max(n, i + 1));
+        // Hand off to the resting copy at the same coordinates, so the swap is
+        // invisible and the coin simply stays where it landed.
+        fall.onfinish = () => {
+          el.style.opacity = "0";
+          setLanded((n) => Math.max(n, i + 1));
+        };
       });
     });
   }, [after]);
@@ -156,7 +171,7 @@ export function VaultSection() {
   /** Gold spraying out of the chute and piling in two tiers on the floor. */
   const payOut = useCallback(() => {
     for (let i = 0; i < 12; i++) {
-      after(2250 + i * 72, () => {
+      after(2800 + i * 72, () => {
         const host = payoutRef.current;
         if (!host) return;
 
@@ -261,18 +276,18 @@ export function VaultSection() {
     dropCoins();
 
     // The jolt lands with the padlock, not the door — that's the heavy beat.
-    after(1560, () => {
+    after(2360, () => {
       if (prefersReducedMotion()) return;
       setJolt(true);
       after(416, () => setJolt(false));
     });
 
     payOut();
-    after(2250, rollCounter);
+    after(2800, rollCounter);
 
-    after(3100, () => say("buy whatever you want."));
+    after(3600, () => say("buy whatever you want."));
 
-    after(3750, () => {
+    after(4250, () => {
       setSpendOpen(true);
       setHint("Now go spend it.");
       busy.current = false;
@@ -431,23 +446,68 @@ export function VaultSection() {
               strokeLinejoin="round"
               strokeLinecap="round"
             >
+              {/* inlet */}
               <path d="M212 86 L448 86 L372 158 L288 158 Z" fill="var(--funnel)" />
               <rect x="206" y="78" width="248" height="16" rx="7" fill="var(--funnel-dark)" />
-              <rect x="150" y="152" width="360" height="300" rx="28" fill="var(--machine)" />
+
+              {/* The carcass: a safe with glass walls. Everything structural is
+                  transparent and everything mechanical is brass, which is what
+                  keeps it readable as a safe rather than as a glass box. */}
               <rect
-                x="198"
-                y="196"
-                width="264"
-                height="168"
-                rx="18"
+                x="150"
+                y="152"
+                width="360"
+                height="300"
+                rx="20"
+                fill="var(--glass)"
+                fillOpacity="0.07"
+              />
+              {/* A single raking highlight across the whole carcass. Flat tint
+                  alone reads as frosted plastic — what says "glass" is a hard
+                  specular streak and a bright edge, not more colour. */}
+              <path
+                d="M150 400 L296 152 L360 152 L214 452 L150 452 Z"
+                fill="#ffffff"
+                fillOpacity="0.5"
+                stroke="none"
+              />
+              <rect
+                x="150"
+                y="152"
+                width="360"
+                height="300"
+                rx="20"
+                fill="none"
+                stroke="var(--glass-lit)"
+                strokeOpacity="0.75"
+                strokeWidth="4"
+              />
+              {/* The cavity behind the door. Without it the carcass was one flat
+                  wash of colour and read as a solid plastic slab rather than as
+                  a box you can see into. */}
+              <rect
+                x="186"
+                y="186"
+                width="252"
+                height="176"
+                rx="12"
                 fill="var(--glass-deep)"
-                fillOpacity="0.55"
+                fillOpacity="0.07"
+              />
+              <rect
+                x="186"
+                y="186"
+                width="252"
+                height="176"
+                rx="12"
+                fill="none"
+                stroke="var(--glass-lit)"
+                strokeOpacity="0.5"
+                strokeWidth="3"
               />
 
-              {/* Each one appears as its falling counterpart arrives. Rendered
-                  unconditionally before, which left the vault looking full
-                  before the lever had been touched — invisible behind the old
-                  dark chamber, obvious behind glass. */}
+              {/* Inside, behind the door. Each appears as its falling twin
+                  arrives, so the safe fills a coin at a time. */}
               {COINS.map((coin, i) => (
                 <g
                   key={coin.ticker}
@@ -462,42 +522,74 @@ export function VaultSection() {
                 </g>
               ))}
 
-              <rect
-                className={s.door}
-                x="198"
-                y="196"
-                width="264"
-                height="168"
-                rx="16"
-                fill="var(--glass)"
-                fillOpacity="0.62"
-              />
-
-              <g className={s.glassSheen} pointerEvents="none">
-                <path
-                  d="M214 352 L286 200 L330 200 L258 352 Z"
-                  fill="var(--glass-lit)"
+              {/* The door. Hinged on the right, so it sweeps shut across the
+                  memes from the hinge side — the same direction a real one
+                  would. */}
+              <g className={s.door}>
+                <rect
+                  x="186"
+                  y="186"
+                  width="252"
+                  height="176"
+                  rx="12"
+                  fill="var(--glass)"
                   fillOpacity="0.16"
-                  stroke="none"
                 />
                 <path
-                  d="M300 352 L372 200 L392 200 L320 352 Z"
-                  fill="var(--glass-lit)"
-                  fillOpacity="0.1"
+                  d="M204 350 L262 198 L292 198 L234 350 Z"
+                  fill="#ffffff"
+                  fillOpacity="0.4"
                   stroke="none"
                 />
               </g>
-              <rect
-                x="198"
-                y="196"
-                width="264"
-                height="168"
-                rx="18"
-                fill="none"
-                stroke="var(--glass-lit)"
-                strokeOpacity="0.45"
-                strokeWidth="3"
-              />
+
+              {/* Dial and handle sit above the door so they stay solid while it
+                  moves — brass on a glass door is the whole idea. */}
+              <g className={s.dial}>
+                <circle cx="392" cy="236" r="34" fill="var(--gold)" />
+                <circle cx="392" cy="236" r="19" fill="var(--gold-deep)" />
+                <path d="M392 236 L392 208" strokeWidth="7" />
+              </g>
+              <g stroke="#12110c" strokeWidth="4" strokeLinecap="round">
+                <path d="M392 194 v8 M392 270 v8 M350 236 h8 M426 236 h8" />
+              </g>
+
+              <g className={s.handle}>
+                <circle cx="392" cy="318" r="26" fill="none" strokeWidth="5" />
+                <path
+                  d="M392 318 V292 M392 318 L414 331 M392 318 L370 331"
+                  stroke="var(--gold)"
+                  strokeWidth="9"
+                  strokeLinecap="round"
+                />
+                <circle cx="392" cy="318" r="10" fill="var(--gold)" strokeWidth="5" />
+              </g>
+
+              {/* Four throw bolts. They live inside the door and shoot left into
+                  the frame one after another — this is the lock, made visible. */}
+              <g>
+                {[210, 252, 294, 336].map((y, i) => (
+                  <rect
+                    key={y}
+                    className={s.bolt}
+                    style={{ "--i": i } as React.CSSProperties}
+                    x="168"
+                    y={y}
+                    width="30"
+                    height="16"
+                    rx="5"
+                    fill="var(--gold)"
+                    strokeWidth="5"
+                  />
+                ))}
+              </g>
+
+              {/* Barrel hinges on the hanging edge. */}
+              <g fill="var(--gold)" strokeWidth="5">
+                <rect x="428" y="200" width="22" height="30" rx="9" />
+                <rect x="428" y="259" width="22" height="30" rx="9" />
+                <rect x="428" y="318" width="22" height="30" rx="9" />
+              </g>
 
               <rect
                 className={s.chuteGlow}
@@ -511,15 +603,8 @@ export function VaultSection() {
               />
               <rect x="236" y="380" width="188" height="30" rx="9" fill="none" />
 
-              <rect x="176" y="452" width="58" height="34" rx="12" fill="var(--machine-dark)" />
-              <rect x="426" y="452" width="58" height="34" rx="12" fill="var(--machine-dark)" />
-            </g>
-
-            <g className={s.padlock} stroke="#12110c" strokeWidth="7" strokeLinejoin="round">
-              <path d="M304 274 v-18 a26 26 0 0 1 52 0 v18" fill="none" />
-              <rect x="292" y="272" width="76" height="60" rx="12" fill="var(--cream)" />
-              <circle cx="330" cy="298" r="8" fill="#12110c" stroke="none" />
-              <path d="M330 304 v12" strokeWidth="6" strokeLinecap="round" />
+              <rect x="176" y="452" width="58" height="34" rx="12" fill="#12110c" />
+              <rect x="426" y="452" width="58" height="34" rx="12" fill="#12110c" />
             </g>
 
             {/* The only red on the page, so the thing you touch is the thing
@@ -608,10 +693,10 @@ export function VaultSection() {
               <text x="330" y="42" fontSize="26" letterSpacing="3" fill="var(--ink)">
                 IN
               </text>
-              <text className={s.labelLocked} x="330" y="188" fill="var(--cream)">
+              <text className={s.labelLocked} x="330" y="178" fill="var(--ink)">
                 LOCKED
               </text>
-              <text className={s.labelOut} x="330" y="438" fill="var(--cream)">
+              <text className={s.labelOut} x="330" y="437" fill="var(--ink)">
                 OUT
               </text>
             </g>

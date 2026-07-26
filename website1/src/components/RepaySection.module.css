@@ -147,3 +147,27 @@
 .nope {
   animation: shakeNo 280ms ease-in-out;
 }
+
+
+/* ---------- the glass safe ---------- */
+
+/* Hinged on the right, where the barrel hinges are drawn. Slow to break away
+   and then decisive, so the door has weight. */
+.safeDoor {
+  transform-box: view-box;
+  transform-origin: 432px 248px;
+  transition: transform 900ms cubic-bezier(0.3, 0.8, 0.3, 1);
+}
+
+/* Both of these are handed their angle inline, straight off the drag — no
+   transition on the dial, or it would lag behind your thumb. */
+.rdial {
+  transform-box: view-box;
+  transform-origin: 362px 186px;
+}
+
+.rhandle {
+  transform-box: view-box;
+  transform-origin: 362px 306px;
+  transition: transform 620ms cubic-bezier(0.34, 1.5, 0.6, 1);
+}
