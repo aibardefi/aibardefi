@@ -40,6 +40,33 @@ body > section {
 }
 
 /*
+ * Fixed header padding. Mirrors the original responsive px/py, but pads with
+ * the device safe-area insets so the logo and buttons clear the notch /
+ * Dynamic Island / rounded corners. Insets resolve to 0 on desktop, so the
+ * desktop spacing is unchanged.
+ */
+.site-header {
+  padding-top: max(1rem, env(safe-area-inset-top));
+  padding-bottom: 1rem;
+  padding-left: max(1.25rem, env(safe-area-inset-left));
+  padding-right: max(1.25rem, env(safe-area-inset-right));
+}
+@media (min-width: 640px) {
+  .site-header {
+    padding-top: max(1.25rem, env(safe-area-inset-top));
+    padding-bottom: 1.25rem;
+    padding-left: max(2rem, env(safe-area-inset-left));
+    padding-right: max(2rem, env(safe-area-inset-right));
+  }
+}
+@media (min-width: 1024px) {
+  .site-header {
+    padding-left: max(2.5rem, env(safe-area-inset-left));
+    padding-right: max(2.5rem, env(safe-area-inset-right));
+  }
+}
+
+/*
  * The bear and coins must stay locked to the courtyard behind them, so this
  * box replicates `object-cover` on the background's own aspect ratio: it fills
  * the viewport, overflows on whichever axis is tighter, and never distorts.
@@ -744,6 +771,16 @@ body > section {
 }
 .y-social a:hover {
   opacity: 1;
+}
+/* Bigger finger-friendly hit area for the social links on touch screens,
+   without shifting the desktop layout. */
+@media (max-width: 1023px) {
+  .y-social {
+    margin-top: 12px;
+  }
+  .y-social a {
+    padding: 8px 0;
+  }
 }
 .y-social svg {
   width: 15px;

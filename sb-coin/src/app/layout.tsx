@@ -17,6 +17,9 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  // Let the page fill the whole screen and expose safe-area insets so the
+  // fixed header can clear the notch / Dynamic Island on modern phones.
+  viewportFit: "cover",
   themeColor: "#f6eddf",
 };
 
