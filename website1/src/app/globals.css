@@ -64,8 +64,8 @@
 
   /* Headline pair: navy carries the line, tangerine picks out the one word
      that word is actually about. */
-  --navy: #1f3a68;
-  --tangerine: #ef7d1f;
+  --navy: #2f5aa0;
+  --tangerine: #ff8f1f;
 
   /* One background for every page, per the brief. The second value only feeds
      the radial wash at the foot of each screen — kept close to the first now,
