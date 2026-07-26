@@ -646,25 +646,41 @@ export function VaultSection() {
             aria-label="Spend it on a lambo"
           >
             <span className={s.spendDisc}>
-              {/* A wedge, not a car shape. What makes a Lamborghini legible at
-                  32px is the profile: a nose almost on the road, one unbroken
-                  rising line to the tail, and a wing on the back. The old icon
-                  was a generic three-box saloon. */}
-              <svg viewBox="0 0 100 100" fill="#12110c" aria-hidden="true">
-                {/* A wedge is wide and low, so at natural size it left half the
-                    disc empty while the pizza filled its own. Scaled about the
-                    centre and pulled up to sit on the disc's midline. */}
-                <g transform="translate(-9 -21) scale(1.18)">
-                <path d="M92 40 L74 40 L74 46 L92 46 Z" />
-                <path d="M80 46 L80 54 L86 54 L86 46 Z" />
-                <path d="M4 66 L14 56 L34 47 L56 43 L74 47 L92 58 L94 66 Z" />
-                <path d="M30 54 L50 49 L64 51 L72 57 L32 59 Z" fill="#f7edd9" />
-                <path d="M50 49 L50 58" stroke="#12110c" strokeWidth="3" />
-                <path d="M18 62 L36 62" stroke="#f7edd9" strokeWidth="3" strokeLinecap="round" />
-                <circle cx="30" cy="70" r="11" />
-                <circle cx="74" cy="70" r="11" />
-                <circle cx="30" cy="70" r="4.5" fill="#f7edd9" />
-                <circle cx="74" cy="70" r="4.5" fill="#f7edd9" />
+              {/* A Countach in profile. The shapes that make it one and not a
+                  generic sports car: a nose that is nearly on the tarmac, a
+                  windscreen raked back further than the bonnet is long, a roof
+                  only a few units wide, a dead-flat rear deck, and the wing on
+                  two struts. Drawn low and wide, then scaled up to fill the
+                  disc — a wedge at natural size leaves the top and bottom of a
+                  circle empty. */}
+              {/* Red, outlined, like every other object on the site — a solid
+                  black silhouette was the only icon here with no fill, and it
+                  read as a shadow rather than a car. The wing is a thin plate on
+                  short struts; tall struts made it a roll bar. */}
+              <svg viewBox="0 0 100 100" aria-hidden="true">
+                <g
+                  transform="translate(-5 -1) scale(1.1)"
+                  stroke="#12110c"
+                  strokeWidth="5"
+                  strokeLinejoin="round"
+                >
+                  <path d="M79 34 L79 44 M90 34 L90 44" strokeLinecap="round" />
+                  <path d="M73 29 L97 29 L97 34 L73 34 Z" fill="#12110c" />
+
+                  {/* One wedge: nose almost on the floor, windscreen raked back
+                      further than the bonnet is long, a roof barely wider than
+                      the screen, then a flat deck to the tail. */}
+                  <path
+                    d="M5 57 L10 48 L36 44 L46 33 L61 33 L71 41 L95 44 L97 51 L97 57 Z"
+                    fill="#c4392b"
+                  />
+                  <path d="M47 43 L50 36 L60 36 L66 42 Z" fill="#f7edd9" strokeWidth="3.5" />
+                  <path d="M66 47 L79 49 L79 52 L66 51 Z" fill="#12110c" strokeWidth="0" />
+
+                  <circle cx="28" cy="58" r="10.5" fill="#12110c" />
+                  <circle cx="77" cy="58" r="11.5" fill="#12110c" />
+                  <circle cx="28" cy="58" r="4" fill="#f7edd9" strokeWidth="0" />
+                  <circle cx="77" cy="58" r="4.5" fill="#f7edd9" strokeWidth="0" />
                 </g>
               </svg>
             </span>
@@ -701,29 +717,31 @@ export function VaultSection() {
             aria-label="Spend it on more memes"
           >
             <span className={s.spendDisc}>
-              {/* A fanned stack of three, and a plus. Two overlapping discs with
-                  a pair of dots on them read as neither coins nor memes — the
-                  count is what says "more", and the face is what says "meme". */}
+              {/* The actual coins, not a generic smiley. These are the same
+                  three from the shared roster the rest of the site feeds into
+                  the machine, drawn from the same glyph data — so "more memes"
+                  means more of the ones you just locked, and the icon can never
+                  drift out of sync with the roster. The glyphs are authored in a
+                  100-unit box, hence the scale factor against each radius. */}
               <svg viewBox="0 0 100 100" aria-hidden="true">
-                <g stroke="#12110c" strokeWidth="6">
-                  <circle cx="28" cy="50" r="21" fill="#b9b3a6" />
-                  <circle cx="72" cy="50" r="21" fill="#8b6fd4" />
-                  <circle cx="50" cy="58" r="26" fill="#7cc606" />
-                </g>
-                <g fill="#12110c">
-                  <circle cx="41" cy="53" r="4.5" />
-                  <circle cx="59" cy="53" r="4.5" />
-                </g>
-                <path
-                  d="M41 66 q9 8 18 0"
-                  fill="none"
-                  stroke="#12110c"
-                  strokeWidth="5"
-                  strokeLinecap="round"
-                />
+                {[
+                  { coin: COINS[0], cx: 27, cy: 48, r: 20 },
+                  { coin: COINS[5], cx: 73, cy: 48, r: 20 },
+                  { coin: COINS[1], cx: 50, cy: 58, r: 25 },
+                ].map(({ coin, cx, cy, r }) => (
+                  <g key={coin.ticker} transform={`translate(${cx} ${cy})`}>
+                    <circle r={r} fill={coin.bg} stroke="#12110c" strokeWidth="6" />
+                    <g
+                      transform={`scale(${(1.5 * r) / 100}) translate(-50 -50)`}
+                      fill={coin.glyphOn}
+                    >
+                      {coin.glyph}
+                    </g>
+                  </g>
+                ))}
                 <g stroke="#12110c" strokeWidth="5" strokeLinecap="round">
-                  <circle cx="80" cy="20" r="13" fill="#f7edd9" />
-                  <path d="M80 14 V26 M74 20 H86" />
+                  <circle cx="82" cy="18" r="13" fill="#f7edd9" />
+                  <path d="M82 12 V24 M76 18 H88" />
                 </g>
               </svg>
             </span>
