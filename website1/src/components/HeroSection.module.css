@@ -3,16 +3,13 @@
 }
 
 .mascot {
-  /* Capped in viewport units, not percentages: a percentage height against an
-     indefinite-height grid item does not resolve, so the artwork's intrinsic
-     height would size the track and push the coins off-screen. The cap leaves
-     headroom for the ~1.3x he reaches when fully fed. */
+  /* Width drives the box and the artwork's ratio supplies the height. Capping
+     max-height here instead does nothing: the <img> inside is width:100% /
+     height:auto, so it sizes off this box's width and overflows the cap. The
+     cap leaves headroom for the ~1.3x he reaches when fully fed. */
+  width: min(84vw, calc(min(41dvh, 400px) * 795 / 1008));
   height: auto;
-  width: auto;
   min-height: 0;
-  max-height: min(41dvh, 400px);
-  max-width: 84vw;
-  object-fit: contain;
   display: block;
   transform-origin: 50% 100%;
   transition: transform 460ms var(--spring);
