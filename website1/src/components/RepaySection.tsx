@@ -2,19 +2,25 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { MASCOT_SRC } from "./Mascot";
+import { COINS } from "./coins";
 import { useEntrance, prefersReducedMotion } from "@/lib/useEntrance";
 import { useReplay } from "@/lib/useReplay";
 import s from "./RepaySection.module.css";
 
 const TOTAL = 42000;
 
-/** The five locked memes, in the positions they sit inside the vault. */
-const INSIDE = [
-  { x: 206, y: 232, bg: "#b9b3a6" },
-  { x: 292, y: 214, bg: "#a8c24e" },
-  { x: 378, y: 232, bg: "#e0a33c" },
-  { x: 240, y: 318, bg: "#7a6a5b" },
-  { x: 344, y: 318, bg: "#c4392b" },
+/**
+ * Where the locked memes sit inside the vault. Same shared roster as the other
+ * screens — these are the very coins the machine swallowed one screen earlier,
+ * so they cannot be a different five.
+ */
+const INSIDE_AT = [
+  { x: 206, y: 226 },
+  { x: 292, y: 210 },
+  { x: 378, y: 226 },
+  { x: 216, y: 316 },
+  { x: 300, y: 330 },
+  { x: 386, y: 316 },
 ];
 
 export function RepaySection() {
@@ -66,11 +72,11 @@ export function RepaySection() {
 
     dl?.animate(
       [{ transform: "none" }, { transform: "translateX(-196px) skewY(-2deg)" }],
-      { duration: 620, easing: "cubic-bezier(.3,.8,.3,1)", fill: "forwards" }
+      { duration: 950, easing: "cubic-bezier(.3,.8,.3,1)", fill: "forwards" }
     );
     dr?.animate(
       [{ transform: "none" }, { transform: "translateX(196px) skewY(2deg)" }],
-      { duration: 620, easing: "cubic-bezier(.3,.8,.3,1)", fill: "forwards" }
+      { duration: 950, easing: "cubic-bezier(.3,.8,.3,1)", fill: "forwards" }
     );
 
     insideRef.current?.querySelectorAll(`.${s.memeOut}`).forEach((m, i) => {
@@ -81,9 +87,9 @@ export function RepaySection() {
             { transform: "translateY(-40px) scale(1.12)", opacity: 1, offset: 0.4 },
             { transform: "translateY(-230px) scale(0.6)", opacity: 0 },
           ],
-          { duration: 900, easing: "cubic-bezier(.4,0,.6,1)", fill: "forwards" }
+          { duration: 1200, easing: "cubic-bezier(.4,0,.6,1)", fill: "forwards" }
         );
-      }, 480 + i * 90);
+      }, 760 + i * 150);
     });
   }, [say]);
 
@@ -134,10 +140,14 @@ export function RepaySection() {
       h === "All of it, or nothing comes out."
         ? h
         : p === 0
-          ? "Drag all the way to repay"
-          : p < 1
-            ? `${Math.round(p * 100)}% repaid — keep going`
-            : "Paid in full."
+          ? "Drag the handle right to repay"
+          : p < 0.35
+            ? `${Math.round(p * 100)}% repaid — the lock is lifting`
+            : p < 0.8
+              ? `${Math.round(p * 100)}% repaid — keep going`
+              : p < 1
+                ? `${Math.round(p * 100)}% — almost off`
+                : "Paid in full."
     );
   }, [p, freed]);
 
@@ -220,13 +230,15 @@ export function RepaySection() {
               <rect x="122" y="130" width="376" height="262" rx="16" fill="var(--safe-deep)" />
 
               <g ref={insideRef}>
-                {INSIDE.map((m, i) => (
-                  <g key={i} className={s.memeOut} transform={`translate(${m.x} ${m.y})`}>
-                    <circle r="30" fill={m.bg} stroke="var(--ink)" strokeWidth="6" />
-                    <g transform="scale(0.4) translate(-50 -50)" fill="var(--ink)">
-                      <ellipse cx="50" cy="56" rx="31" ry="28" />
-                      <circle cx="39" cy="52" r="5" fill={m.bg} />
-                      <circle cx="61" cy="52" r="5" fill={m.bg} />
+                {COINS.map((coin, i) => (
+                  <g
+                    key={coin.ticker}
+                    className={s.memeOut}
+                    transform={`translate(${INSIDE_AT[i].x} ${INSIDE_AT[i].y})`}
+                  >
+                    <circle r="30" fill={coin.bg} stroke="var(--ink)" strokeWidth="6" />
+                    <g transform="scale(0.46) translate(-50 -50)" fill={coin.glyphOn}>
+                      {coin.glyph}
                     </g>
                   </g>
                 ))}
@@ -301,13 +313,26 @@ export function RepaySection() {
           aria-valuemax={100}
           aria-valuenow={Math.round(p * 100)}
           onKeyDown={onKeyDown}
+          /* One set of handlers on the whole slider, with the capture taken
+             here rather than on the knob. Previously a press on the track set
+             the dragging flag but left the move handler on the knob, so the
+             only draggable thing was the 62px knob itself — and a stray
+             timeout released that drag after 460ms regardless, which is what
+             made it feel like the handle kept slipping out of your hand. */
           onPointerDown={(e) => {
-            if (freed || e.target === knobRef.current) return;
-            setSnap(true);
-            commit(pointerP(e.clientX));
+            if (freed) return;
+            e.preventDefault();
             dragging.current = true;
-            window.setTimeout(release, 460);
+            setSnap(false);
+            e.currentTarget.setPointerCapture(e.pointerId);
+            commit(pointerP(e.clientX));
           }}
+          onPointerMove={(e) => {
+            if (!dragging.current || freed) return;
+            commit(pointerP(e.clientX));
+          }}
+          onPointerUp={release}
+          onPointerCancel={release}
         >
           <div className={s.track}>
             <div className={s.fill} style={{ width: `${(p * 100).toFixed(2)}%` }} />
@@ -316,19 +341,6 @@ export function RepaySection() {
             ref={knobRef}
             className={`${s.knob} ${snap ? s.snap : ""}`}
             style={{ left: `${x}px` }}
-            onPointerDown={(e) => {
-              if (freed) return;
-              dragging.current = true;
-              setSnap(false);
-              e.currentTarget.setPointerCapture(e.pointerId);
-              e.preventDefault();
-            }}
-            onPointerMove={(e) => {
-              if (!dragging.current) return;
-              commit(pointerP(e.clientX));
-            }}
-            onPointerUp={release}
-            onPointerCancel={release}
           >
             <svg viewBox="0 0 100 100" fill="var(--ink)" aria-hidden="true">
               <path d="M38 22 L66 50 L38 78 Z" />

@@ -14,6 +14,10 @@ const SVGNS = "http://www.w3.org/2000/svg";
  * from the shared roster, so this screen and the feeding screen can never drift
  * apart on which tokens exist.
  */
+/** Centre of the funnel's narrow neck, and the waiting coins' radius. */
+const FUNNEL_NECK_X = 330;
+const FEED_COIN_R = 19;
+
 const FEED_AT = [
   { x: 214, y: 24 },
   { x: 256, y: 10 },
@@ -100,13 +104,31 @@ export function VaultSection() {
           el.style.opacity = "0";
           return;
         }
+        // Funnel mouth spans 212..448 but its neck is only 288..372, so a coin
+        // that falls straight down from where it waits passes through the
+        // sloped wall instead of into the hole. Each one slides in along the
+        // wall to the neck: barely any drift while it is still above the mouth,
+        // then most of it during the run down the slope.
+        const dx = FUNNEL_NECK_X - (FEED_AT[i].x + FEED_COIN_R);
         el.animate(
           [
-            { transform: "translateY(0) scale(1)", opacity: 1 },
-            { transform: "translateY(150px) scale(0.8)", opacity: 1, offset: 0.7 },
-            { transform: "translateY(210px) scaleY(0.55) scaleX(1.2)", opacity: 0 },
+            { transform: "translate(0,0) scale(1)", opacity: 1 },
+            {
+              transform: `translate(${(dx * 0.12).toFixed(1)}px,66px) scale(0.97)`,
+              opacity: 1,
+              offset: 0.34,
+            },
+            {
+              transform: `translate(${(dx * 0.92).toFixed(1)}px,142px) scale(0.82)`,
+              opacity: 1,
+              offset: 0.72,
+            },
+            {
+              transform: `translate(${dx.toFixed(1)}px,206px) scaleY(0.55) scaleX(1.15)`,
+              opacity: 0,
+            },
           ],
-          { duration: 598, easing: "cubic-bezier(.5,0,.75,0)", fill: "forwards" }
+          { duration: 598, easing: "cubic-bezier(.42,0,.7,.35)", fill: "forwards" }
         );
       });
     });
@@ -122,7 +144,7 @@ export function VaultSection() {
         const g = document.createElementNS(SVGNS, "g");
         const c = document.createElementNS(SVGNS, "circle");
         c.setAttribute("r", "17");
-        c.setAttribute("fill", "#9df907");
+        c.setAttribute("fill", "#d9a020");
         c.setAttribute("stroke", "#12110c");
         c.setAttribute("stroke-width", "5");
         const t = document.createElementNS(SVGNS, "text");
@@ -346,7 +368,15 @@ export function VaultSection() {
               <path d="M212 86 L448 86 L372 158 L288 158 Z" fill="var(--funnel)" />
               <rect x="206" y="78" width="248" height="16" rx="7" fill="var(--funnel-dark)" />
               <rect x="150" y="152" width="360" height="300" rx="28" fill="var(--machine)" />
-              <rect x="198" y="196" width="264" height="168" rx="16" fill="var(--machine-deep)" />
+              <rect
+                x="198"
+                y="196"
+                width="264"
+                height="168"
+                rx="18"
+                fill="var(--glass-deep)"
+                fillOpacity="0.55"
+              />
 
               <g opacity="0.9">
                 {COINS.map((coin, i) => (
@@ -366,7 +396,34 @@ export function VaultSection() {
                 width="264"
                 height="168"
                 rx="16"
-                fill="var(--vault)"
+                fill="var(--glass)"
+                fillOpacity="0.62"
+              />
+
+              <g className={s.glassSheen} pointerEvents="none">
+                <path
+                  d="M214 352 L286 200 L330 200 L258 352 Z"
+                  fill="var(--glass-lit)"
+                  fillOpacity="0.16"
+                  stroke="none"
+                />
+                <path
+                  d="M300 352 L372 200 L392 200 L320 352 Z"
+                  fill="var(--glass-lit)"
+                  fillOpacity="0.1"
+                  stroke="none"
+                />
+              </g>
+              <rect
+                x="198"
+                y="196"
+                width="264"
+                height="168"
+                rx="18"
+                fill="none"
+                stroke="var(--glass-lit)"
+                strokeOpacity="0.45"
+                strokeWidth="3"
               />
 
               <rect
@@ -376,7 +433,7 @@ export function VaultSection() {
                 width="188"
                 height="30"
                 rx="9"
-                fill="var(--sb)"
+                fill="var(--gold)"
                 stroke="none"
               />
               <rect x="236" y="380" width="188" height="30" rx="9" fill="none" />

@@ -49,6 +49,13 @@
   --furniture: #e07a5f;
   --furniture-dark: #c25a41;
 
+  /* The vault chamber: violet glass rather than a dark hole. Translucent on
+     purpose — the point of the screen is that you can see your memes sitting
+     in there, and a solid door hid the very thing it was locking. */
+  --glass: #8b5cf6;
+  --glass-lit: #c4a8ff;
+  --glass-deep: #4c2a9e;
+
   --safe: #2f6157;
   --safe-dark: #21473f;
   --safe-deep: #1f5049;

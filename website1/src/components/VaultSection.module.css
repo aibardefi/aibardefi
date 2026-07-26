@@ -309,3 +309,12 @@
   color: var(--text-dim);
   white-space: nowrap;
 }
+
+/* The sheen only means anything once there is a door to catch the light. */
+.glassSheen {
+  opacity: 0;
+  transition: opacity 420ms ease 1.2s;
+}
+.pulled .glassSheen {
+  opacity: 1;
+}
