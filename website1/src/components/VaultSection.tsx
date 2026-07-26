@@ -353,7 +353,7 @@ export function VaultSection() {
       </div>
 
       <div className="head" data-ent="up" data-ent-delay="90">
-        <h1 className="sticker" data-text="Lock them. Borrow $SB.">
+        <h1 className="sticker">
           Lock them. Borrow $SB.
         </h1>
       </div>

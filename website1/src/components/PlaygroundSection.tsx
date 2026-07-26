@@ -208,7 +208,7 @@ export function PlaygroundSection() {
       </div>
 
       <div className="head" data-ent="up" data-ent-delay="90">
-        <h1 className="sticker" data-text="Poke the bear.">
+        <h1 className="sticker">
           Poke the bear.
         </h1>
       </div>

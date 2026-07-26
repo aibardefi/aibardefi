@@ -96,7 +96,7 @@ export function StorySection() {
       </div>
 
       <div className="head" data-ent="up" data-ent-delay="90">
-        <h1 className="sticker" data-text="He tried everything else first.">
+        <h1 className="sticker">
           He tried everything else first.
         </h1>
       </div>
@@ -223,7 +223,6 @@ export function StorySection() {
 
         <div
           className={`${s.payoff} sticker`}
-          data-text="So he built his own bank."
         >
           So he built his own bank.
         </div>

@@ -166,7 +166,7 @@ export function HeroSection() {
       </div>
 
       <div className="head" data-ent="up" data-ent-delay="90">
-        <h1 className="sticker" data-text="Lock memes. Borrow the meme.">
+        <h1 className="sticker">
           Lock memes. Borrow the meme.
         </h1>
       </div>

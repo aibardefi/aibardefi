@@ -105,7 +105,7 @@ export function WakeSection() {
       </div>
 
       <div className="head" data-ent="up" data-ent-delay="90">
-        <h1 className={`sticker ${s.headline}`} data-text="Why $SB exists.">
+        <h1 className={`sticker ${s.headline}`}>
           Why $SB exists.
         </h1>
       </div>
@@ -118,7 +118,6 @@ export function WakeSection() {
 
           <div
             className={`${s.verdict} sticker`}
-            data-text="Suka blya enough, I want a different life"
           >
             Suka blya enough, I want a different life
           </div>
