@@ -32,7 +32,7 @@ export type Coin = {
   duration: number;
   /** Float start offset in seconds. */
   delay: number;
-  /** Float travel in stage-relative %. */
+  /** Peak float travel in px (kept subtle: ~6–10px). */
   amplitude: number;
   /** Hover glow colour. */
   glow: string;
@@ -49,9 +49,9 @@ export const COINS: Coin[] = [
     size: 5.5,
     zoom: 190,
     mobile: { x: 34, y: 20, size: 8 },
-    duration: 3.4,
+    duration: 5.5,
     delay: 0,
-    amplitude: 1.5,
+    amplitude: 7,
     glow: "rgba(168, 178, 190, 0.9)",
   },
   {
@@ -63,9 +63,9 @@ export const COINS: Coin[] = [
     size: 5.6,
     zoom: 212,
     mobile: { x: 19, y: 41, size: 8.5 },
-    duration: 4.1,
+    duration: 6.2,
     delay: 0.55,
-    amplitude: 1.8,
+    amplitude: 9,
     glow: "rgba(150, 205, 45, 0.9)",
   },
   {
@@ -77,9 +77,9 @@ export const COINS: Coin[] = [
     size: 5.4,
     zoom: 182,
     mobile: { x: 22, y: 60, size: 8 },
-    duration: 3.8,
+    duration: 4.8,
     delay: 1.1,
-    amplitude: 1.6,
+    amplitude: 6,
     glow: "rgba(212, 168, 42, 0.9)",
   },
   {
@@ -91,9 +91,9 @@ export const COINS: Coin[] = [
     size: 5.5,
     zoom: 202,
     mobile: { x: 67, y: 19, size: 8 },
-    duration: 4.4,
+    duration: 6.8,
     delay: 0.3,
-    amplitude: 1.7,
+    amplitude: 8,
     glow: "rgba(140, 200, 40, 0.9)",
   },
   {
@@ -105,9 +105,9 @@ export const COINS: Coin[] = [
     size: 5.4,
     zoom: 234,
     mobile: { x: 82, y: 42, size: 8.5 },
-    duration: 3.6,
+    duration: 5.0,
     delay: 0.85,
-    amplitude: 1.9,
+    amplitude: 10,
     glow: "rgba(150, 90, 220, 0.9)",
   },
 ];
@@ -187,7 +187,7 @@ export const LINKS = {
 } as const;
 
 export const FLIGHT = {
-  durationMs: 650,
+  durationMs: 800,
   /** Coin scale on arrival at the medallion. */
   endScale: 0.35,
   memePowerMs: 1000,

@@ -30,6 +30,13 @@ body {
 /* No horizontal scrollbar at any breakpoint. */
 html {
   overflow-x: hidden;
+  /* Gentle, non-forcing snap so each section settles into view without
+     hijacking the scroll. Padding keeps a snapped top clear of the header. */
+  scroll-snap-type: y proximity;
+  scroll-padding-top: 72px;
+}
+body > section {
+  scroll-snap-align: start;
 }
 
 /*
@@ -272,8 +279,8 @@ html {
 }
 .play .sbout {
   animation:
-    sbout 1.05s cubic-bezier(0.2, 1.5, 0.4, 1) 2.55s backwards,
-    sbfloat 3s ease-in-out 3.6s infinite;
+    sbout 1.05s cubic-bezier(0.2, 1.5, 0.4, 1) 1.9s backwards,
+    sbfloat 3s ease-in-out 2.95s infinite;
 }
 @keyframes sbout {
   0% { opacity: 0; transform: translate(-50%, -50%) translateX(-70%) scale(0.2); }
@@ -299,7 +306,7 @@ html {
   pointer-events: none;
 }
 .play .sbbeam {
-  animation: beam 1.1s ease 2.55s backwards;
+  animation: beam 1.1s ease 1.9s backwards;
 }
 @keyframes beam {
   0% { opacity: 0; transform: translateY(-50%) scaleX(0.2); }
@@ -315,7 +322,7 @@ html {
   pointer-events: none;
 }
 .play .sbburst {
-  animation: burst 0.7s ease-out 2.75s backwards;
+  animation: burst 0.7s ease-out 2.1s backwards;
 }
 @keyframes burst {
   0% { opacity: 0.95; transform: scale(0.3); }
@@ -345,7 +352,7 @@ html {
   mix-blend-mode: screen;
 }
 .play .sbout .halo {
-  animation: sbpulse 1.8s ease-in-out 3.2s infinite;
+  animation: sbpulse 2.4s ease-in-out 2.6s infinite;
 }
 @keyframes sbpulse {
   0%, 100% { opacity: 0.7; transform: scale(1); }
@@ -380,7 +387,7 @@ html {
   );
 }
 .play .med-glow2 {
-  animation: medglow2 0.8s ease-out 3.1s backwards;
+  animation: medglow2 0.8s ease-out 2.2s backwards;
 }
 @keyframes medglow2 {
   0% { opacity: 0; transform: scale(1); }
@@ -474,6 +481,15 @@ html {
   height: 100%;
   object-fit: contain;
   user-select: none;
+}
+/* Tiny confirmation shake right as the verification light turns green. */
+.play3 .station {
+  animation: csshake 0.34s ease-in-out 1.66s 2;
+}
+@keyframes csshake {
+  0%, 100% { transform: translateX(-50%); }
+  30% { transform: translateX(calc(-50% - 2.5px)); }
+  70% { transform: translateX(calc(-50% + 2.5px)); }
 }
 .cs-coin {
   position: absolute;
@@ -662,6 +678,9 @@ html {
     animation-duration: 0.01s;
     animation-delay: 0s;
   }
+  .play3 .station {
+    animation: none;
+  }
 }
 
 /* ---------- Page 4: Meme Yard ---------- */
@@ -838,15 +857,25 @@ html {
 .a-bass { animation-name: p4bass; }
 .a-flag { animation-name: p4flag; }
 .a-king { animation-name: p4king; }
-@keyframes p4bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5%); } }
-@keyframes p4bounce { 0%, 100% { transform: translateY(0) scaleY(1); } 45%, 55% { transform: translateY(-8%) scaleY(1.03); } }
-@keyframes p4wobble { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
-@keyframes p4wiggle { 0%, 100% { transform: rotate(-5deg); } 25% { transform: rotate(5deg); } 50% { transform: rotate(-3deg); } 75% { transform: rotate(4deg); } }
-@keyframes p4sway { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } }
-@keyframes p4peck { 0%, 55%, 100% { transform: translateY(0) rotate(0); } 70% { transform: translateY(6%) rotate(7deg); } 85% { transform: translateY(0) rotate(0); } }
-@keyframes p4bass { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
+/* Calmer amplitudes overall — the crowd reads as alive, not busy. */
+@keyframes p4bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3%); } }
+@keyframes p4bounce { 0%, 100% { transform: translateY(0) scaleY(1); } 45%, 55% { transform: translateY(-4.5%) scaleY(1.02); } }
+@keyframes p4wobble { 0%, 100% { transform: rotate(-2.5deg); } 50% { transform: rotate(2.5deg); } }
+@keyframes p4wiggle { 0%, 100% { transform: rotate(-2.5deg); } 25% { transform: rotate(2.5deg); } 50% { transform: rotate(-1.5deg); } 75% { transform: rotate(2deg); } }
+@keyframes p4sway { 0%, 100% { transform: rotate(-1.6deg); } 50% { transform: rotate(1.6deg); } }
+/* Pigeons stroll left↔right near the ground and dip to peck along the way. */
+@keyframes p4peck {
+  0% { transform: translateX(-7%) translateY(0) rotate(0); }
+  22% { transform: translateX(7%) translateY(0) rotate(0); }
+  34% { transform: translateX(7%) translateY(5%) rotate(6deg); }
+  44% { transform: translateX(7%) translateY(0) rotate(0); }
+  78% { transform: translateX(-7%) translateY(0) rotate(0); }
+  90% { transform: translateX(-7%) translateY(5%) rotate(6deg); }
+  100% { transform: translateX(-7%) translateY(0) rotate(0); }
+}
+@keyframes p4bass { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.015); } }
 @keyframes p4flag { 0%, 100% { transform: rotate(-2deg) skewY(-1.5deg); } 50% { transform: rotate(2deg) skewY(1.5deg); } }
-@keyframes p4king { 0%, 60%, 100% { transform: rotate(0) scale(1); } 68% { transform: rotate(-1.3deg) scale(1.012); } 76% { transform: rotate(1deg) scale(1.012); } 84% { transform: rotate(0) scale(1); } }
+@keyframes p4king { 0%, 60%, 100% { transform: rotate(0) scale(1); } 68% { transform: rotate(-1deg) scale(1.01); } 76% { transform: rotate(0.8deg) scale(1.01); } 84% { transform: rotate(0) scale(1); } }
 .king-med {
   position: absolute;
   left: 49%;
@@ -885,6 +914,20 @@ html {
   animation: sparkle 3.6s ease-in-out 0.5s infinite;
 }
 @keyframes sparkle { 0%, 72%, 100% { opacity: 0; transform: scale(0.4); } 82% { opacity: 1; transform: scale(1); } }
+/* Pause every idle loop while the yard is off screen (IntersectionObserver
+   toggles `.live`), so the compositor never animates unseen characters. */
+#yard:not(.live) .p4a,
+#yard:not(.live) .king-med,
+#yard:not(.live) .p4shine,
+#yard:not(.live) .p4sparkle {
+  animation-play-state: paused;
+}
+/* Reduce idle motion on small screens: slow the loops, drop the glints. */
+@media (max-width: 767px) {
+  .p4a { animation-duration: calc(var(--dur) * 1.35); }
+  .p4shine,
+  .p4sparkle { animation: none; }
+}
 @media (min-width: 1024px) {
   .y-copy {
     position: absolute;

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { asset } from "@/lib/asset";
 import { motion, useInView, useReducedMotion } from "framer-motion";
+import { Reveal } from "@/components/Reveal";
 
 /**
  * Page 3: the $SB Claim Station.
@@ -18,7 +19,12 @@ export function ClaimSection() {
   const inView = useInView(ref, { amount: 0.35 });
 
   const [play, setPlay] = useState(false);
+  // Locked while the claim timeline runs so a click can't interrupt it midway.
+  const [busy, setBusy] = useState(false);
   const rafs = useRef<number[]>([]);
+  const busyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const SEQUENCE_MS = 3600;
+
   const restart = useCallback(() => {
     rafs.current.forEach(cancelAnimationFrame);
     setPlay(false);
@@ -27,7 +33,15 @@ export function ClaimSection() {
       rafs.current.push(r2);
     });
     rafs.current.push(r1);
+    setBusy(true);
+    if (busyTimer.current) clearTimeout(busyTimer.current);
+    busyTimer.current = setTimeout(() => setBusy(false), SEQUENCE_MS);
   }, []);
+
+  // Clicking the station (or the cue) repays again, once the sequence is idle.
+  const replay = useCallback(() => {
+    if (!busy) restart();
+  }, [busy, restart]);
 
   useEffect(() => {
     const id = requestAnimationFrame(() => {
@@ -37,7 +51,13 @@ export function ClaimSection() {
     return () => cancelAnimationFrame(id);
   }, [inView, restart]);
 
-  useEffect(() => () => rafs.current.forEach(cancelAnimationFrame), []);
+  useEffect(
+    () => () => {
+      rafs.current.forEach(cancelAnimationFrame);
+      if (busyTimer.current) clearTimeout(busyTimer.current);
+    },
+    []
+  );
 
   return (
     <section
@@ -45,7 +65,7 @@ export function ClaimSection() {
       ref={ref}
       className={`relative flex min-h-[100svh] w-full flex-col overflow-hidden bg-cream lg:block ${play ? "play3" : ""}`}
     >
-      <div className="c-copy relative z-20 px-5 pt-24 sm:px-8 sm:pt-28">
+      <Reveal className="c-copy relative z-20 px-5 pt-24 sm:px-8 sm:pt-28">
         <h2 className="text-[clamp(2rem,8.5vw,3rem)] leading-[1.04] font-extrabold tracking-[-0.02em] text-navy uppercase lg:text-[clamp(2.25rem,8svh,5rem)]">
           Repay <span className="text-orange">$SB.</span>
           <br />
@@ -54,15 +74,30 @@ export function ClaimSection() {
         <p className="mt-4 max-w-[26ch] text-[clamp(0.95rem,4vw,1.15rem)] font-semibold text-navy/90 lg:text-[clamp(1rem,2.5svh,1.4rem)]">
           Return what you borrowed and reclaim your original memecoin.
         </p>
-      </div>
+      </Reveal>
 
       <div className="c-stage relative z-10 mt-2">
-        <div className="station">
+        <div
+          className="station"
+          role="button"
+          tabIndex={0}
+          aria-label="Repay $SB and reclaim your memecoin"
+          onClick={replay}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              replay();
+            }
+          }}
+          style={{ cursor: "pointer" }}
+        >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={asset("/assets/claim-station.webp")}
             alt="$SB claim station"
             className="h-full w-full object-contain select-none"
+            loading="lazy"
+            decoding="async"
           />
           <span className="cs-streak" aria-hidden />
           <span className="cs-coin" aria-hidden>
@@ -97,6 +132,8 @@ export function ClaimSection() {
             <img
               src={asset("/assets/bear-claim-clerk.webp")}
               alt="The $SB bear clerk holding a gold key and a claim ticket"
+              loading="lazy"
+              decoding="async"
             />
             <span className="cs-med" />
           </motion.div>
@@ -106,7 +143,7 @@ export function ClaimSection() {
         <div className="c-cue">
           <button
             type="button"
-            onClick={restart}
+            onClick={replay}
             aria-label="Replay: watch the memecoin claim"
             className="inline-flex cursor-pointer items-center gap-2.5 whitespace-nowrap text-[11px] font-bold uppercase tracking-[0.22em] text-navy/85 transition-colors hover:text-navy lg:text-[13px]"
           >

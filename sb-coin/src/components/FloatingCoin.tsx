@@ -43,7 +43,7 @@ export function FloatingCoin({ coin, hidden, onFeed, register }: Props) {
       await controls.start({ y: 0, transition: { duration: 0.25, ease: "easeOut" } });
       if (cancelled) return;
       controls.start({
-        y: [0, -coin.amplitude * 8, 0],
+        y: [0, -coin.amplitude, 0],
         transition: {
           duration: coin.duration,
           delay: coin.delay,
@@ -67,7 +67,7 @@ export function FloatingCoin({ coin, hidden, onFeed, register }: Props) {
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
       animate={controls}
-      whileHover={{ scale: 1.08 }}
+      whileHover={{ scale: 1.07 }}
       whileTap={{ scale: 0.98 }}
       transition={{ type: "spring", stiffness: 320, damping: 22 }}
       className="coin-pos pointer-events-auto absolute cursor-pointer rounded-full focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-navy"
@@ -92,16 +92,19 @@ export function FloatingCoin({ coin, hidden, onFeed, register }: Props) {
       <span
         aria-hidden
         className="absolute -inset-[18%] rounded-full blur-[16px] transition-opacity duration-300"
-        style={{ background: coin.glow, opacity: hovered ? 0.7 : 0 }}
+        style={{ background: coin.glow, opacity: hovered ? 0.85 : 0 }}
       />
       {/* Zoomed past the button so the canvas's transparent padding doesn't
-          shrink the visible coin — `size` stays the true diameter. */}
+          shrink the visible coin — `size` stays the true diameter. A gentle
+          brightness lift on hover reads as "alive" without a per-frame filter. */}
       <Image
         src={asset(coin.src)}
         alt={coin.alt}
         width={1536}
         height={1024}
-        className="absolute top-1/2 left-1/2 h-auto w-[var(--zoom)] max-w-none -translate-x-1/2 -translate-y-1/2 select-none"
+        priority
+        className="absolute top-1/2 left-1/2 h-auto w-[var(--zoom)] max-w-none -translate-x-1/2 -translate-y-1/2 select-none transition-[filter] duration-300"
+        style={{ filter: hovered ? "brightness(1.08)" : "brightness(1)" }}
       />
     </motion.button>
   );

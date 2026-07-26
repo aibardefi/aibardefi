@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useInView } from "framer-motion";
 import { asset } from "@/lib/asset";
+import { Reveal } from "@/components/Reveal";
 
 /**
  * The live $SB token contract address. Leave as an empty string until the
@@ -42,15 +44,15 @@ type Yard = {
 
 const YARD: Yard[] = [
   { src: "/assets/sb-flag.webp", x: 79, y: 23, w: 14, ar: "245/186", anim: "flag", dur: 4.5, delay: 0, z: 2, org: "left center", crop: true },
-  { src: "/assets/little-john-ranger.webp", x: 63, y: 46, w: 54, ar: "1536/1024", anim: "king", dur: 7, delay: 0, z: 3, king: true },
+  { src: "/assets/little-john-ranger.webp", x: 63, y: 46, w: 54, ar: "1536/1024", anim: "king", dur: 11, delay: 0, z: 3, king: true },
   { src: "/assets/boombox.webp", x: 41.3, y: 69, w: 8.6, ar: "210/188", anim: "bass", dur: 0.65, delay: 0.2, z: 4, crop: true },
   { src: "/assets/pigeon-left.webp", x: 23.3, y: 82.4, w: 16.5, ar: "1536/1024", anim: "peck", dur: 3.2, delay: 0.4, z: 5 },
   { src: "/assets/pepe-frog.webp", x: 32.6, y: 82, w: 16.3, ar: "1536/1024", anim: "bounce", dur: 2.4, delay: 0.9, z: 5 },
   { src: "/assets/cool-doge.webp", x: 41.9, y: 83.6, w: 22.3, ar: "1536/1024", anim: "bob", dur: 2.8, delay: 0.2, z: 6, shine: true },
-  { src: "/assets/shiba-pup.webp", x: 49, y: 86.1, w: 18.5, ar: "1536/1024", anim: "bounce", dur: 2.1, delay: 1.3, z: 6 },
+  { src: "/assets/shiba-pup.webp", x: 49, y: 86.1, w: 18.5, ar: "1536/1024", anim: "bounce", dur: 3.0, delay: 1.3, z: 6 },
   { src: "/assets/penguin.webp", x: 72, y: 85.5, w: 16.5, ar: "1536/1024", anim: "wobble", dur: 2.6, delay: 0.6, z: 6 },
   { src: "/assets/galaxy-cat.webp", x: 79.8, y: 81.5, w: 15.2, ar: "1536/1024", anim: "sway", dur: 3.4, delay: 1.1, z: 6, sparkle: true },
-  { src: "/assets/tendies-nugget.webp", x: 86.4, y: 81.5, w: 15.9, ar: "1536/1024", anim: "wiggle", dur: 1.9, delay: 0.5, z: 6 },
+  { src: "/assets/tendies-nugget.webp", x: 86.4, y: 81.5, w: 15.9, ar: "1536/1024", anim: "wiggle", dur: 2.8, delay: 0.5, z: 6 },
   { src: "/assets/bear-king-on-throne.webp", x: 92, y: 75, w: 19, ar: "1536/1024", anim: "bounce", dur: 3, delay: 1.6, z: 6 },
   { src: "/assets/pigeon-right.webp", x: 94.5, y: 90, w: 12.3, ar: "1536/1024", anim: "peck", dur: 2.9, delay: 1.4, z: 7 },
 ];
@@ -121,9 +123,14 @@ function ContractAddress() {
 }
 
 export function MemeYardSection() {
+  const ref = useRef<HTMLElement>(null);
+  // The whole crowd's idle loops only run while the yard is on screen, so the
+  // compositor isn't animating a dozen characters the user can't see.
+  const inView = useInView(ref, { amount: 0.2 });
+
   return (
-    <section id="yard">
-      <div className="y-copy">
+    <section id="yard" ref={ref} className={inView ? "live" : ""}>
+      <Reveal className="y-copy">
         <h2 className="text-[clamp(2.1rem,9vw,3.2rem)] leading-[1.02] font-extrabold tracking-[-0.02em] text-navy uppercase lg:text-[clamp(2.5rem,7svh,4.6rem)]">
           The Meme
           <br />
@@ -156,7 +163,7 @@ export function MemeYardSection() {
             );
           })}
         </div>
-      </div>
+      </Reveal>
 
       <div className="y-stage" aria-hidden>
         {YARD.map((c, i) => (
@@ -170,7 +177,7 @@ export function MemeYardSection() {
               style={{ "--dur": `${c.dur}s`, "--delay": `${c.delay}s`, transformOrigin: c.org || "bottom center" } as React.CSSProperties}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={asset(c.src)} alt="" />
+              <img src={asset(c.src)} alt="" loading="lazy" decoding="async" />
               {c.king && <span className="king-med" />}
               {c.shine && <span className="p4shine" />}
               {c.sparkle && <span className="p4sparkle" />}
