@@ -2,14 +2,14 @@ import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
 
-const geist = Geist({
-  variable: "--font-geist-sans",
+const sb = Geist({
+  variable: "--font-sb",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "website1",
-  description: "A new website.",
+  title: "$SB — Kapibara Blyatovich",
+  description: "Lock memes. Borrow the meme.",
 };
 
 export const viewport: Viewport = {
@@ -24,8 +24,10 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={geist.variable}>
-      <body className="bg-background text-foreground antialiased">
+    <html lang="en" className={sb.variable}>
+      {/* Ground and colour come from globals.css, which owns the shared
+          palette; the old Tailwind colour classes no longer resolve. */}
+      <body>
         {children}
       </body>
     </html>

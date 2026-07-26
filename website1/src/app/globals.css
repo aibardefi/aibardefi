@@ -1,30 +1,331 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ---------------------------------------------------------------------------
+   Shared identity for the whole site.
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+   Only genuinely global things live here: colour tokens, the motion
+   vocabulary, the sticker display type, and the page shell every section
+   reuses. Everything specific to one section lives in that section's CSS
+   module, which Next scopes for us — the seven sections were authored
+   independently and all reuse names like .stage and .middle, so scoping is
+   what keeps them from colliding.
+   --------------------------------------------------------------------------- */
+
+:root {
+  --ink: #12110c;
+  --cream: #f7edd9;
+  --fur: #8c5a33;
+  --fur-dark: #6f4526;
+  --vault: #1d1c18;
+  --gold: #d9a020;
+  --gold-deep: #b07d14;
+  --stamp: #c4392b;
+  --cheek: #e8635e;
+
+  /* One background for every page, per the brief. */
+  --ground: #e7e4dc;
+  --ground-2: #dcd8ce;
+  --text: var(--ink);
+  --text-dim: #4f4b42;
+
+  --display: var(--font-sb), ui-sans-serif, system-ui, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+
+  /* Motion vocabulary. Every section pulls easings from here so the whole
+     site accelerates and settles the same way. */
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --spring-big: cubic-bezier(0.34, 1.8, 0.5, 1);
+  --swift: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --heavy: cubic-bezier(0.5, 0, 0.75, 0);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --ground: #16150f;
+    --ground-2: #1f1d15;
+    --text: var(--cream);
+    --text-dim: #9a9488;
   }
 }
 
-html,
-body {
-  background: var(--background);
-  color: var(--foreground);
+* {
+  box-sizing: border-box;
 }
 
-/* No horizontal scrollbar at any breakpoint. */
 html {
   overflow-x: hidden;
+  /* Each section is a screen, so scrolling settles on whole screens. */
+  scroll-snap-type: y proximity;
+}
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--text);
+  font-family: var(--display);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --------------------------------------------------------------------------
+   The shell every section reuses.
+   -------------------------------------------------------------------------- */
+
+.stage {
+  position: relative;
+  min-height: 100dvh;
+  scroll-snap-align: start;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: clamp(0.35rem, 1.4vh, 0.9rem);
+  padding: max(1.1rem, env(safe-area-inset-top)) 1.25rem
+    max(1.1rem, env(safe-area-inset-bottom));
+  background: radial-gradient(
+    120% 55% at 50% 100%,
+    var(--ground-2) 0%,
+    transparent 60%
+  );
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.eyebrow,
+.count {
+  font-size: clamp(0.6rem, 1.6vw, 0.72rem);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.count {
+  font-variant-numeric: tabular-nums;
+}
+
+.head {
+  text-align: center;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(1.5rem, 4.2vw, 3.2rem);
+}
+
+/* Sticker-outline display type: cream fill over a fat black stroke, lifted
+   from the mascot's own outline art. */
+.sticker {
+  position: relative;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 0.92;
+  color: var(--cream);
+  text-wrap: balance;
+}
+.sticker::before {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  -webkit-text-stroke: 0.14em var(--ink);
+  color: var(--ink);
+  z-index: -1;
+}
+
+.middle {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 0;
+}
+
+.bottom {
+  display: grid;
+  justify-items: center;
+  gap: 0.55rem;
+}
+
+.hint {
+  font-size: clamp(0.68rem, 2vw, 0.8rem);
+  font-weight: 700;
+  color: var(--text-dim);
+  min-height: 1.2em;
+  text-align: center;
+}
+
+/* Speech bubble, tail bottom-left by default. */
+.bubble {
+  position: absolute;
+  padding: 0.55rem 0.8rem;
+  background: var(--cream);
+  color: var(--ink);
+  border: 4px solid var(--ink);
+  border-radius: 1.1rem 1.1rem 1.1rem 0.2rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: clamp(0.72rem, 2.2vw, 0.95rem);
+  line-height: 1.05;
+  max-width: 13ch;
+  opacity: 0;
+  z-index: 4;
+  transform: translateY(6px) rotate(-3deg) scale(0.9);
+  transition: opacity 200ms ease, transform 320ms var(--spring);
+}
+.bubble.show {
+  opacity: 1;
+  transform: translateY(0) rotate(-3deg) scale(1);
+}
+
+/* Sticker button: a disc with a label underneath. */
+.sbtn {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  display: grid;
+  justify-items: center;
+  gap: 0.3rem;
+}
+.disc {
+  width: clamp(54px, 12.5vw, 70px);
+  height: clamp(54px, 12.5vw, 70px);
+  border-radius: 50%;
+  border: 4px solid var(--ink);
+  background: var(--disc-bg, var(--cream));
+  display: grid;
+  place-items: center;
+  box-shadow: 0 4px 0 0 var(--ink);
+  transition: transform 130ms ease, box-shadow 130ms ease;
+}
+.disc svg {
+  width: 60%;
+  height: 60%;
+  display: block;
+}
+.sbtn:hover:not(:disabled) .disc {
+  transform: translateY(-3px);
+  box-shadow: 0 7px 0 0 var(--ink);
+}
+.sbtn:active:not(:disabled) .disc {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 0 var(--ink);
+}
+.sbtn:focus-visible {
+  outline: none;
+}
+.sbtn:focus-visible .disc {
+  outline: 3px solid var(--stamp);
+  outline-offset: 3px;
+}
+.sbtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.slabel {
+  font-weight: 900;
+  font-size: clamp(0.5rem, 1.5vw, 0.62rem);
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.cue {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.cue span {
+  display: inline-block;
+  animation: nudge 1.9s ease-in-out infinite;
+}
+@keyframes nudge {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(4px);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Ambient life. Nothing should ever be perfectly still — a static mascot
+   reads as a placed image, a breathing one reads as a character. Deliberately
+   tiny: ~1% scale over four seconds.
+   -------------------------------------------------------------------------- */
+
+.breathe {
+  transform-box: view-box;
+  transform-origin: 50% 100%;
+  animation: breathe 4.2s ease-in-out infinite;
+}
+@keyframes breathe {
+  0%,
+  100% {
+    transform: scale(1, 1);
+  }
+  50% {
+    transform: scale(1.012, 0.988);
+  }
+}
+
+.grounded {
+  filter: drop-shadow(0 10px 8px rgba(18, 17, 12, 0.16));
+}
+
+/* --------------------------------------------------------------------------
+   Section entrance. Four elements on one shared curve, each overlapping the
+   last by about half its duration — that overlap is what reads as authored
+   rather than as a page load.
+   -------------------------------------------------------------------------- */
+
+@keyframes entUp {
+  from {
+    opacity: 0;
+    transform: translateY(var(--ent-y, 14px)) scale(var(--ent-s, 1));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes entFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.ent {
+  opacity: 0;
+}
+.entGo {
+  animation: entUp 760ms cubic-bezier(0.22, 0.9, 0.3, 1) both;
+}
+.entGoFade {
+  animation: entFade 620ms ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+  .ent {
+    opacity: 1;
+  }
+  html {
+    scroll-snap-type: none;
+  }
 }

@@ -1,0 +1,98 @@
+.middle {
+  place-items: end center;
+}
+
+.mascot {
+  /* Capped in viewport units, not percentages: a percentage height against an
+     indefinite-height grid item does not resolve, so the artwork's intrinsic
+     height would size the track and push the coins off-screen. The cap leaves
+     headroom for the ~1.3x he reaches when fully fed. */
+  height: auto;
+  width: auto;
+  min-height: 0;
+  max-height: min(41dvh, 400px);
+  max-width: 84vw;
+  object-fit: contain;
+  display: block;
+  transform-origin: 50% 100%;
+  transition: transform 460ms var(--spring);
+  filter: drop-shadow(0 12px 10px rgba(0, 0, 0, 0.18));
+}
+
+.readout {
+  position: absolute;
+  top: 0;
+  right: 0;
+  text-align: right;
+  pointer-events: none;
+  z-index: 2;
+}
+.label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.value {
+  font-weight: 900;
+  font-size: clamp(1.6rem, 5.5vw, 3rem);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--gold);
+  -webkit-text-stroke: 0.055em var(--ink);
+}
+
+.bubble {
+  top: 2%;
+  left: 0;
+}
+
+.rail {
+  display: flex;
+  gap: clamp(0.5rem, 2.4vw, 1.1rem);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.reset {
+  background: none;
+  border: 0;
+  color: var(--text-dim);
+  font: inherit;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  padding: 0.5rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms ease;
+}
+.reset.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+.reset:focus-visible {
+  outline: 3px solid var(--stamp);
+  outline-offset: 2px;
+}
+
+/* The coin in flight. Two nested elements so each axis gets its own easing. */
+.flyer {
+  position: fixed;
+  border-radius: 50%;
+  border: 4px solid var(--ink);
+  display: grid;
+  place-items: center;
+  z-index: 50;
+  pointer-events: none;
+}
+.flyer svg {
+  width: 58%;
+  height: 58%;
+  display: block;
+}
