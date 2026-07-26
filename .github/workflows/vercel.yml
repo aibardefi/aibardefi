@@ -1,0 +1,72 @@
+name: Deploy $SB site to Vercel
+
+# Vercel is unreachable from the Claude session that authors this repo — the
+# egress gateway answers 403 to CONNECT api.vercel.com — but a GitHub runner
+# has open outbound access, so the deploy happens here instead.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "website1/**"
+      - ".github/workflows/vercel.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: vercel
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: website1/package-lock.json
+
+      - name: Fail early if the token is missing
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          if [ -z "$VERCEL_TOKEN" ]; then
+            echo "::error::VERCEL_TOKEN secret is not set. Add it at" \
+                 "https://github.com/aibardefi/aibardefi/settings/secrets/actions/new"
+            exit 1
+          fi
+
+      - run: npm ci
+        working-directory: website1
+
+      # No base path: this one is served from the root of a Vercel domain,
+      # unlike the GitHub Pages copy which lives under /aibardefi/website1.
+      - run: npm run build
+        working-directory: website1
+
+      # The directory name becomes the Vercel project name, so the export is
+      # staged under the existing project's name and the CLI links to it rather
+      # than creating a second project.
+      - name: Stage the export under the project name
+        run: |
+          set -euo pipefail
+          test -f website1/out/index.html
+          rm -rf sb-kapibara
+          cp -r website1/out sb-kapibara
+
+      - name: Deploy to production
+        id: deploy
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          set -euo pipefail
+          npx --yes vercel@latest deploy sb-kapibara \
+            --prod --yes --token "$VERCEL_TOKEN" | tee vercel-url.txt
+          echo "url=$(tail -n 1 vercel-url.txt)" >> "$GITHUB_OUTPUT"
+
+      - name: Report the live URL
+        run: |
+          echo "### $SB site deployed" >> "$GITHUB_STEP_SUMMARY"
+          echo "${{ steps.deploy.outputs.url }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "LIVE URL: ${{ steps.deploy.outputs.url }}"
