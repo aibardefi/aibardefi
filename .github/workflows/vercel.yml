@@ -45,15 +45,26 @@ jobs:
       - run: npm run build
         working-directory: website1
 
-      # The directory name becomes the Vercel project name, so the export is
-      # staged under the existing project's name and the CLI links to it rather
-      # than creating a second project.
-      - name: Stage the export under the project name
+      # Two things are load-bearing about this shape:
+      #
+      #  - the directory is named after the project, which is how the CLI links
+      #    to the existing sb-kapibara rather than creating a second one;
+      #  - the export sits in a website1/ subfolder, because the project's Root
+      #    Directory setting is "website1" and Vercel resolves that path inside
+      #    whatever is uploaded. Uploading the built files directly failed with
+      #    "the provided path .../sb-kapibara/website1 does not exist".
+      #
+      # There is no package.json in the uploaded tree, so Vercel detects no
+      # framework and serves the export as static files instead of rebuilding
+      # it — the build already happened in the step above.
+      - name: Stage the export where the project expects it
         run: |
           set -euo pipefail
           test -f website1/out/index.html
           rm -rf sb-kapibara
-          cp -r website1/out sb-kapibara
+          mkdir -p sb-kapibara/website1
+          cp -r website1/out/. sb-kapibara/website1/
+          test -f sb-kapibara/website1/index.html
 
       - name: Deploy to production
         id: deploy
