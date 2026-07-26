@@ -79,7 +79,7 @@ export function JoinSection() {
 
       <div className="head" data-ent="up" data-ent-delay="90">
         <h1 className="sticker">
-          Come in. Bring bags.
+          Come in. Bring <span className="hot">bags</span>.
         </h1>
       </div>
 

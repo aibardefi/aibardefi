@@ -62,6 +62,11 @@
 
   --linen: #5b7b93;
 
+  /* Headline pair: navy carries the line, tangerine picks out the one word
+     that word is actually about. */
+  --navy: #1f3a68;
+  --tangerine: #ef7d1f;
+
   /* One background for every page, per the brief. The second value only feeds
      the radial wash at the foot of each screen — kept close to the first now,
      because a full shade below it painted a visible grey band across the bottom
@@ -163,10 +168,17 @@ h1 {
   text-transform: uppercase;
   letter-spacing: -0.02em;
   line-height: 0.92;
-  color: var(--cream);
   text-wrap: balance;
+  color: var(--navy);
   -webkit-text-stroke: 0.14em var(--ink);
   paint-order: stroke fill;
+}
+
+/* The accented word inside a headline. Stroke and paint order are inherited,
+   so only the fill changes and the ink outline stays continuous across the
+   join. */
+.hot {
+  color: var(--tangerine);
 }
 
 .middle {

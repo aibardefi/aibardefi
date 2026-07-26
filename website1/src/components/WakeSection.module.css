@@ -26,12 +26,6 @@
   overflow: hidden;
 }
 
-/* The bedroom's own coral rather than the shared cream: this screen already
-   spends its green on the verdict and the lamp. */
-.headline {
-  color: var(--furniture);
-}
-
 .bub {
   top: 4%;
   left: 2%;

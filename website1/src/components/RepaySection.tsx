@@ -214,7 +214,7 @@ export function RepaySection() {
 
       <div className="head" data-ent="up" data-ent-delay="90">
         <h1 className="sticker">
-          Repay $SB. Take them back.
+          Repay <span className="hot">$SB</span>. Take them back.
         </h1>
       </div>
 

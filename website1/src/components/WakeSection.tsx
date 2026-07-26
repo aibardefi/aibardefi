@@ -105,8 +105,8 @@ export function WakeSection() {
       </div>
 
       <div className="head" data-ent="up" data-ent-delay="90">
-        <h1 className={`sticker ${s.headline}`}>
-          Why $SB exists.
+        <h1 className="sticker">
+          Why <span className="hot">$SB</span> exists.
         </h1>
       </div>
 

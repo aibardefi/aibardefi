@@ -97,7 +97,7 @@ export function StorySection() {
 
       <div className="head" data-ent="up" data-ent-delay="90">
         <h1 className="sticker">
-          He tried everything else first.
+          He tried <span className="hot">everything else</span> first.
         </h1>
       </div>
 

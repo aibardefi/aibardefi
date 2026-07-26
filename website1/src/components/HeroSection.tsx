@@ -167,7 +167,8 @@ export function HeroSection() {
 
       <div className="head" data-ent="up" data-ent-delay="90">
         <h1 className="sticker">
-          Lock memes. Borrow the meme.
+          Lock <span className="hot">memes</span>. Borrow the{" "}
+          <span className="hot">meme</span>.
         </h1>
       </div>
 

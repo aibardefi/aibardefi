@@ -354,7 +354,7 @@ export function VaultSection() {
 
       <div className="head" data-ent="up" data-ent-delay="90">
         <h1 className="sticker">
-          Lock them. Borrow $SB.
+          Lock them. Borrow <span className="hot">$SB</span>.
         </h1>
       </div>
 
