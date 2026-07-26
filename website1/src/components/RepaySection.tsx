@@ -32,13 +32,14 @@ export function RepaySection() {
   const doorLRef = useRef<SVGRectElement>(null);
   const doorRRef = useRef<SVGRectElement>(null);
   const bubbleTimer = useRef<number | undefined>(undefined);
+  const releaseTimers = useRef<number[]>([]);
   const dragging = useRef(false);
 
   const [p, setP] = useState(0);
   const [freed, setFreed] = useState(false);
   const [snap, setSnap] = useState(false);
   const [nope, setNope] = useState(false);
-  const [hint, setHint] = useState("Drag all the way to repay");
+  const [hint, setHint] = useState("Drag the handle right to repay");
 
   const say = useCallback((text: string) => {
     const el = bubbleRef.current;
@@ -80,7 +81,7 @@ export function RepaySection() {
     );
 
     insideRef.current?.querySelectorAll(`.${s.memeOut}`).forEach((m, i) => {
-      window.setTimeout(() => {
+      releaseTimers.current.push(window.setTimeout(() => {
         (m as SVGGElement).animate(
           [
             { transform: "translateY(0) scale(1)", opacity: 1 },
@@ -89,7 +90,7 @@ export function RepaySection() {
           ],
           { duration: 1200, easing: "cubic-bezier(.4,0,.6,1)", fill: "forwards" }
         );
-      }, 760 + i * 150);
+      }, 760 + i * 150));
     });
   }, [say]);
 
@@ -151,11 +152,20 @@ export function RepaySection() {
     );
   }, [p, freed]);
 
-  useEffect(() => () => window.clearTimeout(bubbleTimer.current), []);
+  useEffect(
+    () => () => {
+      window.clearTimeout(bubbleTimer.current);
+      releaseTimers.current.forEach(clearTimeout);
+    },
+    []
+  );
 
   // Cancelling the door and meme animations is what actually rebuilds the
   // vault — the state alone would leave it standing open and empty.
   const rearm = useCallback(() => {
+    releaseTimers.current.forEach(clearTimeout);
+    releaseTimers.current = [];
+    window.clearTimeout(bubbleTimer.current);
     [doorLRef.current, doorRRef.current].forEach((d) =>
       d?.getAnimations().forEach((a) => a.cancel())
     );
@@ -170,7 +180,7 @@ export function RepaySection() {
     setFreed(false);
     setSnap(false);
     setP(0);
-    setHint("Drag all the way to repay");
+    setHint("Drag the handle right to repay");
   }, []);
 
   useReplay(ref, rearm, () => dragging.current);
@@ -230,15 +240,20 @@ export function RepaySection() {
               <rect x="122" y="130" width="376" height="262" rx="16" fill="var(--safe-deep)" />
 
               <g ref={insideRef}>
+                {/* Outer group holds the place in the vault, inner one flies.
+                    On one element the animation replaced the attribute and every
+                    meme took off from the top-left corner instead of from where
+                    it was sitting. */}
                 {COINS.map((coin, i) => (
                   <g
                     key={coin.ticker}
-                    className={s.memeOut}
                     transform={`translate(${INSIDE_AT[i].x} ${INSIDE_AT[i].y})`}
                   >
-                    <circle r="30" fill={coin.bg} stroke="var(--ink)" strokeWidth="6" />
-                    <g transform="scale(0.46) translate(-50 -50)" fill={coin.glyphOn}>
-                      {coin.glyph}
+                    <g className={s.memeOut}>
+                      <circle r="30" fill={coin.bg} stroke="var(--ink)" strokeWidth="6" />
+                      <g transform="scale(0.46) translate(-50 -50)" fill={coin.glyphOn}>
+                        {coin.glyph}
+                      </g>
                     </g>
                   </g>
                 ))}

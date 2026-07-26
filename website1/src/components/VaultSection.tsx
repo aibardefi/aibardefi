@@ -62,10 +62,8 @@ export function VaultSection() {
   // re-sets `pulled` in one handler, which React batches into no DOM change at
   // all, so on a second pull the handle would never move again.
   const [pullRun, setPullRun] = useState(0);
-  // Separate from `pulled`: he arrives once the money is out, not the instant
-  // the handle moves. Tied to `pulled` he stood there through the whole lock-up
-  // and the joke — turning up to take credit — landed before the payout did.
-  const [mascotIn, setMascotIn] = useState(false);
+  /** How many memes have made it into the vault. Drives the chamber filling. */
+  const [landed, setLanded] = useState(0);
 
   const setRefs = useCallback(
     (el: HTMLElement | null) => {
@@ -96,12 +94,13 @@ export function VaultSection() {
   }, []);
 
   const dropCoins = useCallback(() => {
-    const coins = feedRef.current?.querySelectorAll(`.${s.feedcoin}`);
+    const coins = feedRef.current?.querySelectorAll(`.${s.drop}`);
     coins?.forEach((c, i) => {
       after(195 + i * 104, () => {
         const el = c as SVGGElement;
         if (prefersReducedMotion()) {
           el.style.opacity = "0";
+          setLanded((n) => Math.max(n, i + 1));
           return;
         }
         // Funnel mouth spans 212..448 but its neck is only 288..372, so a coin
@@ -109,8 +108,13 @@ export function VaultSection() {
         // sloped wall instead of into the hole. Each one slides in along the
         // wall to the neck: barely any drift while it is still above the mouth,
         // then most of it during the run down the slope.
+        //
+        // These offsets are relative, which only works because this element
+        // carries no position of its own — its parent holds the translate. Put
+        // both on one element and the animation replaces the attribute, which
+        // is what used to fling every coin over to the lever and drop it there.
         const dx = FUNNEL_NECK_X - (FEED_AT[i].x + FEED_COIN_R);
-        el.animate(
+        const fall = el.animate(
           [
             { transform: "translate(0,0) scale(1)", opacity: 1 },
             {
@@ -130,6 +134,9 @@ export function VaultSection() {
           ],
           { duration: 598, easing: "cubic-bezier(.42,0,.7,.35)", fill: "forwards" }
         );
+        // The coin inside the vault appears as this one arrives, so the chamber
+        // fills a coin at a time instead of being full before you touched it.
+        fall.onfinish = () => setLanded((n) => Math.max(n, i + 1));
       });
     });
   }, [after]);
@@ -137,7 +144,7 @@ export function VaultSection() {
   /** Gold spraying out of the chute and piling in two tiers on the floor. */
   const payOut = useCallback(() => {
     for (let i = 0; i < 12; i++) {
-      after(1820 + i * 72, () => {
+      after(2250 + i * 72, () => {
         const host = payoutRef.current;
         if (!host) return;
 
@@ -211,10 +218,13 @@ export function VaultSection() {
       setBorrowed(0);
       setSpendOpen(false);
       setSpent(false);
-      setMascotIn(false);
+      setLanded(0);
       if (payoutRef.current) payoutRef.current.innerHTML = "";
       bubbleRef.current?.classList.remove("show");
-      feedRef.current?.querySelectorAll(`.${s.feedcoin}`).forEach((c) => {
+      // Only the fall. getAnimations() also hands back the CSS bob, and
+      // cancelling a CSSAnimation through the API detaches it permanently —
+      // the coins stopped bobbing for good after one scroll-away.
+      feedRef.current?.querySelectorAll(`.${s.drop}`).forEach((c) => {
         const el = c as SVGGElement;
         el.getAnimations().forEach((a) => a.cancel());
         el.style.opacity = "";
@@ -238,21 +248,18 @@ export function VaultSection() {
     dropCoins();
 
     // The jolt lands with the padlock, not the door — that's the heavy beat.
-    after(1040, () => {
+    after(1560, () => {
       if (prefersReducedMotion()) return;
       setJolt(true);
       after(416, () => setJolt(false));
     });
 
     payOut();
-    after(1820, rollCounter);
+    after(2250, rollCounter);
 
-    after(2600, () => {
-      setMascotIn(true);
-      say("not my problem now.");
-    });
+    after(3100, () => say("buy whatever you want."));
 
-    after(3120, () => {
+    after(3750, () => {
       setSpendOpen(true);
       setHint("Now go spend it.");
       busy.current = false;
@@ -334,7 +341,7 @@ export function VaultSection() {
 
         <div className={s.wrap}>
           <div className={`bubble ${s.bubble}`} ref={bubbleRef}>
-            not my problem now.
+            buy whatever you want.
           </div>
 
           <svg
@@ -344,15 +351,25 @@ export function VaultSection() {
             aria-label="A machine that locks memecoins and pays out $SB"
           >
             <g ref={feedRef}>
+              {/* Three layers, one job each: the outer group holds the coin's
+                  place above the hopper, the middle one falls, the inner one
+                  bobs. Stacking any two of those on one element means the
+                  animation replaces the position outright. */}
               {COINS.map((coin, i) => (
                 <g
                   key={coin.ticker}
-                  className={`${s.feedcoin} ${idle ? s.bob : ""}`}
                   transform={`translate(${FEED_AT[i].x} ${FEED_AT[i].y})`}
                 >
-                  <circle r="19" cx="19" cy="19" fill={coin.bg} stroke="#12110c" strokeWidth="4" />
-                  <g transform="translate(19 19) scale(0.3) translate(-50 -50)" fill={coin.glyphOn}>
-                    {coin.glyph}
+                  <g className={s.drop}>
+                    <g
+                      className={`${s.feedcoin} ${idle ? s.bob : ""}`}
+                      style={{ animationDelay: `${-0.4 * i}s` }}
+                    >
+                      <circle r="19" cx="19" cy="19" fill={coin.bg} stroke="#12110c" strokeWidth="4" />
+                      <g transform="translate(19 19) scale(0.3) translate(-50 -50)" fill={coin.glyphOn}>
+                        {coin.glyph}
+                      </g>
+                    </g>
                   </g>
                 </g>
               ))}
@@ -378,16 +395,23 @@ export function VaultSection() {
                 fillOpacity="0.55"
               />
 
-              <g opacity="0.9">
-                {COINS.map((coin, i) => (
-                  <g key={coin.ticker} transform={`translate(${INSIDE_AT[i].x} ${INSIDE_AT[i].y})`}>
+              {/* Each one appears as its falling counterpart arrives. Rendered
+                  unconditionally before, which left the vault looking full
+                  before the lever had been touched — invisible behind the old
+                  dark chamber, obvious behind glass. */}
+              {COINS.map((coin, i) => (
+                <g
+                  key={coin.ticker}
+                  transform={`translate(${INSIDE_AT[i].x} ${INSIDE_AT[i].y})`}
+                >
+                  <g className={`${s.inside} ${landed > i ? s.insideIn : ""}`}>
                     <circle r="21" fill={coin.bg} stroke="#12110c" strokeWidth="4" />
                     <g transform="scale(0.33) translate(-50 -50)" fill={coin.glyphOn}>
                       {coin.glyph}
                     </g>
                   </g>
-                ))}
-              </g>
+                </g>
+              ))}
 
               <rect
                 className={s.door}
@@ -537,7 +561,7 @@ export function VaultSection() {
 
             {/* Slide-in on the group, breathing on the image inside it —
                 one element cannot carry both transforms. */}
-            <g className={`${s.mascot} ${mascotIn ? s.mascotIn : ""}`}>
+            <g className={s.mascot}>
               <image
                 className={s.mascotBreath}
                 href={MASCOT_SRC}

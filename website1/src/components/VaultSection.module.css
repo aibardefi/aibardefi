@@ -65,18 +65,35 @@
 
 /* ---------------- machine parts ---------------- */
 
+/* The layer that falls. Carries no position of its own — its parent does —
+   so its keyframes can be relative offsets without wiping the placement. */
+.drop {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
 .feedcoin {
   transform-box: fill-box;
   transform-origin: 50% 50%;
 }
+
+/* A coin arriving in the chamber. */
+.inside {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  opacity: 0;
+  transform: scale(0.4);
+}
+.insideIn {
+  opacity: 0.95;
+  transform: none;
+  transition: opacity 200ms ease, transform 420ms var(--spring-big);
+}
 .bob {
   animation: bob 2.4s ease-in-out infinite;
 }
-.bob:nth-of-type(2) { animation-delay: -0.4s; }
-.bob:nth-of-type(3) { animation-delay: -0.8s; }
-.bob:nth-of-type(4) { animation-delay: -1.2s; }
-.bob:nth-of-type(5) { animation-delay: -1.6s; }
-.bob:nth-of-type(6) { animation-delay: -2s; }
+/* Stagger comes in per-coin from the markup: each .bob is now an only child of
+   its own wrapper, so nth-of-type would match every one of them. */
 @keyframes bob {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-7px); }
@@ -124,7 +141,7 @@
   transform: scaleX(0);
   /* A shutter has mass: slow to break away, fast across, then it arrives
      rather than stopping dead. */
-  transition: transform 598ms cubic-bezier(0.5, 0.05, 0.25, 1) 0.91s;
+  transition: transform 598ms cubic-bezier(0.5, 0.05, 0.25, 1) 1.45s;
 }
 .pulled .door {
   transform: scaleX(1);
@@ -135,8 +152,8 @@
   transform-origin: 50% 0%;
   opacity: 0;
   transform: translateY(-46px) scale(0.7);
-  transition: opacity 156ms linear 1.014s,
-    transform 390ms cubic-bezier(0.34, 1.9, 0.64, 1) 1.014s;
+  transition: opacity 156ms linear 1.55s,
+    transform 390ms cubic-bezier(0.34, 1.9, 0.64, 1) 1.55s;
 }
 .pulled .padlock {
   opacity: 1;
@@ -148,7 +165,7 @@
   transform-origin: 50% 100%;
 }
 .pulled .shell {
-  animation: shudder 806ms ease-in-out 1.3s;
+  animation: shudder 806ms ease-in-out 1.75s;
 }
 /* Decaying, not three even swings — a machine that has taken a hit settles. */
 @keyframes shudder {
@@ -163,7 +180,7 @@
 
 .chuteGlow {
   opacity: 0;
-  transition: opacity 338ms ease 1.69s;
+  transition: opacity 338ms ease 2.15s;
 }
 .pulled .chuteGlow {
   opacity: 1;
@@ -172,14 +189,14 @@
 /* Both labels start dim — nothing is locked and nothing has paid out yet. */
 .labelLocked {
   opacity: 0.3;
-  transition: opacity 338ms ease 1.17s;
+  transition: opacity 338ms ease 1.6s;
 }
 .pulled .labelLocked {
   opacity: 1;
 }
 .labelOut {
   opacity: 0.3;
-  transition: opacity 338ms ease 1.69s;
+  transition: opacity 338ms ease 2.15s;
 }
 .pulled .labelOut {
   opacity: 1;
@@ -214,16 +231,6 @@
 .pulled .pullLabel {
   opacity: 0;
   animation: none;
-}
-
-.mascot {
-  opacity: 0;
-  transform: translateY(60px);
-  transition: opacity 338ms ease, transform 676ms var(--spring);
-}
-.mascotIn {
-  opacity: 1;
-  transform: none;
 }
 
 /* His own feet, not the machine's bottom edge — the shared .breathe origin
@@ -313,7 +320,7 @@
 /* The sheen only means anything once there is a door to catch the light. */
 .glassSheen {
   opacity: 0;
-  transition: opacity 420ms ease 1.2s;
+  transition: opacity 420ms ease 1.9s;
 }
 .pulled .glassSheen {
   opacity: 1;
