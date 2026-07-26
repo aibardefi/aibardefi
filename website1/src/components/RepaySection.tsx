@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { MASCOT_SRC } from "./Mascot";
+import { MASCOT_HREF } from "./Mascot";
 import { COINS } from "./coins";
 import { useEntrance, prefersReducedMotion } from "@/lib/useEntrance";
 import { useReplay } from "@/lib/useReplay";
@@ -308,7 +308,7 @@ export function RepaySection() {
 
             <image
               className="breathe grounded"
-              href={MASCOT_SRC}
+              href={MASCOT_HREF}
               x="428"
               y="222"
               width="184"

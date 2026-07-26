@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { MASCOT_SRC } from "./Mascot";
+import { MASCOT_HREF } from "./Mascot";
 import { COINS, CoinGlyph } from "./coins";
 import { useEntrance, prefersReducedMotion } from "@/lib/useEntrance";
 import { useAutoRearm } from "@/lib/useAutoRearm";
@@ -616,7 +616,7 @@ export function VaultSection() {
             <g className={s.mascot}>
               <image
                 className={s.mascotBreath}
-                href={MASCOT_SRC}
+                href={MASCOT_HREF}
                 x="452"
                 y="250"
                 width="200"

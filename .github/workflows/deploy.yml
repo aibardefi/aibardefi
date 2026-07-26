@@ -22,10 +22,40 @@ jobs:
         with:
           node-version: 22
           cache: npm
+
+      # --- the original site, at the root of the Pages URL ---
+      # A repo gets exactly one Pages site, so the two apps share it by
+      # occupying different paths rather than one replacing the other.
       - run: npm ci
       - run: npx next build
         env:
           NEXT_PUBLIC_BASE_PATH: /aibardefi
+
+      # --- the $SB site, one directory down ---
+      # Its own lockfile, so its own install. The base path has to include the
+      # sub-directory as well as the repo, or every chunk and asset it asks for
+      # resolves one level too high.
+      - run: npm ci
+        working-directory: website1
+      - run: npm run build
+        working-directory: website1
+        env:
+          NEXT_PUBLIC_BASE_PATH: /aibardefi/website1
+
+      - name: Nest the $SB export inside the original export
+        run: |
+          set -euo pipefail
+          test -f out/index.html
+          test -f website1/out/index.html
+          rm -rf out/website1
+          cp -r website1/out out/website1
+          # Pages serves what it is given verbatim; Jekyll would otherwise strip
+          # the _next directory every Next export depends on.
+          touch out/.nojekyll
+          echo "--- published tree ---"
+          ls out
+          ls out/website1
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: out

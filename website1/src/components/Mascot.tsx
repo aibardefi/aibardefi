@@ -8,7 +8,22 @@ import Image from "next/image";
  * upload, so this composites cleanly on any ground.
  */
 
-export const MASCOT_SRC = "/assets/kapibara.webp";
+/**
+ * Where the artwork lives, base path and all.
+ *
+ * Nothing prefixes this for us. A string handed to a raw SVG `<image href>`
+ * obviously goes through untouched, but `next/image` does not add the base path
+ * either once `images.unoptimized` is set — with no optimizer URL to build, it
+ * passes src straight through. So under a sub-path deployment every reference
+ * to him, `<Image>` and `<image>` alike, asked for /assets/… at the domain root
+ * and got a 404. Neither the build nor a local run at / shows this; it only
+ * appears when the page is loaded from the path it will really be served from.
+ *
+ * Empty when the site is deployed at a domain root, so this stays correct for
+ * both targets at once.
+ */
+export const MASCOT_SRC = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/assets/kapibara.webp`;
+export const MASCOT_HREF = MASCOT_SRC;
 export const MASCOT_W = 795;
 export const MASCOT_H = 1008;
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { MASCOT_HREF } from "./Mascot";
 import { useEntrance, prefersReducedMotion } from "@/lib/useEntrance";
 import { useReplay } from "@/lib/useReplay";
 import { useAutoRearm } from "@/lib/useAutoRearm";
@@ -201,7 +202,7 @@ export function WakeSection() {
             <g className={s.him}>
               <g className="breathe">
                 <image
-                  href="/assets/kapibara.webp"
+                  href={MASCOT_HREF}
                   x="340"
                   y="212"
                   width="200"

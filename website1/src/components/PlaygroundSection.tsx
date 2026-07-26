@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { MASCOT_SRC } from "./Mascot";
+import { MASCOT_HREF } from "./Mascot";
 import { useEntrance, prefersReducedMotion } from "@/lib/useEntrance";
 import s from "./PlaygroundSection.module.css";
 
@@ -275,7 +275,7 @@ export function PlaygroundSection() {
               <g className={s.lean}>
                 <g className="breathe">
                   <image
-                    href={MASCOT_SRC}
+                    href={MASCOT_HREF}
                     x="256" y="196" width="248" height="256"
                     preserveAspectRatio="xMidYMax meet"
                   />
