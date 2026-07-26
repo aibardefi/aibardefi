@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Standalone Node/Playwright harnesses for the mockups — not app code,
+    // and they legitimately use require().
+    "mockups/**",
   ]),
 ]);
 
