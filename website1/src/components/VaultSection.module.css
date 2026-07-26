@@ -39,7 +39,7 @@
   font-size: clamp(1.5rem, 5vw, 2.8rem);
   line-height: 1;
   font-variant-numeric: tabular-nums;
-  color: var(--gold);
+  color: var(--sb);
   -webkit-text-stroke: 0.055em var(--ink);
 }
 
@@ -175,6 +175,33 @@
 
 .lever {
   cursor: pointer;
+}
+/* Clicking an SVG group focuses it, and the plain :focus ring drew a box round
+   the whole lever that stayed there for the rest of the sequence. Keyboard
+   users still get a ring. */
+.lever:focus {
+  outline: none;
+}
+.lever:focus-visible {
+  outline: 3px solid var(--stamp);
+  outline-offset: 4px;
+}
+
+/* Nudges toward the lever while it is still worth pulling, then gets out of
+   the way once the machine has fired. */
+.pullLabel {
+  transform-box: view-box;
+  transform-origin: 141px 98px;
+  animation: pullNudge 2.2s ease-in-out infinite;
+  transition: opacity 240ms ease;
+}
+@keyframes pullNudge {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(4px); }
+}
+.pulled .pullLabel {
+  opacity: 0;
+  animation: none;
 }
 
 .mascot {

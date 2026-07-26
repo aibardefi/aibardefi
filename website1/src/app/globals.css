@@ -19,6 +19,14 @@
   --vault: #1d1c18;
   --gold: #d9a020;
   --gold-deep: #b07d14;
+
+  /* $SB itself. Everything that IS the token wears this — the counters, the
+     coins, the chute, the launch button. Gold stays on things that are merely
+     warm or metal: brass hinges, lamplight, the clock's alarm. Note the ink
+     stroke everywhere it carries text: at this luminance it would otherwise
+     vanish into the page's own background. */
+  --sb: #9df907;
+  --sb-deep: #7ac406;
   --stamp: #c4392b;
 
   /* Each screen gets its own object colour so the seven do not read as one
@@ -28,6 +36,10 @@
   --machine: #3f4d63;
   --machine-dark: #2c374a;
   --machine-deep: #1e2634;
+  /* The hopper is its own part, in copper, so the mouth you post memes into
+     reads as separate from the slab of machine under it. */
+  --funnel: #b5723a;
+  --funnel-dark: #8d5527;
 
   --safe: #2f6157;
   --safe-dark: #21473f;

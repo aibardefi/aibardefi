@@ -98,24 +98,27 @@ export function VaultSection() {
         const g = document.createElementNS(SVGNS, "g");
         const c = document.createElementNS(SVGNS, "circle");
         c.setAttribute("r", "17");
-        c.setAttribute("fill", "#d9a020");
+        c.setAttribute("fill", "#9df907");
         c.setAttribute("stroke", "#12110c");
         c.setAttribute("stroke-width", "5");
         const t = document.createElementNS(SVGNS, "text");
         t.setAttribute("text-anchor", "middle");
-        t.setAttribute("y", "6");
-        t.setAttribute("font-size", "15");
+        t.setAttribute("y", "4.5");
+        t.setAttribute("font-size", "12");
         t.setAttribute("font-weight", "900");
+        t.setAttribute("letter-spacing", "-0.4");
         t.setAttribute("fill", "#12110c");
-        t.textContent = "S";
+        t.textContent = "$SB";
         g.append(c, t);
 
-        // Two tiers so it reads as a heap, not a single row of coins.
+        // Two tiers, tightened and dropped clear of the feet. Wider spacing put
+        // the heap up over the machine's own legs, so the payout read as coins
+        // strewn across the cabinet rather than as a pile on the floor.
         const tier = i % 2;
         const lane = Math.floor(i / 2) - 2.5;
-        const lx = 330 + lane * 44 + tier * 22;
-        const ly = 512 - tier * 26 - Math.abs(lane) * 2;
-        g.setAttribute("transform", `translate(330 410)`);
+        const lx = 330 + lane * 38 + tier * 19;
+        const ly = 528 - tier * 24;
+        g.setAttribute("transform", `translate(330 400)`);
         host.appendChild(g);
 
         if (prefersReducedMotion()) {
@@ -124,12 +127,15 @@ export function VaultSection() {
         }
         g.animate(
           [
-            { transform: "translate(330px,410px) rotate(0deg)" },
+            { transform: "translate(330px,400px) rotate(0deg)" },
             {
               transform: `translate(${330 + lane * 14}px,${ly - 90}px) rotate(${lane * 60}deg)`,
               offset: 0.45,
             },
-            { transform: `translate(${lx}px,${ly}px) rotate(${lane * 130}deg)` },
+            // Lands near-upright. Spinning them to a random resting angle was
+            // fine when the face was a blank disc, but now it carries a ticker
+            // and a coin lying on its side cannot be read.
+            { transform: `translate(${lx}px,${ly}px) rotate(${lane * 5}deg)` },
           ],
           { duration: 700, easing: "cubic-bezier(.3,.7,.4,1)", fill: "forwards" }
         );
@@ -310,7 +316,8 @@ export function VaultSection() {
               strokeLinejoin="round"
               strokeLinecap="round"
             >
-              <path d="M212 86 L448 86 L372 158 L288 158 Z" fill="var(--machine-dark)" />
+              <path d="M212 86 L448 86 L372 158 L288 158 Z" fill="var(--funnel)" />
+              <rect x="206" y="78" width="248" height="16" rx="7" fill="var(--funnel-dark)" />
               <rect x="150" y="152" width="360" height="300" rx="28" fill="var(--machine)" />
               <rect x="198" y="196" width="264" height="168" rx="16" fill="var(--machine-deep)" />
 
@@ -339,7 +346,7 @@ export function VaultSection() {
                 width="188"
                 height="30"
                 rx="9"
-                fill="var(--gold)"
+                fill="var(--sb)"
                 stroke="none"
               />
               <rect x="236" y="380" width="188" height="30" rx="9" fill="none" />
@@ -401,7 +408,26 @@ export function VaultSection() {
                   strokeWidth="7"
                 />
               </g>
+
             </g>
+
+            {/* Deliberately a sibling of the lever, not a child: it nudges on a
+                loop, and inside the button that motion would keep the click
+                target's box moving. Without it the red knob was just a red dot
+                — nothing said it was the control. */}
+            <text
+              className={s.pullLabel}
+              x="141"
+              y="98"
+              textAnchor="middle"
+              fontWeight="900"
+              fontSize="20"
+              letterSpacing="1"
+              fill="var(--stamp)"
+              aria-hidden="true"
+            >
+              PULL
+            </text>
 
             {/* IN / LOCKED / OUT on the three parts is the whole explanation. */}
             <g

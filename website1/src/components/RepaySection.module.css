@@ -33,7 +33,7 @@
   font-size: clamp(1.5rem, 5vw, 2.8rem);
   line-height: 1;
   font-variant-numeric: tabular-nums;
-  color: var(--gold);
+  color: var(--sb);
   -webkit-text-stroke: 0.055em var(--ink);
 }
 
@@ -64,7 +64,7 @@
   position: absolute;
   inset: 0;
   width: 0%;
-  background: linear-gradient(90deg, var(--gold-deep), var(--gold));
+  background: linear-gradient(90deg, var(--sb-deep), var(--sb));
   border-radius: 99px 0 0 99px;
 }
 .knob {
@@ -75,7 +75,7 @@
   height: 62px;
   border-radius: 50%;
   border: 5px solid var(--ink);
-  background: var(--gold);
+  background: var(--sb);
   box-shadow: 0 4px 0 0 var(--ink);
   cursor: grab;
   display: grid;
