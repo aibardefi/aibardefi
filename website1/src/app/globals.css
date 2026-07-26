@@ -63,9 +63,15 @@
   --linen: #5b7b93;
 
   /* Headline pair: navy carries the line, tangerine picks out the one word
-     that word is actually about. */
-  --navy: #2f5aa0;
-  --tangerine: #ff8f1f;
+     that word is actually about.
+
+     Both were pulled forward off the flat, slightly dusty naval blue and amber
+     they started as. A vivid indigo reads contemporary where #2f5aa0 read like
+     a team crest, and pulling the orange back toward red gets it out of the
+     gold's territory — at #ff8f1f it was competing with the $SB coins for the
+     same warm note instead of contrasting the blue. */
+  --navy: #3b5bd9;
+  --tangerine: #ff7a18;
 
   /* One background for every page, per the brief. The second value only feeds
      the radial wash at the foot of each screen — kept close to the first now,
