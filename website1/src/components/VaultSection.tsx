@@ -55,7 +55,7 @@ export function VaultSection() {
 
   const [pulled, setPulled] = useState(false);
   const [borrowed, setBorrowed] = useState(0);
-  const [hint, setHint] = useState("Pull the lever");
+  const [hint, setHint] = useState("");
   const [spendOpen, setSpendOpen] = useState(false);
   const [spent, setSpent] = useState(false);
   const [jolt, setJolt] = useState(false);
@@ -238,7 +238,10 @@ export function VaultSection() {
         el.style.opacity = "";
       });
       if (!silent) {
-        setHint("Pull the lever");
+        // Blank, not "Pull the lever": that instruction now sits above the
+        // lever itself, and repeating it down here read as two separate
+        // prompts for one control.
+        setHint("");
         busy.current = false;
       }
     },
@@ -551,18 +554,21 @@ export function VaultSection() {
                 loop, and inside the button that motion would keep the click
                 target's box moving. Without it the red knob was just a red dot
                 — nothing said it was the control. */}
+            {/* Two lines, not one: set on a single line at a readable size the
+                label reached the hopper rim and sat under the first coin. */}
             <text
               className={s.pullLabel}
               x="141"
-              y="98"
+              y="76"
               textAnchor="middle"
               fontWeight="900"
-              fontSize="20"
-              letterSpacing="1"
+              fontSize="19"
+              letterSpacing="0.5"
               fill="var(--stamp)"
               aria-hidden="true"
             >
-              PULL
+              <tspan x="141">Pull the</tspan>
+              <tspan x="141" dy="21">lever</tspan>
             </text>
 
             {/* IN / LOCKED / OUT on the three parts is the whole explanation. */}

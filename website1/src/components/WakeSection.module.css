@@ -26,11 +26,26 @@
   overflow: hidden;
 }
 
+/* Over the bear, not over the clock. It used to sit top-left, which is where
+   the clock's "Hit the clock" label now lives — and he is the one talking, so
+   the line belongs on his side of the room. The band above his hat is the only
+   large piece of empty space in the scene. */
 .bub {
-  top: 4%;
-  left: 2%;
+  top: 0;
+  left: 46%;
   background: var(--cream);
   max-width: 15ch;
+}
+
+/* The room is only as tall as the phone is wide, so the band above his hat all
+   but disappears and top: 0 drops the bubble onto the ushanka. Above the room
+   entirely on a phone — the verdict already lives up there and the two never
+   show at the same stage. */
+@media (max-width: 640px) {
+  .bub {
+    top: -16%;
+    left: 42%;
+  }
 }
 
 /* ---------- clock ---------- */
@@ -211,6 +226,31 @@
 }
 .s4 .lampGlow {
   opacity: 0.3;
+}
+
+/* The call to action, sitting directly above the clock rather than in the
+   bottom status line — the instruction now points at the thing it is about.
+   It nudges downward on a loop, the same tell the machine screen's lever
+   label uses, so "this is the control" reads the same way on both screens. */
+.clockLabel {
+  transform-box: view-box;
+  transform-origin: 128px 218px;
+  animation: clockNudge 2.2s ease-in-out infinite;
+  transition: opacity 240ms ease;
+}
+@keyframes clockNudge {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(3px);
+  }
+}
+/* Once he is up there is nothing left to hit. */
+.dead .clockLabel {
+  opacity: 0;
+  animation: none;
 }
 
 /* ---------- bottom status ---------- */

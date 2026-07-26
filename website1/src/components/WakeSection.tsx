@@ -226,6 +226,21 @@ export function WakeSection() {
               strokeLinejoin="round"
             />
 
+            {/* Outside the clock group on purpose: that group is what jolts on
+                every hit, and a label riding along would shake with it. */}
+            <text
+              className={s.clockLabel}
+              x="128"
+              y="218"
+              textAnchor="middle"
+              fontWeight="900"
+              fontSize="14"
+              fill="var(--stamp)"
+              aria-hidden="true"
+            >
+              {dead ? "" : stage === 0 ? "Hit the clock" : "Again"}
+            </text>
+
             <g ref={clockRef}>
               <g
                 stroke="var(--gold)"
@@ -308,12 +323,11 @@ export function WakeSection() {
       </div>
 
       <div className="bottom">
+        {/* The instruction moved up beside the clock, so what is left down here
+            is only the closing line — the one thing that is a conclusion
+            rather than a thing to do. */}
         <div className="hint" data-ent="up" data-ent-delay="430">
-          {dead
-            ? "That is the whole reason."
-            : stage === 0
-              ? "Hit the clock"
-              : "Again"}
+          {dead ? "That is the whole reason." : " "}
         </div>
         <div className={s.hitline} data-ent="up" data-ent-delay="470">
           {STAGES[stage].line}

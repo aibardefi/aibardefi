@@ -222,7 +222,7 @@
    the way once the machine has fired. */
 .pullLabel {
   transform-box: view-box;
-  transform-origin: 141px 98px;
+  transform-origin: 141px 76px;
   animation: pullNudge 2.2s ease-in-out infinite;
   transition: opacity 240ms ease;
 }
