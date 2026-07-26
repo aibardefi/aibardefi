@@ -2,19 +2,35 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { MASCOT_SRC } from "./Mascot";
+import { COINS, CoinGlyph } from "./coins";
 import { useEntrance, prefersReducedMotion } from "@/lib/useEntrance";
 import s from "./VaultSection.module.css";
 
 const TOTAL = 42000;
 const SVGNS = "http://www.w3.org/2000/svg";
 
-/** The five waiting memecoins, drawn flat to match the mascot's outline art. */
-const FEED = [
-  { x: 232, y: 24, bg: "#b9b3a6" },
-  { x: 276, y: 10, bg: "#a8c24e" },
-  { x: 320, y: 20, bg: "#7a6a5b" },
-  { x: 364, y: 8, bg: "#e0a33c" },
-  { x: 408, y: 22, bg: "#c4392b" },
+/**
+ * Where each waiting memecoin sits above the hopper. The coins themselves come
+ * from the shared roster, so this screen and the feeding screen can never drift
+ * apart on which tokens exist.
+ */
+const FEED_AT = [
+  { x: 214, y: 24 },
+  { x: 256, y: 10 },
+  { x: 298, y: 20 },
+  { x: 340, y: 6 },
+  { x: 382, y: 22 },
+  { x: 424, y: 12 },
+];
+
+/** The same six, at rest inside the vault once the door shuts over them. */
+const INSIDE_AT = [
+  { x: 270, y: 286 },
+  { x: 330, y: 278 },
+  { x: 390, y: 286 },
+  { x: 250, y: 330 },
+  { x: 310, y: 336 },
+  { x: 370, y: 330 },
 ];
 
 const SPEND_LINE: Record<string, string> = {
@@ -38,6 +54,14 @@ export function VaultSection() {
   const [spendOpen, setSpendOpen] = useState(false);
   const [spent, setSpent] = useState(false);
   const [jolt, setJolt] = useState(false);
+  // Keyed onto the lever arm purely to restart its animation. pull() clears and
+  // re-sets `pulled` in one handler, which React batches into no DOM change at
+  // all, so on a second pull the handle would never move again.
+  const [pullRun, setPullRun] = useState(0);
+  // Separate from `pulled`: he arrives once the money is out, not the instant
+  // the handle moves. Tied to `pulled` he stood there through the whole lock-up
+  // and the joke — turning up to take credit — landed before the payout did.
+  const [mascotIn, setMascotIn] = useState(false);
 
   const setRefs = useCallback(
     (el: HTMLElement | null) => {
@@ -70,7 +94,7 @@ export function VaultSection() {
   const dropCoins = useCallback(() => {
     const coins = feedRef.current?.querySelectorAll(`.${s.feedcoin}`);
     coins?.forEach((c, i) => {
-      after(150 + i * 80, () => {
+      after(195 + i * 104, () => {
         const el = c as SVGGElement;
         if (prefersReducedMotion()) {
           el.style.opacity = "0";
@@ -82,7 +106,7 @@ export function VaultSection() {
             { transform: "translateY(150px) scale(0.8)", opacity: 1, offset: 0.7 },
             { transform: "translateY(210px) scaleY(0.55) scaleX(1.2)", opacity: 0 },
           ],
-          { duration: 460, easing: "cubic-bezier(.5,0,.75,0)", fill: "forwards" }
+          { duration: 598, easing: "cubic-bezier(.5,0,.75,0)", fill: "forwards" }
         );
       });
     });
@@ -91,7 +115,7 @@ export function VaultSection() {
   /** Gold spraying out of the chute and piling in two tiers on the floor. */
   const payOut = useCallback(() => {
     for (let i = 0; i < 12; i++) {
-      after(1400 + i * 55, () => {
+      after(1820 + i * 72, () => {
         const host = payoutRef.current;
         if (!host) return;
 
@@ -137,7 +161,7 @@ export function VaultSection() {
             // and a coin lying on its side cannot be read.
             { transform: `translate(${lx}px,${ly}px) rotate(${lane * 5}deg)` },
           ],
-          { duration: 700, easing: "cubic-bezier(.3,.7,.4,1)", fill: "forwards" }
+          { duration: 910, easing: "cubic-bezier(.3,.7,.4,1)", fill: "forwards" }
         );
       });
     }
@@ -150,7 +174,7 @@ export function VaultSection() {
     }
     const start = performance.now();
     const step = (now: number) => {
-      const p = Math.min(1, (now - start) / 1100);
+      const p = Math.min(1, (now - start) / 1430);
       setBorrowed(Math.round(TOTAL * (1 - Math.pow(1 - p, 3))));
       if (p < 1) requestAnimationFrame(step);
     };
@@ -165,6 +189,7 @@ export function VaultSection() {
       setBorrowed(0);
       setSpendOpen(false);
       setSpent(false);
+      setMascotIn(false);
       if (payoutRef.current) payoutRef.current.innerHTML = "";
       bubbleRef.current?.classList.remove("show");
       feedRef.current?.querySelectorAll(`.${s.feedcoin}`).forEach((c) => {
@@ -186,22 +211,26 @@ export function VaultSection() {
     reset(true);
 
     setPulled(true);
+    setPullRun((n) => n + 1);
     setHint("");
     dropCoins();
 
     // The jolt lands with the padlock, not the door — that's the heavy beat.
-    after(800, () => {
+    after(1040, () => {
       if (prefersReducedMotion()) return;
       setJolt(true);
-      after(320, () => setJolt(false));
+      after(416, () => setJolt(false));
     });
 
     payOut();
-    after(1400, rollCounter);
+    after(1820, rollCounter);
 
-    after(2000, () => say("not my problem now."));
+    after(2600, () => {
+      setMascotIn(true);
+      say("not my problem now.");
+    });
 
-    after(2400, () => {
+    after(3120, () => {
       setSpendOpen(true);
       setHint("Now go spend it.");
       busy.current = false;
@@ -293,17 +322,15 @@ export function VaultSection() {
             aria-label="A machine that locks memecoins and pays out $SB"
           >
             <g ref={feedRef}>
-              {FEED.map((c, i) => (
+              {COINS.map((coin, i) => (
                 <g
-                  key={i}
+                  key={coin.ticker}
                   className={`${s.feedcoin} ${idle ? s.bob : ""}`}
-                  transform={`translate(${c.x} ${c.y})`}
+                  transform={`translate(${FEED_AT[i].x} ${FEED_AT[i].y})`}
                 >
-                  <circle r="19" cx="19" cy="19" fill={c.bg} stroke="#12110c" strokeWidth="4" />
-                  <g transform="translate(19 19) scale(0.24) translate(-50 -50)" fill="#12110c">
-                    <ellipse cx="50" cy="56" rx="31" ry="28" />
-                    <circle cx="39" cy="52" r="5" fill={c.bg} />
-                    <circle cx="61" cy="52" r="5" fill={c.bg} />
+                  <circle r="19" cx="19" cy="19" fill={coin.bg} stroke="#12110c" strokeWidth="4" />
+                  <g transform="translate(19 19) scale(0.3) translate(-50 -50)" fill={coin.glyphOn}>
+                    {coin.glyph}
                   </g>
                 </g>
               ))}
@@ -322,11 +349,14 @@ export function VaultSection() {
               <rect x="198" y="196" width="264" height="168" rx="16" fill="var(--machine-deep)" />
 
               <g opacity="0.9">
-                <circle cx="268" cy="300" r="21" fill="#b9b3a6" stroke="#12110c" strokeWidth="4" />
-                <circle cx="316" cy="286" r="21" fill="#a8c24e" stroke="#12110c" strokeWidth="4" />
-                <circle cx="364" cy="300" r="21" fill="#e0a33c" stroke="#12110c" strokeWidth="4" />
-                <circle cx="292" cy="332" r="21" fill="#7a6a5b" stroke="#12110c" strokeWidth="4" />
-                <circle cx="340" cy="332" r="21" fill="#c4392b" stroke="#12110c" strokeWidth="4" />
+                {COINS.map((coin, i) => (
+                  <g key={coin.ticker} transform={`translate(${INSIDE_AT[i].x} ${INSIDE_AT[i].y})`}>
+                    <circle r="21" fill={coin.bg} stroke="#12110c" strokeWidth="4" />
+                    <g transform="scale(0.33) translate(-50 -50)" fill={coin.glyphOn}>
+                      {coin.glyph}
+                    </g>
+                  </g>
+                ))}
               </g>
 
               <rect
@@ -387,7 +417,7 @@ export function VaultSection() {
                 stroke="#12110c"
                 strokeWidth="6"
               />
-              <g className={s.leverArm}>
+              <g className={s.leverArm} key={pullRun}>
                 <rect
                   x="133"
                   y="150"
@@ -450,7 +480,7 @@ export function VaultSection() {
 
             {/* Slide-in on the group, breathing on the image inside it —
                 one element cannot carry both transforms. */}
-            <g className={`${s.mascot} ${pulled ? s.mascotIn : ""}`}>
+            <g className={`${s.mascot} ${mascotIn ? s.mascotIn : ""}`}>
               <image
                 className={s.mascotBreath}
                 href={MASCOT_SRC}

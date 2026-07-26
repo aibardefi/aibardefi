@@ -12,7 +12,7 @@ const CARDS = [
   {
     pip: "1st",
     job: "An honest job",
-    bg: "#4f7a3a",
+    bg: "#5fae3f",
     label: "Reveal what happened with the honest job",
     punch: "Lasted four hours.",
   },
@@ -26,7 +26,7 @@ const CARDS = [
   {
     pip: "3rd",
     job: "Asked a bank",
-    bg: "#2f6f7a",
+    bg: "#2fa8c4",
     label: "Reveal what happened with the bank",
     punch: "They laughed. No collateral.",
   },
@@ -130,7 +130,7 @@ export function StorySection() {
                             width="16"
                             height="12"
                             rx="4"
-                            fill="var(--fur-dark)"
+                            fill="var(--furniture-dark)"
                           />
                           <path
                             d="M32 56 h36 l-6 30 q-12 8 -24 0 z"
@@ -204,7 +204,7 @@ export function StorySection() {
                             width="76"
                             height="10"
                             rx="3"
-                            fill="var(--fur-dark)"
+                            fill="var(--furniture-dark)"
                           />
                         </g>
                       </svg>

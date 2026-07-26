@@ -76,6 +76,7 @@
 .bob:nth-of-type(3) { animation-delay: -0.8s; }
 .bob:nth-of-type(4) { animation-delay: -1.2s; }
 .bob:nth-of-type(5) { animation-delay: -1.6s; }
+.bob:nth-of-type(6) { animation-delay: -2s; }
 @keyframes bob {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-7px); }
@@ -86,11 +87,22 @@
      include the knob and put the hinge in the wrong place. */
   transform-box: view-box;
   transform-origin: 141px 249px;
-  transition: transform 520ms var(--spring);
 }
-/* Anticlockwise: a left-hand lever pulls down and out to the left. */
+
+/* Down and back, not down and parked. Stopping at -104deg left the handle
+   sticking straight out into empty space beside the machine, reading as a part
+   that had snapped off; and a lever you have to look at in its spent position
+   for the rest of the sequence never invites a second pull. It swings past
+   vertical, knocks against the stop, and returns. */
 .pulled .leverArm {
-  transform: rotate(-104deg);
+  animation: leverPull 1300ms cubic-bezier(0.35, 0.1, 0.25, 1) both;
+}
+@keyframes leverPull {
+  0% { transform: rotate(0deg); }
+  20% { transform: rotate(-178deg); }
+  30% { transform: rotate(-168deg); }
+  40% { transform: rotate(-175deg); }
+  100% { transform: rotate(0deg); }
 }
 
 .leverKnob {
@@ -112,7 +124,7 @@
   transform: scaleX(0);
   /* A shutter has mass: slow to break away, fast across, then it arrives
      rather than stopping dead. */
-  transition: transform 460ms cubic-bezier(0.5, 0.05, 0.25, 1) 0.7s;
+  transition: transform 598ms cubic-bezier(0.5, 0.05, 0.25, 1) 0.91s;
 }
 .pulled .door {
   transform: scaleX(1);
@@ -123,8 +135,8 @@
   transform-origin: 50% 0%;
   opacity: 0;
   transform: translateY(-46px) scale(0.7);
-  transition: opacity 120ms linear 0.78s,
-    transform 300ms cubic-bezier(0.34, 1.9, 0.64, 1) 0.78s;
+  transition: opacity 156ms linear 1.014s,
+    transform 390ms cubic-bezier(0.34, 1.9, 0.64, 1) 1.014s;
 }
 .pulled .padlock {
   opacity: 1;
@@ -136,7 +148,7 @@
   transform-origin: 50% 100%;
 }
 .pulled .shell {
-  animation: shudder 620ms ease-in-out 1s;
+  animation: shudder 806ms ease-in-out 1.3s;
 }
 /* Decaying, not three even swings — a machine that has taken a hit settles. */
 @keyframes shudder {
@@ -151,7 +163,7 @@
 
 .chuteGlow {
   opacity: 0;
-  transition: opacity 260ms ease 1.3s;
+  transition: opacity 338ms ease 1.69s;
 }
 .pulled .chuteGlow {
   opacity: 1;
@@ -160,14 +172,14 @@
 /* Both labels start dim — nothing is locked and nothing has paid out yet. */
 .labelLocked {
   opacity: 0.3;
-  transition: opacity 260ms ease 0.9s;
+  transition: opacity 338ms ease 1.17s;
 }
 .pulled .labelLocked {
   opacity: 1;
 }
 .labelOut {
   opacity: 0.3;
-  transition: opacity 260ms ease 1.3s;
+  transition: opacity 338ms ease 1.69s;
 }
 .pulled .labelOut {
   opacity: 1;
@@ -207,7 +219,7 @@
 .mascot {
   opacity: 0;
   transform: translateY(60px);
-  transition: opacity 260ms ease, transform 520ms var(--spring);
+  transition: opacity 338ms ease, transform 676ms var(--spring);
 }
 .mascotIn {
   opacity: 1;

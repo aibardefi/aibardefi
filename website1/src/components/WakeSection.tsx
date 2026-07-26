@@ -139,17 +139,17 @@ export function WakeSection() {
                 width="60"
                 height="18"
                 rx="7"
-                fill="var(--fur-dark)"
+                fill="var(--furniture-dark)"
               />
               <path d="M652 442 v-96" fill="none" />
               <path
                 d="M618 292 L686 292 L678 346 L626 346 Z"
-                fill="var(--fur-dark)"
+                fill="var(--sb)"
               />
               <path
                 className={s.lampGlow}
                 d="M626 348 L678 348 L700 456 L446 456 Z"
-                fill="var(--gold)"
+                fill="var(--sb)"
                 opacity="0"
                 stroke="none"
               />
@@ -181,7 +181,7 @@ export function WakeSection() {
                 width="330"
                 height="54"
                 rx="14"
-                fill="var(--fur-dark)"
+                fill="var(--furniture-dark)"
               />
               <rect
                 x="270"
@@ -189,7 +189,7 @@ export function WakeSection() {
                 width="42"
                 height="128"
                 rx="12"
-                fill="var(--fur)"
+                fill="var(--furniture)"
               />
             </g>
 
@@ -250,7 +250,7 @@ export function WakeSection() {
                   width="84"
                   height="16"
                   rx="6"
-                  fill="var(--fur-dark)"
+                  fill="var(--furniture-dark)"
                 />
                 <path d="M96 402 v46 M160 402 v46" fill="none" />
                 <circle

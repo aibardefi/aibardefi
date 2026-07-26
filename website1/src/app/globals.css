@@ -16,7 +16,7 @@
   --cream: #f7edd9;
   --fur: #8c5a33;
   --fur-dark: #6f4526;
-  --vault: #1d1c18;
+  --vault: #2e3a4f;
   --gold: #d9a020;
   --gold-deep: #b07d14;
 
@@ -35,15 +35,23 @@
      — the warmth is the point right after two rooms of metal. */
   --machine: #3f4d63;
   --machine-dark: #2c374a;
-  --machine-deep: #1e2634;
-  /* The hopper is its own part, in copper, so the mouth you post memes into
-     reads as separate from the slab of machine under it. */
-  --funnel: #b5723a;
-  --funnel-dark: #8d5527;
+  --machine-deep: #33415c;
+  /* The hopper is its own part so the mouth you post memes into reads as
+     separate from the slab under it. Teal rather than the copper it started as
+     — copper was one more brown on a page that already has a brown bear, and
+     it sat too close to the red lever to leave the lever shouting alone. */
+  --funnel: #2fa8a0;
+  --funnel-dark: #1f7d77;
+
+  /* Furniture. Coral, not wood: the bedroom was brown frame, brown stool,
+     brown lamp and a brown bear, which flattened the whole scene into one
+     colour. Coral against the linen blanket gives the room two. */
+  --furniture: #e07a5f;
+  --furniture-dark: #c25a41;
 
   --safe: #2f6157;
   --safe-dark: #21473f;
-  --safe-deep: #16332d;
+  --safe-deep: #1f5049;
 
   --linen: #5b7b93;
 
