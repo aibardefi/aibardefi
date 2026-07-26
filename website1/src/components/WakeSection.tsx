@@ -113,20 +113,32 @@ export function WakeSection() {
 
           <svg
             className={s.roomSvg}
-            viewBox="0 0 700 480"
+            viewBox="0 196 700 292"
             ref={sceneRef}
             role="img"
             aria-label="Kapibara Blyatovich asleep, an alarm clock ringing beside him"
           >
             <g stroke="var(--ink)" strokeWidth="6" strokeLinejoin="round">
-              <path d="M440 -30 v70" fill="none" />
+              {/* A bedside lamp, not a pendant. Hanging from the ceiling left
+                  a bare cord across an empty third of the frame and read as a
+                  plant pot; standing beside the bed also fills the right side,
+                  balancing the clock on the left. */}
+              <rect
+                x="622"
+                y="442"
+                width="60"
+                height="18"
+                rx="7"
+                fill="var(--fur-dark)"
+              />
+              <path d="M652 442 v-96" fill="none" />
               <path
-                d="M400 40 L480 40 L466 84 L414 84 Z"
+                d="M618 292 L686 292 L678 346 L626 346 Z"
                 fill="var(--fur-dark)"
               />
               <path
                 className={s.lampGlow}
-                d="M414 86 L466 86 L560 330 L320 330 Z"
+                d="M626 348 L678 348 L700 456 L446 456 Z"
                 fill="var(--gold)"
                 opacity="0"
                 stroke="none"

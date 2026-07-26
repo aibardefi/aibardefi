@@ -22,6 +22,12 @@
   --stamp: #c4392b;
   --cheek: #e8635e;
 
+  /* The safe. Deep green with gold hardware, so the thing holding your memes
+     stops being another brown box next to a brown bear. */
+  --safe: #2f6157;
+  --safe-dark: #21473f;
+  --safe-deep: #16332d;
+
   /* One background for every page, per the brief. */
   --ground: #e7e4dc;
   --ground-2: #dcd8ce;
@@ -54,8 +60,12 @@
 
 html {
   overflow-x: hidden;
-  /* Each section is a screen, so scrolling settles on whole screens. */
-  scroll-snap-type: y proximity;
+  /* Each section is a screen, so scrolling settles on whole screens. Mandatory
+     rather than proximity: proximity leaves you parked between two screens
+     whenever you stop mid-gesture, which is what makes the page feel like it
+     is fighting you instead of flowing. */
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -75,6 +85,8 @@ body {
   position: relative;
   min-height: 100dvh;
   scroll-snap-align: start;
+  /* Never let a snap land halfway through a screen. */
+  scroll-snap-stop: always;
   display: grid;
   grid-template-rows: auto auto 1fr auto;
   gap: clamp(0.35rem, 1.4vh, 0.9rem);

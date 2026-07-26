@@ -193,8 +193,8 @@ export function RepaySection() {
             aria-label="A vault holding your locked memecoins"
           >
             <g stroke="var(--ink)" strokeWidth="7" strokeLinejoin="round" strokeLinecap="round">
-              <rect x="86" y="96" width="448" height="330" rx="26" fill="var(--fur)" />
-              <rect x="122" y="130" width="376" height="262" rx="16" fill="#2a1c10" />
+              <rect x="86" y="96" width="448" height="330" rx="26" fill="var(--safe)" />
+              <rect x="122" y="130" width="376" height="262" rx="16" fill="var(--safe-deep)" />
 
               <g ref={insideRef}>
                 {INSIDE.map((m, i) => (
@@ -216,7 +216,7 @@ export function RepaySection() {
                 y="130"
                 width="188"
                 height="262"
-                fill="var(--vault)"
+                fill="var(--safe-dark)"
               />
               <rect
                 ref={doorRRef}
@@ -225,16 +225,16 @@ export function RepaySection() {
                 y="130"
                 width="188"
                 height="262"
-                fill="var(--vault)"
+                fill="var(--safe-dark)"
               />
 
-              <rect x="104" y="160" width="20" height="40" rx="6" fill="var(--fur-dark)" />
-              <rect x="104" y="322" width="20" height="40" rx="6" fill="var(--fur-dark)" />
-              <rect x="496" y="160" width="20" height="40" rx="6" fill="var(--fur-dark)" />
-              <rect x="496" y="322" width="20" height="40" rx="6" fill="var(--fur-dark)" />
+              <rect x="104" y="160" width="20" height="40" rx="6" fill="var(--gold)" />
+              <rect x="104" y="322" width="20" height="40" rx="6" fill="var(--gold)" />
+              <rect x="496" y="160" width="20" height="40" rx="6" fill="var(--gold)" />
+              <rect x="496" y="322" width="20" height="40" rx="6" fill="var(--gold)" />
 
-              <rect x="112" y="426" width="66" height="34" rx="12" fill="var(--fur-dark)" />
-              <rect x="442" y="426" width="66" height="34" rx="12" fill="var(--fur-dark)" />
+              <rect x="112" y="426" width="66" height="34" rx="12" fill="var(--safe-deep)" />
+              <rect x="442" y="426" width="66" height="34" rx="12" fill="var(--safe-deep)" />
             </g>
 
             {/* The shackle lifts out of the lock body in step with your drag. */}
@@ -246,7 +246,7 @@ export function RepaySection() {
                 style={{ transform: `translateY(${(-30 * p).toFixed(1)}px)` }}
               />
               <g className={s.lockBody}>
-                <rect x="270" y="254" width="80" height="64" rx="13" fill="var(--cream)" />
+                <rect x="270" y="254" width="80" height="64" rx="13" fill="var(--gold)" />
                 <circle cx="310" cy="280" r="8" fill="var(--ink)" stroke="none" />
                 <path d="M310 286 v13" strokeWidth="6" strokeLinecap="round" />
               </g>

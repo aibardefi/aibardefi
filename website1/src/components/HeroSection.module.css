@@ -16,6 +16,14 @@
   filter: drop-shadow(0 12px 10px rgba(0, 0, 0, 0.18));
 }
 
+/* A tall narrow screen has vertical room the laptop cap does not use, and the
+   leftover reads as a hole above his head rather than as breathing space. */
+@media (max-width: 640px) {
+  .mascot {
+    width: min(84vw, calc(min(52dvh, 460px) * 795 / 1008));
+  }
+}
+
 .readout {
   position: absolute;
   top: 0;

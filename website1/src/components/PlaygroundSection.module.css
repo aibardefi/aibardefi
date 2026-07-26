@@ -1,0 +1,196 @@
+.middle {
+  place-items: end center;
+}
+
+.yard {
+  position: relative;
+  width: min(100%, calc(min(50dvh, 420px) * 380 / 360));
+  aspect-ratio: 380 / 360;
+}
+
+.yardSvg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+  cursor: pointer;
+}
+
+/* ---------------------------------------------------------------------------
+   Ambient layer: he leans toward the pointer and his gaze follows it. Driven
+   from JS via custom properties so CSS still owns the easing.
+   --------------------------------------------------------------------------- */
+.lean {
+  transform-box: view-box;
+  transform-origin: 380px 430px;
+  transition: transform 900ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  transform:
+    translateX(calc(var(--px, 0) * 26px))
+    rotate(calc(var(--px, 0) * 2.4deg));
+}
+
+.pupils {
+  transition: transform 420ms var(--swift);
+  transform: translate(calc(var(--px, 0) * 7px), calc(var(--py, 0) * 1.2px));
+}
+
+.shadow {
+  transform-box: view-box;
+  transform-origin: 380px 452px;
+  transition: transform 900ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  transform: translateX(calc(var(--px, 0) * 16px)) scaleX(calc(1 - var(--pa, 0) * 0.1));
+}
+
+/* ---------------------------------------------------------------------------
+   Moods. Each is a distinct, hand-timed animation on its own layer so they
+   never fight the ambient lean.
+   --------------------------------------------------------------------------- */
+.mood {
+  transform-box: view-box;
+  transform-origin: 380px 452px;
+  perspective: 800px;
+}
+
+.mJump .mood { animation: mJump 950ms cubic-bezier(0.3, 0.9, 0.4, 1); }
+@keyframes mJump {
+  0%   { transform: translateY(0) scale(1, 1); }
+  8%   { transform: translateY(3px) scale(1.05, 0.93); }
+  14%  { transform: translateY(6px) scale(1.1, 0.86); }
+  28%  { transform: translateY(-52px) scale(0.96, 1.06); }
+  40%  { transform: translateY(-96px) scale(0.92, 1.12); }
+  50%  { transform: translateY(-104px) scale(0.96, 1.06); }
+  56%  { transform: translateY(-100px) scale(1, 1); }
+  70%  { transform: translateY(-20px) scale(1.04, 0.94); }
+  80%  { transform: translateY(4px) scale(1.12, 0.84); }
+  88%  { transform: translateY(-2px) scale(1.04, 0.97); }
+  94%  { transform: translateY(1px) scale(1.02, 0.99); }
+  100% { transform: translateY(0) scale(1, 1); }
+}
+
+.mSpin .mood {
+  animation: mSpin 1100ms cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+@keyframes mSpin {
+  0%   { transform: rotateY(0deg) scale(1); }
+  12%  { transform: rotateY(-28deg) scale(0.96, 1.04); }
+  25%  { transform: rotateY(0deg) scale(0.98); }
+  65%  { transform: rotateY(380deg) scale(1.03, 0.96); }
+  80%  { transform: rotateY(365deg) scale(1.01); }
+  90%  { transform: rotateY(358deg) scale(1); }
+  100% { transform: rotateY(360deg) scale(1); }
+}
+
+.mRage .mood { animation: mRage 760ms steps(2, end) 4; }
+@keyframes mRage {
+  0%   { transform: translate(0, 0) scale(1); }
+  25%  { transform: translate(-6px, -3px) scale(1.03); }
+  50%  { transform: translate(5px, 2px) scale(1.05); }
+  75%  { transform: translate(-4px, 3px) scale(1.03); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+.mFat .mood { animation: mFat 1600ms cubic-bezier(0.3, 1.2, 0.5, 1); }
+@keyframes mFat {
+  0%   { transform: scale(1, 1); }
+  10%  { transform: scale(1.08, 1.04); }
+  25%  { transform: scale(1.28, 1.14); }
+  35%  { transform: scale(1.32, 1.17); }
+  50%  { transform: scale(1.26, 1.20); }
+  65%  { transform: scale(1.18, 1.14); }
+  80%  { transform: scale(1.06, 1.04); }
+  92%  { transform: scale(0.98, 1.01); }
+  100% { transform: scale(1, 1); }
+}
+
+.mShy .mood { animation: mShy 1500ms cubic-bezier(0.4, 0, 0.2, 1); }
+@keyframes mShy {
+  0%   { transform: translateY(0) rotate(0) scale(1); }
+  15%  { transform: translateY(4px) rotate(-2deg) scale(0.98); }
+  35%  { transform: translateY(22px) rotate(-9deg) scale(0.82); }
+  50%  { transform: translateY(26px) rotate(-11deg) scale(0.78); }
+  65%  { transform: translateY(24px) rotate(-10deg) scale(0.80); }
+  80%  { transform: translateY(12px) rotate(-4deg) scale(0.90); }
+  92%  { transform: translateY(2px) rotate(1deg) scale(0.98); }
+  100% { transform: translateY(0) rotate(0) scale(1); }
+}
+
+.mSleep .mood { animation: mSleep 2800ms cubic-bezier(0.4, 0, 0.2, 1); }
+@keyframes mSleep {
+  0%   { transform: translateY(0) rotate(0) scale(1); }
+  8%   { transform: translateY(4px) rotate(-3deg) scale(0.99); }
+  18%  { transform: translateY(18px) rotate(-42deg) scale(0.97); }
+  28%  { transform: translateY(32px) rotate(-78deg) scale(0.96); }
+  35%  { transform: translateY(36px) rotate(-82deg) scale(0.96); }
+  70%  { transform: translateY(36px) rotate(-80deg) scale(0.96); }
+  80%  { transform: translateY(24px) rotate(-44deg) scale(0.97); }
+  90%  { transform: translateY(8px) rotate(-10deg) scale(0.99); }
+  96%  { transform: translateY(-2px) rotate(3deg) scale(1); }
+  100% { transform: translateY(0) rotate(0) scale(1); }
+}
+
+/* While a mood plays, the ambient lean stands down so they don't compete. */
+.busy .lean {
+  transition: transform 300ms ease;
+  transform: none;
+}
+
+/* ---- per-mood overlays ---- */
+.fx { opacity: 0; pointer-events: none; }
+
+.mRage .fxSteam { animation: steam 700ms ease-out 3; }
+@keyframes steam {
+  0%   { opacity: 0.9; transform: translateY(0) scale(0.6); }
+  100% { opacity: 0; transform: translateY(-58px) scale(1.5); }
+}
+.fxSteam { transform-box: view-box; transform-origin: 380px 300px; }
+
+.mShy .fxBlush { animation: blush 1400ms ease-in-out; }
+@keyframes blush {
+  0%, 100% { opacity: 0; }
+  40%, 70% { opacity: 0.85; }
+}
+
+.mSleep .fxZzz { animation: zzz6 2800ms ease-out; }
+.mSleep .fxZzz:nth-of-type(2) { animation-delay: 400ms; }
+.mSleep .fxZzz:nth-of-type(3) { animation-delay: 800ms; }
+@keyframes zzz6 {
+  0%   { opacity: 0; transform: translate(0, 0) scale(0.6); }
+  30%  { opacity: 1; }
+  100% { opacity: 0; transform: translate(44px, -68px) scale(1.2); }
+}
+.fxZzz { transform-box: view-box; transform-origin: 470px 300px; }
+
+.mJump .fxDust, .mFat .fxDust { animation: dust 620ms ease-out; }
+@keyframes dust {
+  0%   { opacity: 0.8; transform: scaleX(0.4) scaleY(1); }
+  100% { opacity: 0; transform: scaleX(2.1) scaleY(0.3); }
+}
+.fxDust { transform-box: view-box; transform-origin: 380px 452px; }
+
+.mSpin .fxSwoosh { animation: swoosh 1000ms ease-out; }
+@keyframes swoosh {
+  0%   { opacity: 0; stroke-dasharray: 0 400; }
+  25%  { opacity: 0.9; }
+  100% { opacity: 0; stroke-dasharray: 400 400; }
+}
+
+/* ---------------- the mood buttons ---------------- */
+.pad {
+  display: flex;
+  gap: clamp(0.4rem, 2vw, 0.9rem);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.mbtn :global(.disc) { background: var(--mood-bg); }
+
+.active :global(.disc) {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 0 var(--ink);
+}
+
+.bubble {
+  top: 6%;
+  left: 2%;
+}

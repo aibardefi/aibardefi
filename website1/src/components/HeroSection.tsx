@@ -179,7 +179,14 @@ export function HeroSection() {
           className={s.mascot}
           style={{ transform: `scale(${sx.toFixed(3)},${sy.toFixed(3)})` }}
         >
-          <Mascot priority alt="Kapibara Blyatovich, who eats your memecoins" />
+          {/* Breathing sits on the image, not the wrapper: the wrapper already
+              carries the fed-scale and the gulp, and one element cannot hold
+              two competing transforms. */}
+          <Mascot
+            className="breathe"
+            priority
+            alt="Kapibara Blyatovich, who eats your memecoins"
+          />
         </div>
       </div>
 

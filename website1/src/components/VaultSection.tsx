@@ -422,15 +422,19 @@ export function VaultSection() {
 
             <g ref={payoutRef} />
 
-            <image
-              className={`${s.mascot} ${pulled ? s.mascotIn : ""}`}
-              href={MASCOT_SRC}
-              x="452"
-              y="250"
-              width="200"
-              height="254"
-              preserveAspectRatio="xMidYMax meet"
-            />
+            {/* Slide-in on the group, breathing on the image inside it —
+                one element cannot carry both transforms. */}
+            <g className={`${s.mascot} ${pulled ? s.mascotIn : ""}`}>
+              <image
+                className={s.mascotBreath}
+                href={MASCOT_SRC}
+                x="452"
+                y="250"
+                width="200"
+                height="254"
+                preserveAspectRatio="xMidYMax meet"
+              />
+            </g>
           </svg>
         </div>
       </div>
