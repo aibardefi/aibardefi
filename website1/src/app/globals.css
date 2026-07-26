@@ -62,9 +62,12 @@
 
   --linen: #5b7b93;
 
-  /* One background for every page, per the brief. */
-  --ground: #e7e4dc;
-  --ground-2: #dcd8ce;
+  /* One background for every page, per the brief. The second value only feeds
+     the radial wash at the foot of each screen — kept close to the first now,
+     because a full shade below it painted a visible grey band across the bottom
+     third rather than the hint of ground it was meant to be. */
+  --ground: #efece5;
+  --ground-2: #e7e3da;
   --text: var(--ink);
   --text-dim: #4f4b42;
 
