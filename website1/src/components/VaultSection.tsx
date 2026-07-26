@@ -347,7 +347,12 @@ export function VaultSection() {
 
   return (
     <section
-      className={`stage ${pulled ? s.pulled : ""} ${jolt ? s.jolt : ""}`}
+      // spendOpen is set in the same beat that releases `busy`, so it marks
+      // exactly the moment the lever becomes pullable again — which is when its
+      // label has to come back.
+      className={`stage ${pulled ? s.pulled : ""} ${jolt ? s.jolt : ""} ${
+        spendOpen ? s.settled : ""
+      }`}
       ref={setRefs}
     >
       <div className="top" data-ent="fade" data-ent-delay="0">

@@ -1,5 +1,29 @@
 .mid {
   place-items: center;
+  /* Two in-flow rows now — the label and the deck. The payoff and the mascot
+     are absolutely positioned, so they stay out of this. */
+  align-content: center;
+  gap: clamp(0.4rem, 1.4vh, 0.9rem);
+}
+
+/* The instruction sits with the cards rather than in the bottom status line,
+   matching the lever and the clock on the screens either side of this one. */
+.deckLabel {
+  font-weight: 900;
+  font-size: clamp(0.72rem, 2vw, 0.9rem);
+  color: var(--stamp);
+  min-height: 1.2em;
+  text-align: center;
+  animation: deckNudge 2.2s ease-in-out infinite;
+}
+@keyframes deckNudge {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(3px);
+  }
 }
 
 /* ---------- card deck ---------- */

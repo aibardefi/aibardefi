@@ -75,15 +75,17 @@ export function StorySection() {
 
   const flippedCount = cards.filter((c) => c !== "idle").length;
   const allTriggered = cards.every((c) => c !== "idle");
-  const hintText = showPayoff
-    ? "And that is page five."
-    : allTriggered
-      ? ""
-      : flippedCount === 0
-        ? "Turn them over"
-        : flippedCount === 1
-          ? "Two to go"
-          : "One more";
+
+  // Above the deck: what is left to do. Below it: only the closing line, which
+  // is a conclusion rather than an instruction.
+  const deckLabel = allTriggered
+    ? ""
+    : flippedCount === 0
+      ? "Turn them over"
+      : flippedCount === 1
+        ? "Two to go"
+        : "One more";
+  const hintText = showPayoff ? "And that is page five." : "";
 
   return (
     <section
@@ -102,6 +104,11 @@ export function StorySection() {
       </div>
 
       <div className={`middle ${s.mid}`} data-ent="up" data-ent-delay="240">
+        {/* Non-breaking space rather than an empty string: the label keeps its
+            line box once the deck is spent, so the cards do not jump upward the
+            moment the third one is turned. */}
+        <div className={s.deckLabel}>{deckLabel || " "}</div>
+
         <div className={s.deck}>
           {CARDS.map((card, i) => {
             const state = cards[i];

@@ -234,6 +234,13 @@
   opacity: 0;
   animation: none;
 }
+/* Back once the machine has finished paying out. The lever accepts a second
+   pull from that beat onward, so leaving the label hidden left a live control
+   with nothing saying so. */
+.pulled.settled .pullLabel {
+  opacity: 1;
+  animation: pullNudge 2.2s ease-in-out infinite;
+}
 
 /* His own feet, not the machine's bottom edge — the shared .breathe origin
    resolves against the whole viewBox here and would swing him sideways. */
