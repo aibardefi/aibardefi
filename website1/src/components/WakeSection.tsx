@@ -118,9 +118,9 @@ export function WakeSection() {
 
           <div
             className={`${s.verdict} sticker`}
-            data-text="Enough. I want a different life."
+            data-text="Suka blya enough, I want a different life"
           >
-            Enough. I want a different life.
+            Suka blya enough, I want a different life
           </div>
 
           <svg
