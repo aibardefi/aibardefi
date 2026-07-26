@@ -95,7 +95,7 @@
   padding: 0.8rem 1.5rem;
   font-size: clamp(0.68rem, 1.9vw, 0.88rem);
 }
-.primary:hover { background: #b0f53d; }
+.primary:hover { background: #8ddc0a; }
 
 /* ---- contract address: coming soon, copyable when it lands ---- */
 .ca {
