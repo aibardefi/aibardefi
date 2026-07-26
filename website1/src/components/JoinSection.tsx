@@ -8,6 +8,14 @@ import s from "./JoinSection.module.css";
 
 const CONTRACT: string | null = null;
 
+/**
+ * The real destinations. Kept together at the top so there is one place to
+ * change when a link moves, and typed as string so the "#" placeholder branch
+ * in handleLink still compiles for anything not yet live.
+ */
+const X_URL = "https://x.com/sbmemecoin";
+const TELEGRAM_URL = "https://t.me/sbmemetoken";
+
 function shorten(a: string) {
   return a.length > 20 ? a.slice(0, 8) + "…" + a.slice(-6) : a;
 }
@@ -159,14 +167,26 @@ export function JoinSection() {
               Launch app
             </a>
 
-            <a className={s.link} href="#" onClick={handleLink}>
+            <a
+              className={s.link}
+              href={X_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={handleLink}
+            >
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                 <path d="M18.9 2H22l-6.8 7.8L22.8 22h-6.4l-4.4-6.1L6.7 22H3.6l7.2-8.2 L3.2 2h6.5l4.1 5.7L18.9 2Zm-1.1 18h1.7L7.3 3.7H5.5L17.8 20Z" />
               </svg>
               Follow on X
             </a>
 
-            <a className={s.link} href="#" onClick={handleLink}>
+            <a
+              className={s.link}
+              href={TELEGRAM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={handleLink}
+            >
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                 <path d="M21.9 3.3 2.9 10.6c-1 .4-1 1.8 0 2.2l4.3 1.5 1.7 5.2c.3.9 1.4 1.1 2 .4l2.3-2.5 4.3 3.2c.7.5 1.7.1 1.9-.8l3.3-15 c.2-1-.8-1.8-1.8-1.5ZM9.4 14.7l-.4 3.7-1.2-3.8 8.9-6.2-7.3 6.3Z" />
               </svg>

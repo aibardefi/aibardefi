@@ -646,13 +646,26 @@ export function VaultSection() {
             aria-label="Spend it on a lambo"
           >
             <span className={s.spendDisc}>
+              {/* A wedge, not a car shape. What makes a Lamborghini legible at
+                  32px is the profile: a nose almost on the road, one unbroken
+                  rising line to the tail, and a wing on the back. The old icon
+                  was a generic three-box saloon. */}
               <svg viewBox="0 0 100 100" fill="#12110c" aria-hidden="true">
-                <path d="M8 66 L26 44 L58 39 L82 52 L92 57 L92 68 L8 68 Z" />
-                <path d="M31 49 L54 46 L70 54 L33 56 Z" fill="#f7edd9" />
-                <circle cx="30" cy="70" r="9" />
-                <circle cx="72" cy="70" r="9" />
-                <circle cx="30" cy="70" r="3.5" fill="#f7edd9" />
-                <circle cx="72" cy="70" r="3.5" fill="#f7edd9" />
+                {/* A wedge is wide and low, so at natural size it left half the
+                    disc empty while the pizza filled its own. Scaled about the
+                    centre and pulled up to sit on the disc's midline. */}
+                <g transform="translate(-9 -21) scale(1.18)">
+                <path d="M92 40 L74 40 L74 46 L92 46 Z" />
+                <path d="M80 46 L80 54 L86 54 L86 46 Z" />
+                <path d="M4 66 L14 56 L34 47 L56 43 L74 47 L92 58 L94 66 Z" />
+                <path d="M30 54 L50 49 L64 51 L72 57 L32 59 Z" fill="#f7edd9" />
+                <path d="M50 49 L50 58" stroke="#12110c" strokeWidth="3" />
+                <path d="M18 62 L36 62" stroke="#f7edd9" strokeWidth="3" strokeLinecap="round" />
+                <circle cx="30" cy="70" r="11" />
+                <circle cx="74" cy="70" r="11" />
+                <circle cx="30" cy="70" r="4.5" fill="#f7edd9" />
+                <circle cx="74" cy="70" r="4.5" fill="#f7edd9" />
+                </g>
               </svg>
             </span>
             <span className={s.spendLabel}>LAMBO</span>
@@ -688,11 +701,30 @@ export function VaultSection() {
             aria-label="Spend it on more memes"
           >
             <span className={s.spendDisc}>
+              {/* A fanned stack of three, and a plus. Two overlapping discs with
+                  a pair of dots on them read as neither coins nor memes — the
+                  count is what says "more", and the face is what says "meme". */}
               <svg viewBox="0 0 100 100" aria-hidden="true">
-                <circle cx="38" cy="42" r="24" fill="#b9b3a6" stroke="#12110c" strokeWidth="6" />
-                <circle cx="66" cy="62" r="24" fill="#a8c24e" stroke="#12110c" strokeWidth="6" />
-                <circle cx="59" cy="58" r="4" fill="#12110c" />
-                <circle cx="73" cy="58" r="4" fill="#12110c" />
+                <g stroke="#12110c" strokeWidth="6">
+                  <circle cx="28" cy="50" r="21" fill="#b9b3a6" />
+                  <circle cx="72" cy="50" r="21" fill="#8b6fd4" />
+                  <circle cx="50" cy="58" r="26" fill="#7cc606" />
+                </g>
+                <g fill="#12110c">
+                  <circle cx="41" cy="53" r="4.5" />
+                  <circle cx="59" cy="53" r="4.5" />
+                </g>
+                <path
+                  d="M41 66 q9 8 18 0"
+                  fill="none"
+                  stroke="#12110c"
+                  strokeWidth="5"
+                  strokeLinecap="round"
+                />
+                <g stroke="#12110c" strokeWidth="5" strokeLinecap="round">
+                  <circle cx="80" cy="20" r="13" fill="#f7edd9" />
+                  <path d="M80 14 V26 M74 20 H86" />
+                </g>
               </svg>
             </span>
             <span className={s.spendLabel}>MORE MEMES</span>
