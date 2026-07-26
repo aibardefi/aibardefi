@@ -1,0 +1,349 @@
+<title>$SB — Page 4 Mockup</title>
+
+<style>
+__BASE_CSS__
+
+
+/* Same ground as every other page. The early-morning read comes from the
+   lamp, the blanket and the drifting z's, not from recolouring the room. */
+.middle { place-items: end center; }
+
+.room {
+  position: relative;
+  width: min(94vw, calc(min(58dvh, 500px) * 700 / 480));
+  aspect-ratio: 700 / 480;
+}
+svg.room-svg { width: 100%; height: 100%; display: block; overflow: visible; }
+
+.bubble {
+  top: 4%;
+  left: 2%;
+  background: var(--cream);
+  max-width: 15ch;
+}
+
+/* ---------- the clock: rings until you hit it ---------- */
+#clock-hit { cursor: pointer; }
+#clock-hit:focus { outline: none; }
+#clock-hit:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+.dead #clock-hit { cursor: default; }
+#clock-body { transform-box: view-box; transform-origin: 128px 300px; }
+.ringing #clock-body { animation: ring 180ms ease-in-out infinite; }
+@keyframes ring {
+  0%, 100% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
+}
+.bell { transform-box: view-box; transform-origin: 128px 300px; }
+.ringing .bell { animation: bell 180ms ease-in-out infinite alternate; }
+@keyframes bell {
+  from { transform: translateX(-3px); }
+  to { transform: translateX(3px); }
+}
+/* Sound waves puffing off the clock */
+.wave { opacity: 0; }
+.ringing .wave { animation: wave 900ms ease-out infinite; }
+.ringing .wave:nth-of-type(2) { animation-delay: 300ms; }
+.ringing .wave:nth-of-type(3) { animation-delay: 600ms; }
+@keyframes wave {
+  0% { opacity: 0.9; transform: scale(0.5); }
+  100% { opacity: 0; transform: scale(1.9); }
+}
+.wave { transform-box: view-box; transform-origin: 128px 296px; }
+
+.dead #clock-body { animation: none; transform: rotate(14deg) translateY(10px); }
+.dead .bell { animation: none; }
+.dead .wave { animation: none; opacity: 0; }
+
+/* ---------- him, waking up in stages ---------- */
+#him {
+  transform-box: view-box;
+  transform-origin: 430px 430px;
+  transition: transform 520ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+/* Stage 0: flat out under the blanket. Each hit sits him further up. */
+.s0 #him { transform: translateY(96px) rotate(-9deg) scale(0.94); }
+.s1 #him { transform: translateY(68px) rotate(-6deg) scale(0.96); }
+.s2 #him { transform: translateY(30px) rotate(-2deg); }
+.s3 #him { transform: translateY(0) rotate(0deg); }
+.s4 #him { transform: translateY(-6px) scale(1.04); }
+
+#blanket {
+  transform-box: view-box;
+  transform-origin: 430px 470px;
+  transition: transform 620ms cubic-bezier(.4,0,.3,1), opacity 400ms ease;
+}
+.s3 #blanket, .s4 #blanket { transform: translateY(120px) rotate(8deg); opacity: 0; }
+
+/* The eyes: shut, then one open, then both. Drawn over his art. */
+#lids { transition: opacity 300ms ease; }
+.s0 #lids, .s1 #lids { opacity: 1; }
+.s2 #lids { opacity: 0.5; }
+.s3 #lids, .s4 #lids { opacity: 0; }
+
+/* Zzz floats while asleep only */
+.zzz { opacity: 0; transform-box: view-box; transform-origin: 520px 380px; }
+.s0 .zzz, .s1 .zzz { animation: zzz 2.6s ease-out infinite; }
+.s0 .zzz:nth-of-type(2), .s1 .zzz:nth-of-type(2) { animation-delay: 0.85s; }
+.s0 .zzz:nth-of-type(3), .s1 .zzz:nth-of-type(3) { animation-delay: 1.7s; }
+@keyframes zzz {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.7); }
+  30% { opacity: 1; }
+  100% { opacity: 0; transform: translate(46px, -76px) scale(1.25); }
+}
+
+/* The lamp snaps on at the last stage */
+#lamp-glow { opacity: 0; transition: opacity 300ms ease; }
+.s4 #lamp-glow { opacity: 0.3; }
+
+.hitline {
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: clamp(0.62rem, 1.8vw, 0.72rem);
+  color: var(--gold);
+  min-height: 1.2em;
+}
+
+/* Final line lands as sticker type over the scene */
+.verdict {
+  position: absolute;
+  inset: 2% 0 auto 0;
+  text-align: center;
+  font-size: clamp(1.1rem, 4vw, 2.4rem);
+  opacity: 0;
+  transform: scale(0.8) rotate(-2deg);
+  transition: opacity 260ms ease, transform 420ms cubic-bezier(.34,1.7,.64,1);
+  pointer-events: none;
+  z-index: 5;
+}
+.s4 .verdict { opacity: 1; transform: none; }
+</style>
+
+<main class="stage s0 ringing" id="stage">
+  <div class="top">
+    <div class="eyebrow">Kapibara Blyatovich &middot; Lending Co.</div>
+    <div class="count">04 / 07</div>
+  </div>
+
+  <div class="head">
+    <h1 class="sticker" data-text="Why $SB exists.">Why $SB exists.</h1>
+  </div>
+
+  <div class="middle">
+    <div class="room" id="room">
+      <div class="bubble" id="bubble">five more minutes.</div>
+
+      <div class="verdict sticker" data-text="Enough. I want a different life.">
+        Enough. I want a different life.
+      </div>
+
+      <svg class="room-svg" viewBox="0 0 700 480" id="scene" role="img"
+           aria-label="Kapibara Blyatovich asleep, an alarm clock ringing beside him">
+
+        <!-- lamp -->
+        <g stroke="var(--ink)" stroke-width="6" stroke-linejoin="round">
+          <path d="M440 -30 v70" fill="none"/>
+          <path d="M400 40 L480 40 L466 84 L414 84 Z" fill="var(--fur-dark)"/>
+          <!-- cone of light down onto the bed, only once the lamp is on -->
+          <path id="lamp-glow" d="M414 86 L466 86 L560 330 L320 330 Z"
+                fill="var(--gold)" opacity="0" stroke="none"/>
+        </g>
+
+        <!-- zzz (asleep only) -->
+        <g font-weight="900" font-size="34" fill="var(--cream)">
+          <text class="zzz" x="516" y="372">z</text>
+          <text class="zzz" x="516" y="372">z</text>
+          <text class="zzz" x="516" y="372">z</text>
+        </g>
+
+        <!-- bed -->
+        <g stroke="var(--ink)" stroke-width="7" stroke-linejoin="round"
+           stroke-linecap="round">
+          <rect x="286" y="404" width="330" height="54" rx="14"
+                fill="var(--fur-dark)"/>
+          <rect x="270" y="330" width="42" height="128" rx="12"
+                fill="var(--fur)"/>
+        </g>
+
+        <!-- him: the real mascot, lying down then sitting up -->
+        <!-- Two nested groups on purpose: #him carries the per-stage pose, the
+             inner group carries the breathing loop. On one element the
+             animation would win and he would never leave stage 0. -->
+        <g id="him">
+          <g class="breathe">
+            <image href="data:image/webp;base64,__MASCOT_B64__"
+                   x="340" y="212" width="200" height="254"
+                   preserveAspectRatio="xMidYMax meet"/>
+            <!-- shut eyelids painted over his open eyes -->
+            <g id="lids" stroke="var(--ink)" stroke-width="5"
+               stroke-linecap="round" fill="none">
+              <path d="M396 336 q14 8 28 0"/>
+              <path d="M452 336 q14 8 28 0"/>
+            </g>
+          </g>
+        </g>
+
+        <!-- blanket over him, thrown off at the end -->
+        <path id="blanket" d="M300 420 q130 -34 300 -8 l0 46 l-300 0 z"
+              fill="var(--cream)" stroke="var(--ink)" stroke-width="7"
+              stroke-linejoin="round"/>
+
+        <!-- the clock, on a stool, ringing -->
+        <g id="clock">
+          <!-- waves -->
+          <g class="wave-set" stroke="var(--gold)" stroke-width="6" fill="none"
+             stroke-linecap="round">
+            <path class="wave" d="M62 264 q-22 34 0 68"/>
+            <path class="wave" d="M52 254 q-30 44 0 88"/>
+            <path class="wave" d="M42 244 q-38 54 0 108"/>
+          </g>
+
+          <g id="clock-body" stroke="var(--ink)" stroke-width="7"
+             stroke-linejoin="round" stroke-linecap="round">
+            <!-- stool -->
+            <rect x="86" y="386" width="84" height="16" rx="6"
+                  fill="var(--fur-dark)"/>
+            <path d="M96 402 v46 M160 402 v46" fill="none"/>
+            <!-- bells -->
+            <circle class="bell" cx="96" cy="256" r="20" fill="var(--stamp)"/>
+            <circle class="bell" cx="160" cy="256" r="20" fill="var(--stamp)"/>
+            <!-- face -->
+            <circle cx="128" cy="310" r="66" fill="var(--cream)"/>
+            <circle cx="128" cy="310" r="50" fill="#efe2c8" stroke="none"/>
+            <path d="M128 310 v-30 M128 310 l24 16" stroke-width="7"/>
+            <circle cx="128" cy="310" r="6" fill="var(--ink)" stroke="none"/>
+            <!-- feet -->
+            <path d="M92 366 l-14 22 M164 366 l14 22" fill="none"/>
+          </g>
+
+          <!-- Stationary hit area: the artwork rattles, the target does not. -->
+          <rect id="clock-hit" x="34" y="226" width="188" height="232" rx="14"
+                fill="transparent" tabindex="0" role="button"
+                aria-label="Hit the alarm clock"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="bottom">
+    <div class="hint" id="hint">Hit the clock</div>
+    <div class="hitline" id="hitline">&nbsp;</div>
+    <div class="cue"><span>Scroll &darr;</span></div>
+  </div>
+</main>
+
+<section class="note">
+  <div class="note-in">
+    <h2>Page 4 mockup &mdash; whack the alarm</h2>
+    <p>
+      It is ringing when you arrive. Hit the clock. Each hit drags him one stage
+      further out of bed &mdash; and the fifth one is where $SB gets invented.
+    </p>
+    <ul>
+      <li>
+        <strong>Third mechanic, third feel.</strong> Page 1 accumulates, page 3
+        scrubs, this one is a five-state machine you punch through. The clock
+        physically shakes while it rings, so it asks to be hit.
+      </li>
+      <li>
+        Stages: flat out &rarr; stirs &rarr; one eye &rarr; sits up, blanket
+        thrown off &rarr; lamp on, <strong>"Enough. I want a different
+        life."</strong>
+      </li>
+      <li>
+        <strong>Same background as every other page.</strong> The 6am read comes
+        from the lamp, the blanket and the drifting z's &mdash; not from
+        recolouring the room.
+      </li>
+      <li>
+        His shut eyelids are drawn over your artwork and fade off as he wakes,
+        so the same file does asleep and awake.
+      </li>
+    </ul>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var stage = document.getElementById("stage");
+    var clock = document.getElementById("clock");
+    var hitArea = document.getElementById("clock-hit");
+    var hint = document.getElementById("hint");
+    var hitline = document.getElementById("hitline");
+    var bubble = document.getElementById("bubble");
+    var scene = document.getElementById("scene");
+
+    var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // What he mutters at each stage, and the little status line under the page.
+    var STAGES = [
+      { say: "five more minutes.", line: "still asleep" },
+      { say: "no. go away.",       line: "stirring" },
+      { say: "what time is it.",   line: "one eye open" },
+      { say: "i have no money.",   line: "sitting up" },
+      { say: "",                   line: "awake. dangerous." }
+    ];
+
+    var s = 0;
+    var MAX = 4;
+
+    function say(t) {
+      if (!t) { bubble.classList.remove("show"); return; }
+      bubble.textContent = t;
+      bubble.classList.add("show");
+      clearTimeout(say._t);
+      say._t = setTimeout(function () {
+        bubble.classList.remove("show");
+      }, 1900);
+    }
+
+    function render() {
+      for (var i = 0; i <= MAX; i++) stage.classList.remove("s" + i);
+      stage.classList.add("s" + s);
+      hitline.textContent = STAGES[s].line;
+
+      if (s >= MAX) {
+        stage.classList.remove("ringing");
+        stage.classList.add("dead");
+        hint.textContent = "That is the whole reason.";
+      } else {
+        hint.textContent = s === 0 ? "Hit the clock" : "Again";
+      }
+      say(STAGES[s].say);
+    }
+
+    function hit() {
+      if (s >= MAX) return;
+      s++;
+
+      // Impact: the clock takes a real knock, the room jumps a little.
+      if (!reduced) {
+        clock.animate(
+          [
+            { transform: "translateY(0) scale(1)" },
+            { transform: "translateY(9px) scaleY(0.86) scaleX(1.1)" },
+            { transform: "translateY(0) scale(1)" }
+          ],
+          { duration: 260, easing: "ease-out" }
+        );
+        scene.animate(
+          [
+            { transform: "translate(0,0)" },
+            { transform: "translate(-3px,2px)" },
+            { transform: "translate(3px,-1px)" },
+            { transform: "translate(0,0)" }
+          ],
+          { duration: 160, easing: "steps(2, end)" }
+        );
+      }
+      render();
+    }
+
+    hitArea.addEventListener("click", hit);
+    hitArea.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); hit(); }
+    });
+
+    render();
+  })();
+</script>

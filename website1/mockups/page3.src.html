@@ -1,0 +1,435 @@
+<title>$SB — Page 3 Mockup</title>
+
+<style>
+__BASE_CSS__
+
+
+.middle { place-items: end center; }
+
+.vault-wrap {
+  position: relative;
+  width: min(92vw, calc(min(56dvh, 480px) * 620 / 520));
+  aspect-ratio: 620 / 520;
+}
+svg.vault { width: 100%; height: 100%; display: block; overflow: visible; }
+
+/* Progress readout, left */
+.readout { position: absolute; top: 0; left: 0; pointer-events: none; z-index: 3; }
+.readout .label {
+  font-size: 0.62rem; font-weight: 700; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--text-dim);
+}
+.readout .value {
+  font-weight: 900; font-size: clamp(1.5rem, 5vw, 2.8rem); line-height: 1;
+  font-variant-numeric: tabular-nums; color: var(--gold);
+  -webkit-text-stroke: 0.055em var(--ink);
+}
+.bubble { top: 12%; right: 0; }
+
+/* ---------------- the repay slider ---------------- */
+.slider {
+  position: relative;
+  width: min(88vw, 460px);
+  height: 62px;
+  touch-action: none;
+}
+.track {
+  position: absolute;
+  inset: 12px 0;
+  border: 4px solid var(--ink);
+  border-radius: 99px;
+  background: var(--vault);
+  overflow: hidden;
+}
+/* Gold fills the track from the left as you repay. */
+.fill {
+  position: absolute;
+  inset: 0;
+  width: 0%;
+  background: linear-gradient(90deg, var(--gold-deep), var(--gold));
+  border-radius: 99px 0 0 99px;
+}
+.knob {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  border: 5px solid var(--ink);
+  background: var(--gold);
+  box-shadow: 0 4px 0 0 var(--ink);
+  cursor: grab;
+  display: grid;
+  place-items: center;
+  /* Only springs back when released short — never during a drag. */
+  transition: left 0ms;
+}
+.knob.snap { transition: left 420ms cubic-bezier(0.34, 1.56, 0.64, 1); }
+.knob:active { cursor: grabbing; }
+.knob svg { width: 54%; height: 54%; }
+.slider:focus-visible .knob { outline: 3px solid var(--stamp); outline-offset: 3px; }
+
+.done .knob { background: var(--cream); }
+
+/* ---------------- vault internals ---------------- */
+/* Shackle rises with progress; --p is set from JS (0..1). */
+#shackle {
+  transform-box: view-box;
+  transform-origin: 310px 250px;
+}
+#door-l, #door-r { transform-box: view-box; }
+#lock-body { transform-box: view-box; transform-origin: 310px 280px; }
+
+.freed #lock-body { animation: lockdrop 620ms cubic-bezier(.5,0,.9,.5) forwards; }
+@keyframes lockdrop {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(170px) rotate(28deg); opacity: 0; }
+}
+#shackle.gone { opacity: 0; transition: opacity 200ms ease; }
+
+/* The freed memes float back up and out */
+.meme-out { transform-box: fill-box; transform-origin: 50% 50%; }
+
+@keyframes shake-no {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-7px); }
+  75% { transform: translateX(7px); }
+}
+.nope { animation: shake-no 280ms ease-in-out; }
+</style>
+
+<main class="stage" id="stage">
+  <div class="top">
+    <div class="eyebrow">Kapibara Blyatovich &middot; Lending Co.</div>
+    <div class="count">03 / 07</div>
+  </div>
+
+  <div class="head">
+    <h1 class="sticker" data-text="Repay $SB. Take them back.">
+      Repay $SB. Take them back.
+    </h1>
+  </div>
+
+  <div class="middle">
+    <div class="readout">
+      <div class="label">Left to repay</div>
+      <div class="value" id="owed">42,000</div>
+    </div>
+
+    <div class="vault-wrap" id="vaultWrap">
+      <div class="bubble" id="bubble">all of it.</div>
+
+      <svg class="vault" viewBox="0 0 620 520" id="vault" role="img"
+           aria-label="A vault holding your locked memecoins">
+
+        <g stroke="var(--ink)" stroke-width="7" stroke-linejoin="round"
+           stroke-linecap="round">
+
+          <!-- vault frame -->
+          <rect x="86" y="96" width="448" height="330" rx="26"
+                fill="var(--fur)"/>
+          <rect x="122" y="130" width="376" height="262" rx="16"
+                fill="#2a1c10"/>
+
+          <!-- the memes inside, waiting -->
+          <g id="inside">
+            <g class="meme-out" transform="translate(206 232)">
+              <circle r="30" fill="#b9b3a6" stroke="var(--ink)" stroke-width="6"/>
+              <g transform="scale(0.4) translate(-50 -50)" fill="var(--ink)">
+                <path d="M24 38 L17 11 L41 26 Z"/><path d="M76 38 L83 11 L59 26 Z"/>
+                <ellipse cx="50" cy="58" rx="33" ry="29"/>
+                <circle cx="38" cy="54" r="5" fill="#b9b3a6"/>
+                <circle cx="62" cy="54" r="5" fill="#b9b3a6"/>
+              </g>
+            </g>
+            <g class="meme-out" transform="translate(292 214)">
+              <circle r="30" fill="#a8c24e" stroke="var(--ink)" stroke-width="6"/>
+              <g transform="scale(0.4) translate(-50 -50)" fill="var(--ink)">
+                <path d="M22 32 q-15 8 -11 36 q3 15 16 8 z"/>
+                <path d="M78 32 q15 8 11 36 q-3 15 -16 8 z"/>
+                <ellipse cx="50" cy="56" rx="30" ry="28"/>
+                <circle cx="39" cy="52" r="5" fill="#a8c24e"/>
+                <circle cx="61" cy="52" r="5" fill="#a8c24e"/>
+              </g>
+            </g>
+            <g class="meme-out" transform="translate(378 232)">
+              <circle r="30" fill="#e0a33c" stroke="var(--ink)" stroke-width="6"/>
+              <g transform="scale(0.4) translate(-50 -50)" fill="var(--ink)">
+                <path d="M26 48 q-6 -24 22 -27 q28 -3 34 17 q9 24 -11 34
+                         q-26 14 -40 -3 q-8 -10 -5 -21 z"/>
+                <circle cx="44" cy="46" r="4" fill="#e0a33c"/>
+                <circle cx="62" cy="58" r="4" fill="#e0a33c"/>
+              </g>
+            </g>
+            <g class="meme-out" transform="translate(240 318)">
+              <circle r="30" fill="#7a6a5b" stroke="var(--ink)" stroke-width="6"/>
+              <g transform="scale(0.4) translate(-50 -50)" fill="var(--cream)">
+                <circle cx="36" cy="30" r="14"/>
+                <path d="M18 58 q10 -22 40 -20 q26 2 28 20 q2 18 -26 20
+                         q-34 2 -42 -20 z"/>
+              </g>
+            </g>
+            <g class="meme-out" transform="translate(344 318)">
+              <circle r="30" fill="#c4392b" stroke="var(--ink)" stroke-width="6"/>
+              <g transform="scale(0.4) translate(-50 -50)" fill="var(--cream)">
+                <path d="M8 66 L26 44 L58 39 L82 52 L92 57 L92 68 L8 68 Z"/>
+                <circle cx="30" cy="70" r="9"/><circle cx="72" cy="70" r="9"/>
+              </g>
+            </g>
+          </g>
+
+          <!-- the two door halves, closed at rest -->
+          <rect id="door-l" x="122" y="130" width="188" height="262"
+                fill="var(--vault)"/>
+          <rect id="door-r" x="310" y="130" width="188" height="262"
+                fill="var(--vault)"/>
+
+          <!-- hinges -->
+          <rect x="104" y="160" width="20" height="40" rx="6" fill="var(--fur-dark)"/>
+          <rect x="104" y="322" width="20" height="40" rx="6" fill="var(--fur-dark)"/>
+          <rect x="496" y="160" width="20" height="40" rx="6" fill="var(--fur-dark)"/>
+          <rect x="496" y="322" width="20" height="40" rx="6" fill="var(--fur-dark)"/>
+
+          <!-- feet -->
+          <rect x="112" y="426" width="66" height="34" rx="12" fill="var(--fur-dark)"/>
+          <rect x="442" y="426" width="66" height="34" rx="12" fill="var(--fur-dark)"/>
+        </g>
+
+        <!-- the padlock: shackle lifts as you repay -->
+        <g stroke="var(--ink)" stroke-width="8" stroke-linejoin="round">
+          <path id="shackle" d="M284 258 v-26 a26 26 0 0 1 52 0 v26" fill="none"/>
+          <g id="lock-body">
+            <rect x="270" y="254" width="80" height="64" rx="13"
+                  fill="var(--cream)"/>
+            <circle cx="310" cy="280" r="8" fill="var(--ink)" stroke="none"/>
+            <path d="M310 286 v13" stroke-width="6" stroke-linecap="round"/>
+          </g>
+        </g>
+
+        <!-- he leans in from the right, watching you pay -->
+        <image id="mascot" class="breathe grounded" href="data:image/webp;base64,__MASCOT_B64__"
+               x="428" y="222" width="184" height="234"
+               preserveAspectRatio="xMidYMax meet"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="bottom">
+    <div class="hint" id="hint">Drag all the way to repay</div>
+
+    <div class="slider" id="slider" tabindex="0" role="slider"
+         aria-label="Repay $SB" aria-valuemin="0" aria-valuemax="100"
+         aria-valuenow="0">
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <div class="knob" id="knob">
+        <svg viewBox="0 0 100 100" fill="var(--ink)" aria-hidden="true">
+          <path d="M38 22 L66 50 L38 78 Z"/>
+          <rect x="20" y="44" width="14" height="12" rx="3"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="cue"><span>Scroll &darr;</span></div>
+  </div>
+</main>
+
+<section class="note">
+  <div class="note-in">
+    <h2>Page 3 mockup &mdash; you scrub it yourself</h2>
+    <p>
+      Drag the gold knob. The padlock's shackle lifts in step with your drag,
+      the amount owed counts down, and the doors only part once you have paid
+      every last $SB.
+    </p>
+    <ul>
+      <li>
+        <strong>New mechanic on purpose.</strong> Page 1 was tapping, page 2 was
+        one big trigger. This one is continuous &mdash; you control every frame,
+        and it runs backwards if you drag back.
+      </li>
+      <li>
+        <strong>Let go early and it snaps back</strong> and he shakes his head.
+        Part-paying gets you nothing, which is exactly how a loan works.
+      </li>
+      <li>
+        Finish it and the lock falls off, the doors swing open, and your five
+        memes float back out to you.
+      </li>
+      <li>Keyboard works too &mdash; focus the slider and use the arrow keys.</li>
+    </ul>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var TOTAL = 42000;
+
+    var stage = document.getElementById("stage");
+    var slider = document.getElementById("slider");
+    var knob = document.getElementById("knob");
+    var fill = document.getElementById("fill");
+    var owed = document.getElementById("owed");
+    var hint = document.getElementById("hint");
+    var bubble = document.getElementById("bubble");
+    var shackle = document.getElementById("shackle");
+    var doorL = document.getElementById("door-l");
+    var doorR = document.getElementById("door-r");
+    var inside = document.getElementById("inside");
+    var vault = document.getElementById("vault");
+
+    var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    var p = 0;          // 0..1 repaid
+    var freed = false;
+    var dragging = false;
+
+    function travel() {
+      return slider.clientWidth - knob.offsetWidth;
+    }
+
+    function say(t) {
+      bubble.textContent = t;
+      bubble.classList.add("show");
+      clearTimeout(say._t);
+      say._t = setTimeout(function () {
+        bubble.classList.remove("show");
+      }, 2000);
+    }
+
+    /* Everything that reads off progress lives here, so the drag, the keyboard
+       and the snap-back all stay in sync. */
+    function render() {
+      var x = p * travel();
+      knob.style.left = x + "px";
+      fill.style.width = (p * 100).toFixed(2) + "%";
+      slider.setAttribute("aria-valuenow", Math.round(p * 100));
+
+      owed.textContent = Math.round(TOTAL * (1 - p)).toLocaleString("en-US");
+
+      // Shackle lifts out of the lock body in step with the drag.
+      shackle.style.transform = "translateY(" + (-30 * p).toFixed(1) + "px)";
+
+      if (!freed) {
+        hint.textContent =
+          p === 0
+            ? "Drag all the way to repay"
+            : p < 1
+              ? Math.round(p * 100) + "% repaid — keep going"
+              : "Paid in full.";
+      }
+    }
+
+    function free() {
+      if (freed) return;
+      freed = true;
+      stage.classList.add("freed");
+      shackle.classList.add("gone");
+      slider.classList.add("done");
+      hint.textContent = "Unlocked. They are yours again.";
+      say("we are square.");
+
+      // Doors swing apart, then the memes drift up and out.
+      if (reduced) {
+        doorL.style.transform = "translateX(-190px)";
+        doorR.style.transform = "translateX(190px)";
+        inside.querySelectorAll(".meme-out").forEach(function (m) {
+          m.style.opacity = 0;
+        });
+        return;
+      }
+      doorL.animate(
+        [{ transform: "none" }, { transform: "translateX(-196px) skewY(-2deg)" }],
+        { duration: 620, easing: "cubic-bezier(.3,.8,.3,1)", fill: "forwards" }
+      );
+      doorR.animate(
+        [{ transform: "none" }, { transform: "translateX(196px) skewY(2deg)" }],
+        { duration: 620, easing: "cubic-bezier(.3,.8,.3,1)", fill: "forwards" }
+      );
+
+      inside.querySelectorAll(".meme-out").forEach(function (m, i) {
+        setTimeout(function () {
+          m.animate(
+            [
+              { transform: "translateY(0) scale(1)", opacity: 1 },
+              { transform: "translateY(-40px) scale(1.12)", opacity: 1, offset: 0.4 },
+              { transform: "translateY(-230px) scale(0.6)", opacity: 0 }
+            ],
+            { duration: 900, easing: "cubic-bezier(.4,0,.6,1)", fill: "forwards" }
+          );
+        }, 480 + i * 90);
+      });
+    }
+
+    function setP(v, viaDrag) {
+      p = Math.max(0, Math.min(1, v));
+      render();
+      if (p >= 1) free();
+      else if (!viaDrag) knob.classList.remove("snap");
+    }
+
+    /* ---- pointer drag ---- */
+    function pointerP(clientX) {
+      var r = slider.getBoundingClientRect();
+      return (clientX - r.left - knob.offsetWidth / 2) / travel();
+    }
+
+    knob.addEventListener("pointerdown", function (e) {
+      if (freed) return;
+      dragging = true;
+      knob.classList.remove("snap");
+      knob.setPointerCapture(e.pointerId);
+      e.preventDefault();
+    });
+
+    knob.addEventListener("pointermove", function (e) {
+      if (!dragging) return;
+      setP(pointerP(e.clientX), true);
+    });
+
+    function release() {
+      if (!dragging) return;
+      dragging = false;
+      if (freed) return;
+      // Short of the end: springs back, and he tells you so.
+      knob.classList.add("snap");
+      var was = p;
+      setP(0);
+      if (was > 0.06) {
+        vault.classList.add("nope");
+        setTimeout(function () { vault.classList.remove("nope"); }, 300);
+        say(was > 0.75 ? "so close." : "not enough.");
+        hint.textContent = "All of it, or nothing comes out.";
+      }
+    }
+    knob.addEventListener("pointerup", release);
+    knob.addEventListener("pointercancel", release);
+
+    /* ---- keyboard ---- */
+    slider.addEventListener("keydown", function (e) {
+      if (freed) return;
+      var step = e.shiftKey ? 0.25 : 0.08;
+      if (e.key === "ArrowRight" || e.key === "ArrowUp") {
+        knob.classList.add("snap"); setP(p + step); e.preventDefault();
+      } else if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
+        knob.classList.add("snap"); setP(p - step); e.preventDefault();
+      } else if (e.key === "End") {
+        knob.classList.add("snap"); setP(1); e.preventDefault();
+      } else if (e.key === "Home") {
+        knob.classList.add("snap"); setP(0); e.preventDefault();
+      }
+    });
+
+    // Clicking the track jumps toward that point (still must reach the end).
+    slider.addEventListener("pointerdown", function (e) {
+      if (freed || e.target === knob) return;
+      knob.classList.add("snap");
+      setP(pointerP(e.clientX));
+      setTimeout(release, 460);
+      dragging = true;
+    });
+
+    window.addEventListener("resize", render);
+    render();
+  })();
+</script>

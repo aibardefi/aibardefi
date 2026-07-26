@@ -1,0 +1,439 @@
+<title>$SB — Page 6 Mockup</title>
+
+<style>
+__BASE_CSS__
+
+.middle { place-items: end center; }
+
+.yard {
+  position: relative;
+  width: min(100%, calc(min(45dvh, 400px) * 760 / 470));
+  aspect-ratio: 760 / 470;
+}
+svg.yard-svg { width: 100%; height: 100%; display: block; overflow: visible; }
+
+/* ---------------------------------------------------------------------------
+   Ambient layer: he leans toward the pointer and his gaze follows it. Driven
+   from JS via custom properties so CSS still owns the easing.
+   --------------------------------------------------------------------------- */
+#lean {
+  transform-box: view-box;
+  transform-origin: 380px 430px;
+  /* Long, soft follow — a short duration here reads twitchy and cheap. */
+  transition: transform 900ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  transform:
+    translateX(calc(var(--px, 0) * 26px))
+    rotate(calc(var(--px, 0) * 2.4deg));
+}
+#pupils {
+  transition: transform 420ms var(--swift);
+  /* Travel is bounded by the sliver: ~7px across, barely any vertically. */
+  transform: translate(calc(var(--px, 0) * 7px), calc(var(--py, 0) * 1.2px));
+}
+
+/* Shadow squashes as he moves — sells the lean without extra drawing. */
+#shadow {
+  transform-box: view-box;
+  transform-origin: 380px 452px;
+  transition: transform 900ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  transform: translateX(calc(var(--px, 0) * 16px)) scaleX(calc(1 - var(--pa, 0) * 0.1));
+}
+
+/* ---------------------------------------------------------------------------
+   Moods. Each is a distinct, hand-timed animation on its own layer so they
+   never fight the ambient lean.
+   --------------------------------------------------------------------------- */
+#mood { transform-box: view-box; transform-origin: 380px 452px; }
+
+.m-jump #mood { animation: m-jump 900ms cubic-bezier(0.3, 0.9, 0.4, 1); }
+@keyframes m-jump {
+  0%   { transform: translateY(0) scale(1, 1); }
+  14%  { transform: translateY(6px) scale(1.1, 0.86); }
+  40%  { transform: translateY(-96px) scale(0.92, 1.12); }
+  56%  { transform: translateY(-104px) scale(1, 1); }
+  80%  { transform: translateY(4px) scale(1.14, 0.82); }
+  100% { transform: translateY(0) scale(1, 1); }
+}
+
+.m-spin #mood { animation: m-spin 1000ms cubic-bezier(0.5, 0, 0.3, 1); }
+@keyframes m-spin {
+  0%   { transform: rotate(0) scale(1); }
+  20%  { transform: rotate(-24deg) scale(0.95, 1.06); }
+  75%  { transform: rotate(392deg) scale(1.04, 0.94); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+.m-rage #mood { animation: m-rage 760ms steps(2, end) 4; }
+@keyframes m-rage {
+  0%   { transform: translate(0, 0) scale(1); }
+  25%  { transform: translate(-6px, -3px) scale(1.03); }
+  50%  { transform: translate(5px, 2px) scale(1.05); }
+  75%  { transform: translate(-4px, 3px) scale(1.03); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+.m-fat #mood { animation: m-fat 1500ms cubic-bezier(0.3, 1.4, 0.5, 1); }
+@keyframes m-fat {
+  0%   { transform: scale(1, 1); }
+  30%  { transform: scale(1.3, 1.16); }
+  55%  { transform: scale(1.24, 1.2); }
+  100% { transform: scale(1, 1); }
+}
+
+.m-shy #mood { animation: m-shy 1400ms ease-in-out; }
+@keyframes m-shy {
+  0%   { transform: translateY(0) rotate(0); }
+  35%  { transform: translateY(14px) rotate(-7deg) scale(0.95); }
+  70%  { transform: translateY(14px) rotate(6deg) scale(0.95); }
+  100% { transform: translateY(0) rotate(0); }
+}
+
+.m-sleep #mood { animation: m-sleep 2200ms ease-in-out; }
+@keyframes m-sleep {
+  0%   { transform: translateY(0) rotate(0); }
+  40%  { transform: translateY(24px) rotate(-13deg) scale(0.97); }
+  75%  { transform: translateY(24px) rotate(-13deg) scale(0.97); }
+  100% { transform: translateY(0) rotate(0); }
+}
+
+/* While a mood plays, the ambient lean stands down so they don't compete. */
+.busy #lean { transition: transform 300ms ease; transform: none; }
+
+/* ---- per-mood overlays ---- */
+.fx { opacity: 0; pointer-events: none; }
+.m-rage .fx-steam { animation: steam 700ms ease-out 3; }
+@keyframes steam {
+  0%   { opacity: 0.9; transform: translateY(0) scale(0.6); }
+  100% { opacity: 0; transform: translateY(-58px) scale(1.5); }
+}
+.fx-steam { transform-box: view-box; transform-origin: 380px 300px; }
+
+.m-shy .fx-blush { animation: blush 1400ms ease-in-out; }
+@keyframes blush {
+  0%, 100% { opacity: 0; }
+  40%, 70% { opacity: 0.85; }
+}
+
+.m-sleep .fx-zzz { animation: zzz6 2200ms ease-out; }
+.m-sleep .fx-zzz:nth-of-type(2) { animation-delay: 320ms; }
+.m-sleep .fx-zzz:nth-of-type(3) { animation-delay: 640ms; }
+@keyframes zzz6 {
+  0%   { opacity: 0; transform: translate(0, 0) scale(0.6); }
+  30%  { opacity: 1; }
+  100% { opacity: 0; transform: translate(44px, -68px) scale(1.2); }
+}
+.fx-zzz { transform-box: view-box; transform-origin: 470px 300px; }
+
+.m-jump .fx-dust, .m-fat .fx-dust { animation: dust 620ms ease-out; }
+@keyframes dust {
+  0%   { opacity: 0.8; transform: scaleX(0.4) scaleY(1); }
+  100% { opacity: 0; transform: scaleX(2.1) scaleY(0.3); }
+}
+.fx-dust { transform-box: view-box; transform-origin: 380px 452px; }
+
+.m-spin .fx-swoosh { animation: swoosh 1000ms ease-out; }
+@keyframes swoosh {
+  0%   { opacity: 0; stroke-dasharray: 0 400; }
+  25%  { opacity: 0.9; }
+  100% { opacity: 0; stroke-dasharray: 400 400; }
+}
+
+/* ---------------- the mood buttons ---------------- */
+.pad {
+  display: flex;
+  gap: clamp(0.4rem, 2vw, 0.9rem);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.mbtn .disc { background: var(--mood-bg); }
+/* Whichever mood is playing stays pressed in. */
+.mbtn.active .disc {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 0 var(--ink);
+}
+</style>
+
+<main class="stage" id="stage">
+  <div class="top">
+    <div class="eyebrow">Kapibara Blyatovich &middot; Lending Co.</div>
+    <div class="count">06 / 07</div>
+  </div>
+
+  <div class="head">
+    <h1 class="sticker" data-text="Poke the bear.">Poke the bear.</h1>
+  </div>
+
+  <div class="middle">
+    <div class="yard" id="yard">
+      <div class="bubble" id="bubble" style="top:6%; left:2%;">hello.</div>
+
+      <svg class="yard-svg" viewBox="0 0 760 470" id="scene" role="img"
+           aria-label="Kapibara Blyatovich, who reacts to you">
+
+        <!-- contact shadow -->
+        <ellipse id="shadow" cx="380" cy="452" rx="118" ry="20"
+                 fill="var(--ink)" opacity="0.14"/>
+
+        <!-- dust puff on landings -->
+        <g class="fx fx-dust" stroke="var(--ink)" stroke-width="5"
+           fill="none" stroke-linecap="round" opacity="0">
+          <path d="M262 448 q-26 -12 -44 -4"/>
+          <path d="M498 448 q26 -12 44 -4"/>
+        </g>
+
+        <!-- swoosh arc for the spin -->
+        <circle class="fx fx-swoosh" cx="380" cy="330" r="132"
+                fill="none" stroke="var(--gold)" stroke-width="7"
+                stroke-linecap="round" opacity="0"/>
+
+        <!-- steam for the rage -->
+        <g class="fx fx-steam" stroke="var(--stamp)" stroke-width="7"
+           fill="none" stroke-linecap="round" opacity="0">
+          <path d="M300 250 q-14 -22 2 -40"/>
+          <path d="M460 250 q14 -22 -2 -40"/>
+        </g>
+
+        <!-- z's for the nap -->
+        <g class="fx" font-weight="900" font-size="34" fill="var(--ink)">
+          <text class="fx-zzz" x="470" y="300" opacity="0">z</text>
+          <text class="fx-zzz" x="470" y="300" opacity="0">z</text>
+          <text class="fx-zzz" x="470" y="300" opacity="0">z</text>
+        </g>
+
+        <!-- Three nested groups, three jobs: mood pose, ambient lean, breath.
+             Keeping them separate is what lets a mood play while he is still
+             leaning toward your cursor. -->
+        <g id="mood">
+          <g id="lean">
+            <g class="breathe">
+              <image href="data:image/webp;base64,__MASCOT_B64__"
+                     x="256" y="196" width="248" height="256"
+                     preserveAspectRatio="xMidYMax meet"/>
+
+              <!-- gaze: pupils painted over his eyes, tracking the pointer -->
+              <g id="pupils">
+                <circle cx="342.8" cy="319.2" r="3.6" fill="var(--ink)"/>
+                <circle cx="414.4" cy="319.2" r="3.6" fill="var(--ink)"/>
+              </g>
+
+              <!-- blush for the shy mood -->
+              <g class="fx fx-blush" opacity="0">
+                <ellipse cx="316" cy="336" rx="19" ry="11" fill="var(--cheek)"/>
+                <ellipse cx="444" cy="336" rx="19" ry="11" fill="var(--cheek)"/>
+              </g>
+            </g>
+          </g>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="bottom">
+    <div class="hint" id="hint">Move your cursor &mdash; then press one</div>
+
+    <div class="pad" id="pad">
+      <button class="sbtn mbtn" data-m="jump" style="--mood-bg:#a8c24e">
+        <span class="disc">
+          <svg viewBox="0 0 100 100" fill="var(--ink)" aria-hidden="true">
+            <path d="M50 14 L64 40 L50 32 L36 40 Z"/>
+            <rect x="42" y="44" width="16" height="30" rx="6"/>
+            <ellipse cx="50" cy="84" rx="26" ry="7"/>
+          </svg>
+        </span>
+        <span class="slabel">JUMP</span>
+      </button>
+
+      <button class="sbtn mbtn" data-m="spin" style="--mood-bg:#7fb3dd">
+        <span class="disc">
+          <svg viewBox="0 0 100 100" fill="none" stroke="var(--ink)"
+               stroke-width="9" stroke-linecap="round" aria-hidden="true">
+            <path d="M76 34 a32 32 0 1 0 8 22"/>
+            <path d="M84 24 v30 h-28"/>
+          </svg>
+        </span>
+        <span class="slabel">SPIN</span>
+      </button>
+
+      <button class="sbtn mbtn" data-m="rage" style="--mood-bg:#c4392b">
+        <span class="disc">
+          <svg viewBox="0 0 100 100" fill="var(--cream)" aria-hidden="true">
+            <path d="M54 8 L26 56 h20 l-8 36 30 -50 h-20 z"/>
+          </svg>
+        </span>
+        <span class="slabel">RAGE</span>
+      </button>
+
+      <button class="sbtn mbtn" data-m="fat" style="--mood-bg:#d9a020">
+        <span class="disc">
+          <svg viewBox="0 0 100 100" fill="var(--ink)" aria-hidden="true">
+            <ellipse cx="50" cy="56" rx="34" ry="28"/>
+            <path d="M16 26 q34 -16 68 0" fill="none" stroke="var(--ink)"
+                  stroke-width="8" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span class="slabel">INFLATE</span>
+      </button>
+
+      <button class="sbtn mbtn" data-m="shy" style="--mood-bg:#e8635e">
+        <span class="disc">
+          <svg viewBox="0 0 100 100" fill="var(--ink)" aria-hidden="true">
+            <path d="M50 84 C6 56 20 16 50 34 C80 16 94 56 50 84 Z"/>
+          </svg>
+        </span>
+        <span class="slabel">SHY</span>
+      </button>
+
+      <button class="sbtn mbtn" data-m="sleep" style="--mood-bg:#9aa0a6">
+        <span class="disc">
+          <svg viewBox="0 0 100 100" fill="var(--ink)" aria-hidden="true">
+            <path d="M62 12 a38 38 0 1 0 26 62 A42 42 0 0 1 62 12 Z"/>
+          </svg>
+        </span>
+        <span class="slabel">NAP</span>
+      </button>
+    </div>
+
+    <div class="cue"><span>Scroll &darr;</span></div>
+  </div>
+</main>
+
+<section class="note">
+  <div class="note-in">
+    <h2>Page 6 mockup &mdash; the playground</h2>
+    <p>
+      He watches your cursor the whole time: eyes track it, body leans toward
+      it, and his shadow squashes as he goes. Then press any of the six buttons.
+    </p>
+    <ul>
+      <li>
+        <strong>Fifth mechanic, and the busiest page on purpose.</strong>
+        Continuous pointer tracking plus six hand-timed one-shots &mdash; this
+        is the page that exists to show off.
+      </li>
+      <li>
+        <strong>Every mood is timed by hand,</strong> not one shared wobble:
+        the jump has anticipation, a squash on take-off and a landing; the spin
+        winds back before it goes and overshoots 32&deg; past before settling;
+        rage runs on stepped frames so it judders instead of gliding.
+      </li>
+      <li>
+        Each one brings its own effects &mdash; dust on landings, a gold arc on
+        the spin, steam on the rage, blush when shy, drifting z's for the nap.
+      </li>
+      <li>
+        <strong>Three nested layers</strong> carry pose, lean and breath
+        separately, which is what lets him keep breathing and leaning while a
+        mood plays instead of snapping to a stop.
+      </li>
+    </ul>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var stage = document.getElementById("stage");
+    var yard = document.getElementById("yard");
+    var scene = document.getElementById("scene");
+    var pad = document.getElementById("pad");
+    var hint = document.getElementById("hint");
+    var bubble = document.getElementById("bubble");
+
+    var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    var MOODS = {
+      jump:  { ms: 900,  say: "up.",            hint: "Again?" },
+      spin:  { ms: 1000, say: "dizzy now.",     hint: "Do not do that again." },
+      rage:  { ms: 3040, say: "i am very calm.", hint: "He is not calm." },
+      fat:   { ms: 1500, say: "this is muscle.", hint: "Sure." },
+      shy:   { ms: 1400, say: "stop looking.",  hint: "He is embarrassed." },
+      sleep: { ms: 2200, say: "later.",         hint: "Let him rest." }
+    };
+    var ALL = Object.keys(MOODS);
+
+    var playing = null;
+    var timer = null;
+
+    function say(t) {
+      bubble.textContent = t;
+      bubble.classList.add("show");
+      clearTimeout(say._t);
+      say._t = setTimeout(function () {
+        bubble.classList.remove("show");
+      }, 1800);
+    }
+
+    /* ---- pointer tracking: normalised -1..1 from the scene's centre ---- */
+    var raf = null;
+    var target = { x: 0, y: 0 };
+
+    function apply() {
+      raf = null;
+      yard.style.setProperty("--px", target.x.toFixed(3));
+      yard.style.setProperty("--py", target.y.toFixed(3));
+      yard.style.setProperty("--pa", Math.abs(target.x).toFixed(3));
+    }
+
+    function track(e) {
+      if (reduced) return;
+      var r = scene.getBoundingClientRect();
+      var cx = r.left + r.width / 2;
+      var cy = r.top + r.height * 0.62;
+      // Clamped so he leans, never lurches off his feet.
+      target.x = Math.max(-1, Math.min(1, (e.clientX - cx) / (r.width * 0.55)));
+      target.y = Math.max(-1, Math.min(1, (e.clientY - cy) / (r.height * 0.6)));
+      if (!raf) raf = requestAnimationFrame(apply);
+    }
+
+    window.addEventListener("pointermove", track, { passive: true });
+    window.addEventListener("pointerleave", function () {
+      target.x = 0; target.y = 0;
+      if (!raf) raf = requestAnimationFrame(apply);
+    });
+
+    /* ---- moods ---- */
+    function play(name) {
+      var m = MOODS[name];
+      if (!m) return;
+
+      // Restart cleanly if something is already running.
+      clearTimeout(timer);
+      ALL.forEach(function (k) { stage.classList.remove("m-" + k); });
+      pad.querySelectorAll(".mbtn").forEach(function (b) {
+        b.classList.remove("active");
+      });
+      stage.classList.remove("busy");
+
+      // Force a reflow so re-pressing the same button replays from frame zero.
+      void stage.offsetWidth;
+
+      playing = name;
+      stage.classList.add("m-" + name, "busy");
+      var btn = pad.querySelector('.mbtn[data-m="' + name + '"]');
+      if (btn) btn.classList.add("active");
+      say(m.say);
+      hint.textContent = m.hint;
+
+      timer = setTimeout(function () {
+        stage.classList.remove("m-" + name, "busy");
+        if (btn) btn.classList.remove("active");
+        playing = null;
+        hint.textContent = "Pick another";
+      }, reduced ? 60 : m.ms);
+    }
+
+    pad.addEventListener("click", function (e) {
+      var b = e.target.closest(".mbtn");
+      if (b) play(b.dataset.m);
+    });
+
+    // Poking him directly picks a mood at random — but never the one that just
+    // ran, so a second poke always looks like something new.
+    var lastPoke = null;
+    scene.addEventListener("click", function () {
+      var pool = ALL.filter(function (k) { return k !== lastPoke; });
+      lastPoke = pool[Math.floor(Math.random() * pool.length)];
+      play(lastPoke);
+    });
+    scene.style.cursor = "pointer";
+  })();
+</script>

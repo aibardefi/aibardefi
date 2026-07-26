@@ -1,0 +1,280 @@
+/* Shared identity for every page. Individual pages override --ground and
+   --ground-2 only, so each screen feels like a different room in one world. */
+:root {
+  --ink: #12110c;
+  --cream: #f7edd9;
+  --fur: #8c5a33;
+  --fur-dark: #6f4526;
+  --vault: #1d1c18;
+  --gold: #d9a020;
+  --gold-deep: #b07d14;
+  --stamp: #c4392b;
+  --cheek: #e8635e;
+
+  --ground: #e7e4dc;
+  --ground-2: #dcd8ce;
+  --text: var(--ink);
+  --text-dim: #4f4b42;
+
+  --display: ui-sans-serif, system-ui, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+
+  /* Motion vocabulary. Every page pulls easings from here so the whole site
+     accelerates and settles the same way — that consistency is most of what
+     makes motion read as considered rather than assembled. */
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);   /* settles with one overshoot */
+  --spring-big: cubic-bezier(0.34, 1.8, 0.5, 1); /* louder overshoot, for impacts */
+  --swift: cubic-bezier(0.2, 0.8, 0.2, 1);       /* fast out, long glide */
+  --heavy: cubic-bezier(0.5, 0, 0.75, 0);        /* accelerates into a landing */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ground: #16150f;
+    --ground-2: #1f1d15;
+    --text: var(--cream);
+    --text-dim: #9a9488;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #16150f;
+  --ground-2: #1f1d15;
+  --text: var(--cream);
+  --text-dim: #9a9488;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--text);
+  font-family: var(--display);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Sticker-outline display type: cream fill over a fat black stroke, lifted
+   from the mascot's own outline art. */
+.sticker {
+  position: relative;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 0.92;
+  color: var(--cream);
+  text-wrap: balance;
+}
+.sticker::before {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  -webkit-text-stroke: 0.14em var(--ink);
+  color: var(--ink);
+  z-index: -1;
+}
+
+.stage {
+  position: relative;
+  min-height: 100dvh;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: clamp(0.35rem, 1.4vh, 0.9rem);
+  padding: max(1.1rem, env(safe-area-inset-top)) 1.25rem
+    max(1.1rem, env(safe-area-inset-bottom));
+  background:
+    radial-gradient(120% 55% at 50% 100%, var(--ground-2) 0%, transparent 60%);
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.eyebrow, .count {
+  font-size: clamp(0.6rem, 1.6vw, 0.72rem);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.count { font-variant-numeric: tabular-nums; }
+
+.head { text-align: center; }
+h1 { margin: 0; font-size: clamp(1.5rem, 4.2vw, 3.2rem); }
+
+.middle {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 0;
+}
+
+.bottom { display: grid; justify-items: center; gap: 0.55rem; }
+.hint {
+  font-size: clamp(0.68rem, 2vw, 0.8rem);
+  font-weight: 700;
+  color: var(--text-dim);
+  min-height: 1.2em;
+  text-align: center;
+}
+
+/* Speech bubble, tail bottom-left by default */
+.bubble {
+  position: absolute;
+  padding: 0.55rem 0.8rem;
+  background: var(--cream);
+  color: var(--ink);
+  border: 4px solid var(--ink);
+  border-radius: 1.1rem 1.1rem 1.1rem 0.2rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: clamp(0.72rem, 2.2vw, 0.95rem);
+  line-height: 1.05;
+  max-width: 13ch;
+  opacity: 0;
+  z-index: 4;
+  transform: translateY(6px) rotate(-3deg) scale(0.9);
+  transition: opacity 200ms ease,
+    transform 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.bubble.show { opacity: 1; transform: translateY(0) rotate(-3deg) scale(1); }
+
+/* Sticker button: disc + label underneath */
+.sbtn {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  display: grid;
+  justify-items: center;
+  gap: 0.3rem;
+}
+.disc {
+  width: clamp(54px, 12.5vw, 70px);
+  height: clamp(54px, 12.5vw, 70px);
+  border-radius: 50%;
+  border: 4px solid var(--ink);
+  background: var(--disc-bg, var(--cream));
+  display: grid;
+  place-items: center;
+  box-shadow: 0 4px 0 0 var(--ink);
+  transition: transform 130ms ease, box-shadow 130ms ease;
+}
+.disc svg { width: 60%; height: 60%; display: block; }
+.sbtn:hover:not(:disabled) .disc {
+  transform: translateY(-3px);
+  box-shadow: 0 7px 0 0 var(--ink);
+}
+.sbtn:active:not(:disabled) .disc {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 0 var(--ink);
+}
+.sbtn:focus-visible { outline: none; }
+.sbtn:focus-visible .disc {
+  outline: 3px solid var(--stamp);
+  outline-offset: 3px;
+}
+.sbtn:disabled { opacity: 0.3; cursor: not-allowed; }
+.slabel {
+  font-weight: 900;
+  font-size: clamp(0.5rem, 1.5vw, 0.62rem);
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------------------
+   Ambient life. Nothing on screen should ever be perfectly still — a static
+   mascot reads as a placed image, a breathing one reads as a character. These
+   are deliberately tiny: 1-2% scale, 2-3px drift, long periods.
+   --------------------------------------------------------------------------- */
+
+/* Breathing, for the mascot on any page. Anchored at the feet so he swells
+   upward instead of floating. */
+.breathe {
+  transform-box: view-box;
+  transform-origin: 50% 100%;
+  animation: breathe 4.2s ease-in-out infinite;
+}
+@keyframes breathe {
+  0%, 100% { transform: scale(1, 1); }
+  50% { transform: scale(1.012, 0.988); }
+}
+
+/* Contact shadow that softens as a thing lifts — sells weight cheaply. */
+.grounded { filter: drop-shadow(0 10px 8px rgba(18, 17, 12, 0.16)); }
+
+/* Slow drift for anything meant to hang in the air. */
+.drift { animation: drift 6s ease-in-out infinite; }
+@keyframes drift {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  33% { transform: translate3d(2px, -5px, 0) rotate(1.2deg); }
+  66% { transform: translate3d(-2px, -2px, 0) rotate(-1deg); }
+}
+
+/* A sheen that crosses a surface once, on demand. Used for "this is ready"
+   moments instead of a colour change. */
+.sheen { position: relative; overflow: hidden; }
+.sheen::after {
+  content: "";
+  position: absolute;
+  top: -60%;
+  bottom: -60%;
+  left: -40%;
+  width: 28%;
+  background: linear-gradient(
+    100deg,
+    transparent,
+    rgba(255, 255, 255, 0.5),
+    transparent
+  );
+  transform: translateX(-120%) rotate(8deg);
+  pointer-events: none;
+}
+.sheen.swipe::after { animation: sheen 900ms var(--swift); }
+@keyframes sheen {
+  to { transform: translateX(560%) rotate(8deg); }
+}
+
+.cue {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.cue span { display: inline-block; animation: nudge 1.9s ease-in-out infinite; }
+@keyframes nudge {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(4px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+}
+
+/* Mockup annotation strip — not part of the real page */
+.note {
+  border-top: 4px solid var(--ink);
+  background: var(--ground-2);
+  padding: 1.5rem 1.25rem 2.5rem;
+}
+.note-in { max-width: 62ch; margin: 0 auto; display: grid; gap: 0.75rem; }
+.note h2 {
+  margin: 0;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.72rem;
+  color: var(--stamp);
+}
+.note p { margin: 0; font-size: 0.9rem; line-height: 1.55; }
+.note ul { margin: 0; padding-left: 1.1rem; display: grid; gap: 0.4rem; }
+.note li { font-size: 0.9rem; line-height: 1.5; }

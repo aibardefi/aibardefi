@@ -1,0 +1,364 @@
+<title>$SB — Page 5 Mockup</title>
+
+<style>
+__BASE_CSS__
+
+.middle { place-items: center; }
+
+.deck {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(0.6rem, 2.4vw, 1.6rem);
+  width: min(100%, 900px);
+  perspective: 1400px;
+}
+@media (max-width: 620px) {
+  .deck { gap: 0.45rem; }
+  /* Centred payoff spans nearly the full width here, so he stands above it. */
+  #mascot-wrap { bottom: 26%; width: 60px; }
+}
+
+.card {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  /* Two-stage flip: lifts off the table, turns, then settles back down. */
+  transition: transform 720ms var(--spring);
+  transform: rotateY(0deg) translateZ(0);
+}
+.card:focus-visible { outline: none; }
+.card:focus-visible .face-front,
+.card:focus-visible .face-back { outline: 3px solid var(--stamp); outline-offset: 3px; }
+.card.flipped { transform: rotateY(180deg); }
+.card.lift { transform: rotateY(90deg) translateZ(40px) scale(1.06); }
+
+.face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border: 5px solid var(--ink);
+  border-radius: 18px;
+  display: grid;
+  overflow: hidden;
+  box-shadow: 0 6px 0 0 var(--ink);
+}
+.face-front {
+  background: var(--cream);
+  grid-template-rows: 1fr auto;
+  place-items: center;
+  padding: 8% 8% 6%;
+  gap: 4%;
+}
+.face-back {
+  background: var(--card-bg);
+  transform: rotateY(180deg);
+  place-items: center;
+  padding: 10%;
+}
+
+.card-art { width: 74%; height: auto; display: block; }
+.card-art svg { width: 100%; height: auto; display: block; }
+
+.card-job {
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: clamp(0.56rem, 1.5vw, 0.8rem);
+  letter-spacing: 0.04em;
+  text-align: center;
+  color: var(--ink);
+  line-height: 1.15;
+}
+
+.punch {
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: clamp(0.62rem, 1.7vw, 1rem);
+  line-height: 1.12;
+  text-align: center;
+  color: var(--cream);
+  text-wrap: balance;
+  /* Punchline arrives a beat after the card lands — the joke needs the pause. */
+  opacity: 0;
+  transform: translateY(8px) scale(0.94);
+  transition: opacity 220ms ease 360ms,
+    transform 420ms var(--spring-big) 360ms;
+}
+.card.flipped .punch { opacity: 1; transform: none; }
+
+/* Corner index, like a playing card. Encodes real order: 1st job, 2nd, 3rd. */
+.pip {
+  position: absolute;
+  top: 6%;
+  left: 8%;
+  font-weight: 900;
+  font-size: clamp(0.5rem, 1.3vw, 0.66rem);
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+}
+
+/* Idle: the unflipped stack breathes very slightly out of sync so the row is
+   never dead still. */
+.card:not(.flipped):not(.lift) { animation: cardidle 5.4s ease-in-out infinite; }
+.card:nth-child(2):not(.flipped):not(.lift) { animation-delay: -1.8s; }
+.card:nth-child(3):not(.flipped):not(.lift) { animation-delay: -3.6s; }
+@keyframes cardidle {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-5px) rotate(-0.5deg); }
+}
+
+.card:hover:not(.flipped) { animation: none; transform: translateY(-9px) rotate(-1deg); }
+
+/* ---- the tally that fills in as you flip ---- */
+.tally {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+.tally i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 2.5px solid var(--ink);
+  background: transparent;
+  transition: background 240ms ease, transform 320ms var(--spring-big);
+}
+.tally i.on { background: var(--stamp); transform: scale(1.25); }
+
+/* Final line, once all three are turned over */
+.payoff {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: max-content;
+  max-width: 100%;
+  text-align: center;
+  font-size: clamp(1rem, 3.4vw, 2.1rem);
+  opacity: 0;
+  transform: translate(-50%, 14px) rotate(-1.5deg) scale(0.9);
+  transition: opacity 300ms ease, transform 560ms var(--spring-big);
+  pointer-events: none;
+  z-index: 6;
+}
+.all-done .payoff { opacity: 1; transform: translate(-50%, 0) rotate(-1.5deg); }
+
+/* He walks on at the end, bottom right */
+#mascot-wrap {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: clamp(64px, 11vw, 124px);
+  opacity: 0;
+  transform: translateY(34px) rotate(6deg);
+  transition: opacity 300ms ease, transform 640ms var(--spring);
+  pointer-events: none;
+  z-index: 5;
+}
+.all-done #mascot-wrap { opacity: 1; transform: none; }
+#mascot-wrap img { width: 100%; display: block; }
+</style>
+
+<main class="stage" id="stage">
+  <div class="top">
+    <div class="eyebrow">Kapibara Blyatovich &middot; Lending Co.</div>
+    <div class="count">05 / 07</div>
+  </div>
+
+  <div class="head">
+    <h1 class="sticker" data-text="He tried everything else first.">
+      He tried everything else first.
+    </h1>
+  </div>
+
+  <div class="middle">
+    <div class="deck" id="deck">
+
+      <button class="card" data-i="0" style="--card-bg:#4f7a3a"
+              aria-label="Reveal what happened with the honest job">
+        <span class="face face-front">
+          <span class="pip">1st</span>
+          <span class="card-art">
+            <!-- shovel -->
+            <svg viewBox="0 0 100 100" aria-hidden="true">
+              <g stroke="var(--ink)" stroke-width="6" stroke-linejoin="round"
+                 stroke-linecap="round">
+                <path d="M50 10 v46" fill="none"/>
+                <rect x="42" y="4" width="16" height="12" rx="4"
+                      fill="var(--fur-dark)"/>
+                <path d="M32 56 h36 l-6 30 q-12 8 -24 0 z" fill="#9aa0a6"/>
+              </g>
+            </svg>
+          </span>
+          <span class="card-job">An honest job</span>
+        </span>
+        <span class="face face-back">
+          <span class="punch">Lasted four hours.</span>
+        </span>
+      </button>
+
+      <button class="card" data-i="1" style="--card-bg:#c4392b"
+              aria-label="Reveal what happened with day trading">
+        <span class="face face-front">
+          <span class="pip">2nd</span>
+          <span class="card-art">
+            <!-- chart going down -->
+            <svg viewBox="0 0 100 100" aria-hidden="true">
+              <g stroke="var(--ink)" stroke-width="6" stroke-linejoin="round"
+                 stroke-linecap="round" fill="none">
+                <path d="M14 18 v66 h72"/>
+                <path d="M24 34 L44 52 L58 42 L82 74" stroke="var(--stamp)"
+                      stroke-width="7"/>
+                <path d="M82 60 v14 h-14" stroke="var(--stamp)" stroke-width="7"/>
+              </g>
+            </svg>
+          </span>
+          <span class="card-job">Day trading</span>
+        </span>
+        <span class="face face-back">
+          <span class="punch">Down 94%. Twice.</span>
+        </span>
+      </button>
+
+      <button class="card" data-i="2" style="--card-bg:#2f6f7a"
+              aria-label="Reveal what happened with the bank">
+        <span class="face face-front">
+          <span class="pip">3rd</span>
+          <span class="card-art">
+            <!-- bank -->
+            <svg viewBox="0 0 100 100" aria-hidden="true">
+              <g stroke="var(--ink)" stroke-width="6" stroke-linejoin="round"
+                 stroke-linecap="round">
+                <path d="M12 40 L50 16 L88 40 Z" fill="var(--cream)"/>
+                <rect x="20" y="44" width="12" height="34" fill="var(--cream)"/>
+                <rect x="44" y="44" width="12" height="34" fill="var(--cream)"/>
+                <rect x="68" y="44" width="12" height="34" fill="var(--cream)"/>
+                <rect x="12" y="80" width="76" height="10" rx="3"
+                      fill="var(--fur-dark)"/>
+              </g>
+            </svg>
+          </span>
+          <span class="card-job">Asked a bank</span>
+        </span>
+        <span class="face face-back">
+          <span class="punch">They laughed. No collateral.</span>
+        </span>
+      </button>
+
+    </div>
+
+    <div class="payoff sticker" data-text="So he built his own bank.">
+      So he built his own bank.
+    </div>
+
+    <div id="mascot-wrap">
+      <img class="breathe grounded"
+           src="data:image/webp;base64,__MASCOT_B64__"
+           alt="Kapibara Blyatovich" />
+    </div>
+  </div>
+
+  <div class="bottom">
+    <div class="hint" id="hint">Turn them over</div>
+    <div class="tally" id="tally" aria-hidden="true">
+      <i></i><i></i><i></i>
+    </div>
+    <div class="cue"><span>Scroll &darr;</span></div>
+  </div>
+</main>
+
+<section class="note">
+  <div class="note-in">
+    <h2>Page 5 mockup &mdash; three jobs, three punchlines</h2>
+    <p>
+      Click each card. It lifts off the table, turns edge-on, and lands with the
+      punchline arriving a beat later &mdash; the pause is the joke. Turn all
+      three and he walks on to take the credit.
+    </p>
+    <ul>
+      <li>
+        <strong>Fourth mechanic.</strong> Tap-to-collect, one-shot lever,
+        drag-scrub, whack-the-clock &mdash; and now a reveal. Nothing here
+        counts up or runs a timeline.
+      </li>
+      <li>
+        <strong>The flip is three moves, not one:</strong> lift and rotate
+        90&deg; edge-on, complete the turn, settle. A single rotateY reads
+        cheap; breaking it makes the card feel like an object.
+      </li>
+      <li>
+        The unturned cards drift out of sync with each other, so the row is
+        never dead still.
+      </li>
+      <li>
+        <strong>1st / 2nd / 3rd</strong> in the corners is real order &mdash;
+        this is the sequence he actually went through.
+      </li>
+    </ul>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var stage = document.getElementById("stage");
+    var deck = document.getElementById("deck");
+    var hint = document.getElementById("hint");
+    var pips = document.getElementById("tally").querySelectorAll("i");
+
+    var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var flipped = [false, false, false];
+
+    var LEFT = {
+      0: "Two to go",
+      1: "One more",
+      2: "That is the lot"
+    };
+
+    function done() {
+      return flipped.every(Boolean);
+    }
+
+    function flip(card) {
+      var i = Number(card.dataset.i);
+      if (flipped[i]) return;
+      flipped[i] = true;
+      pips[i].classList.add("on");
+
+      if (reduced) {
+        card.classList.add("flipped");
+      } else {
+        // Lift edge-on first, then complete the turn. Two transitions in
+        // sequence read as a physical object; one rotateY reads as a CSS demo.
+        card.classList.add("lift");
+        setTimeout(function () {
+          card.classList.remove("lift");
+          card.classList.add("flipped");
+        }, 300);
+      }
+
+      var n = flipped.filter(Boolean).length;
+      hint.textContent = done() ? "" : LEFT[n - 1] || "";
+
+      if (done()) {
+        setTimeout(function () {
+          stage.classList.add("all-done");
+          hint.textContent = "And that is page five.";
+        }, reduced ? 0 : 700);
+      }
+    }
+
+    deck.addEventListener("click", function (e) {
+      var card = e.target.closest(".card");
+      if (card) flip(card);
+    });
+
+    // Buttons already handle Enter/Space, but keep focus visible on the face.
+    deck.addEventListener("keydown", function (e) {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      var card = e.target.closest(".card");
+      if (card) { e.preventDefault(); flip(card); }
+    });
+  })();
+</script>
