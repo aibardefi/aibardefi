@@ -132,9 +132,9 @@ export function MemeYardSection() {
     <section id="yard" ref={ref} className={inView ? "live" : ""}>
       <Reveal className="y-copy">
         <h2 className="text-[clamp(2.1rem,9vw,3.2rem)] leading-[1.02] font-extrabold tracking-[-0.02em] text-navy uppercase lg:text-[clamp(2.5rem,7svh,4.6rem)]">
-          The Meme
+          <span className="text-orange">The Meme</span>
           <br />
-          Powered By <span className="text-orange">Meme.</span>
+          Powered By Memes.
         </h2>
         <p className="mt-4 text-[clamp(0.95rem,4vw,1.15rem)] font-semibold text-navy/90 lg:text-[clamp(1rem,2.4svh,1.35rem)]">
           Meme power. Community chaos.
