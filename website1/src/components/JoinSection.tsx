@@ -116,8 +116,12 @@ export function JoinSection() {
       </div>
 
       <div className="head" data-ent="up" data-ent-delay="90">
+        {/* Lower case in the markup, uppercase on screen — .sticker applies the
+            transform, so writing it shouted here would only make the source
+            harder to read. The accent lands on the last word: it is the payoff
+            of the line and the thing the whole site is collateralised by. */}
         <h1 className="sticker">
-          Come in. Bring <span className="hot">bags</span>.
+          The meme powered by <span className="hot">memes</span>
         </h1>
       </div>
 
