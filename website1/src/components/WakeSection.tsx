@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useEntrance, prefersReducedMotion } from "@/lib/useEntrance";
 import { useReplay } from "@/lib/useReplay";
+import { useAutoRearm } from "@/lib/useAutoRearm";
 import s from "./WakeSection.module.css";
 
 const MAX = 4;
@@ -35,6 +36,9 @@ export function WakeSection() {
   }, []);
 
   useReplay(ref, rearm);
+  // Back to sleep on his own after the verdict has had its moment, so the clock
+  // is worth hitting again without leaving the screen.
+  useAutoRearm(dead, rearm, 5200);
 
   useEffect(() => () => window.clearTimeout(bubbleTimer.current), []);
 

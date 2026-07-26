@@ -5,6 +5,7 @@ import { MASCOT_SRC } from "./Mascot";
 import { COINS } from "./coins";
 import { useEntrance, prefersReducedMotion } from "@/lib/useEntrance";
 import { useReplay } from "@/lib/useReplay";
+import { useAutoRearm } from "@/lib/useAutoRearm";
 import s from "./RepaySection.module.css";
 
 const TOTAL = 42000;
@@ -184,6 +185,9 @@ export function RepaySection() {
   }, []);
 
   useReplay(ref, rearm, () => dragging.current);
+  // The safe re-locks itself once the freed memes have been admired, putting the
+  // handle back at zero for another go.
+  useAutoRearm(freed, rearm, 5200);
 
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (freed) return;

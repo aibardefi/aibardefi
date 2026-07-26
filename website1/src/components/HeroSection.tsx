@@ -5,6 +5,7 @@ import { createRoot } from "react-dom/client";
 import { Mascot } from "./Mascot";
 import { COINS, CoinGlyph, type Coin } from "./coins";
 import { useEntrance, prefersReducedMotion } from "@/lib/useEntrance";
+import { useAutoRearm } from "@/lib/useAutoRearm";
 import s from "./HeroSection.module.css";
 
 const MAX = 10;
@@ -157,6 +158,15 @@ export function HeroSection() {
 
   const { sx, sy } = shape(fed);
   const full = fed >= MAX;
+
+  // Hands the bags back on his own once he is full, so the coins are tappable
+  // again without scrolling away first. Same restore the button performs, minus
+  // the "no." — that line is a reply to being asked, and nobody asked.
+  const deflate = useCallback(() => {
+    inFlight.current = 0;
+    setFed(0);
+  }, []);
+  useAutoRearm(full, deflate, 5200);
 
   return (
     <section className="stage" ref={ref}>

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { MASCOT_SRC } from "./Mascot";
 import { COINS, CoinGlyph } from "./coins";
 import { useEntrance, prefersReducedMotion } from "@/lib/useEntrance";
+import { useAutoRearm } from "@/lib/useAutoRearm";
 import s from "./VaultSection.module.css";
 
 const TOTAL = 42000;
@@ -21,7 +22,8 @@ const FEED_COIN_R = 19;
 const FEED_AT = [
   { x: 214, y: 24 },
   { x: 256, y: 10 },
-  { x: 298, y: 20 },
+  // Lifted out of the way of the IN label directly beneath it.
+  { x: 298, y: 14 },
   { x: 340, y: 6 },
   { x: 382, y: 22 },
   { x: 424, y: 12 },
@@ -327,6 +329,13 @@ export function VaultSection() {
     [reset, say, spendOpen, spent]
   );
 
+  // Once the gold has been spent the screen has nothing left to offer, so it
+  // rebuilds itself. MORE MEMES already resets at 1400ms and cancels this by
+  // clearing `spent`; this is what covers LAMBO and PIZZA, which used to leave
+  // the machine standing empty for good.
+  const rebuild = useCallback(() => reset(false), [reset]);
+  useAutoRearm(spent, rebuild, 4600);
+
   // Rearm when the section scrolls away, so coming back gives a fresh machine.
   useEffect(() => {
     const el = stageRef.current;
@@ -584,7 +593,14 @@ export function VaultSection() {
               fill="var(--text-dim)"
               textAnchor="middle"
             >
-              <text x="330" y="78">IN</text>
+              {/* Its own size and baseline: at 19/78 the glyphs sat exactly on
+                  the hopper rim (measured: label bottom 83.2 against a rim top
+                  of 78) and touched the coin above. Only 18 units of daylight
+                  exist between the coins and the rim, so the label had to come
+                  up and down a size to fit inside it. */}
+              <text x="330" y="74" fontSize="17">
+                IN
+              </text>
               <text className={s.labelLocked} x="330" y="188" fill="var(--cream)">
                 LOCKED
               </text>

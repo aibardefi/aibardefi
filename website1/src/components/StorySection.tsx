@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Mascot } from "./Mascot";
 import { useEntrance, prefersReducedMotion } from "@/lib/useEntrance";
 import { useReplay } from "@/lib/useReplay";
+import { useAutoRearm } from "@/lib/useAutoRearm";
 import s from "./StorySection.module.css";
 
 type CardState = "idle" | "lifting" | "flipped";
@@ -43,6 +44,9 @@ export function StorySection() {
   }, []);
 
   useReplay(ref, rearm);
+  // The deck turns itself face down again once the payoff has been read, so the
+  // three cards are not a one-shot.
+  useAutoRearm(showPayoff, rearm, 5200);
 
   const flipCard = useCallback((i: number) => {
     setCards((prev) => {
