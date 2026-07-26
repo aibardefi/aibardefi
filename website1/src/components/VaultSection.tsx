@@ -19,14 +19,21 @@ const SVGNS = "http://www.w3.org/2000/svg";
 const FUNNEL_NECK_X = 330;
 const FEED_COIN_R = 19;
 
+/**
+ * Three to a side, arcing down at the outer edges, with a 74-unit hole in the
+ * middle. The hole is the point: IN used to be squeezed into whatever space was
+ * left between a continuous row of coins and the hopper rim, which was none —
+ * it touched the coin above it and sat on the rim below. The coins now frame
+ * the word instead of closing over it, and they hang wider than the funnel
+ * mouth so the gap can be big enough to read into.
+ */
 const FEED_AT = [
-  { x: 214, y: 24 },
-  { x: 256, y: 10 },
-  // Lifted out of the way of the IN label directly beneath it.
-  { x: 298, y: 14 },
-  { x: 340, y: 6 },
-  { x: 382, y: 22 },
-  { x: 424, y: 12 },
+  { x: 171, y: 30 },
+  { x: 213, y: 16 },
+  { x: 255, y: 6 },
+  { x: 367, y: 6 },
+  { x: 409, y: 16 },
+  { x: 451, y: 30 },
 ];
 
 /** The same six, at rest inside the vault once the door shuts over them. */
@@ -593,12 +600,12 @@ export function VaultSection() {
               fill="var(--text-dim)"
               textAnchor="middle"
             >
-              {/* Its own size and baseline: at 19/78 the glyphs sat exactly on
-                  the hopper rim (measured: label bottom 83.2 against a rim top
-                  of 78) and touched the coin above. Only 18 units of daylight
-                  exist between the coins and the rim, so the label had to come
-                  up and down a size to fit inside it. */}
-              <text x="330" y="74" fontSize="17">
+              {/* Up into the gap the coins now leave, and bigger than the two
+                  labels on the machine body — it sits on open background rather
+                  than on a slab, so it has nothing behind it to lift it off the
+                  page. Baseline 40 puts its lowest ink ~32 units clear of the
+                  rim it used to rest on. */}
+              <text x="330" y="42" fontSize="26" letterSpacing="3" fill="var(--ink)">
                 IN
               </text>
               <text className={s.labelLocked} x="330" y="188" fill="var(--cream)">
