@@ -4,6 +4,7 @@ import Image from "next/image";
 import { asset } from "@/lib/asset";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
+import { Reveal } from "@/components/Reveal";
 
 /**
  * Section 2: memecoins lock into the vault, $SB comes out.
@@ -14,20 +15,22 @@ import { motion, useInView, useReducedMotion } from "framer-motion";
  * positions are % of the same height-fit stage system the hero uses.
  */
 
+// Locked coins fade in together around the 1.5s "locked visible" beat.
 const INSIDE = [
-  { src: "/assets/coin-ansemcat.webp", x: 48.5, y: 46.5, size: 6.8, zoom: 234, d2: "0.85s" },
-  { src: "/assets/coin-tendies.webp", x: 57.7, y: 46.5, size: 6.8, zoom: 202, d2: "1.1s" },
-  { src: "/assets/coin-cashdog.webp", x: 48, y: 58, size: 6.5, zoom: 212, d2: "1.35s" },
-  { src: "/assets/coin-cashcat.webp", x: 53, y: 59.5, size: 6.5, zoom: 190, d2: "1.6s" },
-  { src: "/assets/coin-littlejohn.webp", x: 58.2, y: 58, size: 6.5, zoom: 182, d2: "1.85s" },
+  { src: "/assets/coin-ansemcat.webp", x: 48.5, y: 46.5, size: 6.8, zoom: 234, d2: "1.5s" },
+  { src: "/assets/coin-tendies.webp", x: 57.7, y: 46.5, size: 6.8, zoom: 202, d2: "1.55s" },
+  { src: "/assets/coin-cashdog.webp", x: 48, y: 58, size: 6.5, zoom: 212, d2: "1.6s" },
+  { src: "/assets/coin-cashcat.webp", x: 53, y: 59.5, size: 6.5, zoom: 190, d2: "1.65s" },
+  { src: "/assets/coin-littlejohn.webp", x: 58.2, y: 58, size: 6.5, zoom: 182, d2: "1.7s" },
 ];
 
+// Memes move toward the vault on a clean stagger (0.4s → 1.0s).
 const TRAVEL = [
-  { src: "/assets/coin-ansemcat.webp", zoom: 234, d: "0.15s", sx: 29, sy: 66, tsz: 4, msx: 6, msy: 36, mtsz: 8, trail: "rgba(150,90,220,.85)" },
-  { src: "/assets/coin-tendies.webp", zoom: 202, d: "0.4s", sx: 33, sy: 61, tsz: 4, msx: 11, msy: 32, mtsz: 8, trail: "rgba(140,200,40,.85)" },
-  { src: "/assets/coin-cashdog.webp", zoom: 212, d: "0.65s", sx: 30, sy: 64, tsz: 3.7, msx: 8, msy: 34, mtsz: 8, trail: "rgba(150,205,45,.85)" },
-  { src: "/assets/coin-cashcat.webp", zoom: 190, d: "0.9s", sx: 36, sy: 59, tsz: 4, msx: 15, msy: 31, mtsz: 8.5, trail: "rgba(190,198,206,.8)" },
-  { src: "/assets/coin-littlejohn.webp", zoom: 182, d: "1.15s", sx: 40, sy: 57, tsz: 4.3, msx: 22, msy: 29, mtsz: 9, trail: "rgba(212,168,42,.85)" },
+  { src: "/assets/coin-ansemcat.webp", zoom: 234, d: "0.4s", sx: 29, sy: 66, tsz: 4, msx: 6, msy: 36, mtsz: 8, trail: "rgba(150,90,220,.85)" },
+  { src: "/assets/coin-tendies.webp", zoom: 202, d: "0.55s", sx: 33, sy: 61, tsz: 4, msx: 11, msy: 32, mtsz: 8, trail: "rgba(140,200,40,.85)" },
+  { src: "/assets/coin-cashdog.webp", zoom: 212, d: "0.7s", sx: 30, sy: 64, tsz: 3.7, msx: 8, msy: 34, mtsz: 8, trail: "rgba(150,205,45,.85)" },
+  { src: "/assets/coin-cashcat.webp", zoom: 190, d: "0.85s", sx: 36, sy: 59, tsz: 4, msx: 15, msy: 31, mtsz: 8.5, trail: "rgba(190,198,206,.8)" },
+  { src: "/assets/coin-littlejohn.webp", zoom: 182, d: "1.0s", sx: 40, sy: 57, tsz: 4.3, msx: 22, msy: 29, mtsz: 9, trail: "rgba(212,168,42,.85)" },
 ];
 
 export function VaultSection() {
@@ -41,9 +44,14 @@ export function VaultSection() {
 
   // `.play` drives the whole CSS sequence. Cycling it off→on restarts every
   // animation from zero, so the section replays both on scroll-into-view and
-  // when the cue is clicked.
+  // when the vault (or cue) is clicked.
   const [play, setPlay] = useState(false);
+  // Locked while the ~2.6s timeline runs so a replay can't interrupt itself.
+  const [busy, setBusy] = useState(false);
   const rafs = useRef<number[]>([]);
+  const busyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const SEQUENCE_MS = 2600;
+
   const restart = useCallback(() => {
     rafs.current.forEach(cancelAnimationFrame);
     setPlay(false);
@@ -52,7 +60,15 @@ export function VaultSection() {
       rafs.current.push(r2);
     });
     rafs.current.push(r1);
+    setBusy(true);
+    if (busyTimer.current) clearTimeout(busyTimer.current);
+    busyTimer.current = setTimeout(() => setBusy(false), SEQUENCE_MS);
   }, []);
+
+  // Clicking the vault or the cue replays, but only once the timeline is idle.
+  const replay = useCallback(() => {
+    if (!busy) restart();
+  }, [busy, restart]);
 
   useEffect(() => {
     const id = requestAnimationFrame(() => {
@@ -62,7 +78,13 @@ export function VaultSection() {
     return () => cancelAnimationFrame(id);
   }, [inView, restart]);
 
-  useEffect(() => () => rafs.current.forEach(cancelAnimationFrame), []);
+  useEffect(
+    () => () => {
+      rafs.current.forEach(cancelAnimationFrame);
+      if (busyTimer.current) clearTimeout(busyTimer.current);
+    },
+    []
+  );
 
   return (
     <>
@@ -71,7 +93,7 @@ export function VaultSection() {
         ref={ref}
         className={`relative flex min-h-[100svh] w-full flex-col overflow-hidden bg-cream lg:block ${play ? "play" : ""}`}
       >
-        <div className="v-copy relative z-20 px-5 pt-24 sm:px-8 sm:pt-28">
+        <Reveal className="v-copy relative z-20 px-5 pt-24 sm:px-8 sm:pt-28">
           <h2 className="text-[clamp(2rem,9vw,3rem)] leading-[1.04] font-extrabold tracking-[-0.02em] text-navy uppercase lg:text-[clamp(2.25rem,8.5svh,5.5rem)]">
             Lock Memes.
             <br />
@@ -80,10 +102,23 @@ export function VaultSection() {
           <p className="mt-4 max-w-[26ch] text-[clamp(0.95rem,4vw,1.15rem)] font-semibold text-navy/90 lg:text-[clamp(1rem,2.6svh,1.45rem)]">
             Keep your memecoins and get $SB without selling them.
           </p>
-        </div>
+        </Reveal>
 
         <div className="v-stage relative z-10 mt-2">
-          <div className="vault">
+          <div
+            className="vault"
+            role="button"
+            tabIndex={0}
+            aria-label="Replay the vault animation"
+            onClick={replay}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                replay();
+              }
+            }}
+            style={{ cursor: "pointer" }}
+          >
             <div className="vault-glow" aria-hidden />
             {hasVault ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -91,6 +126,8 @@ export function VaultSection() {
                 src={asset("/assets/vault.webp")}
                 alt="Stone vault holding locked memecoins"
                 className="h-full w-full object-contain select-none"
+                loading="lazy"
+                decoding="async"
                 onError={() => setHasVault(false)}
               />
             ) : (
@@ -205,7 +242,7 @@ export function VaultSection() {
           <div className="v-cue">
             <button
               type="button"
-              onClick={restart}
+              onClick={replay}
               aria-label="Replay: watch the memecoins lock into the vault"
               className="inline-flex cursor-pointer items-center gap-2.5 whitespace-nowrap text-[11px] font-bold uppercase tracking-[0.22em] text-navy/85 transition-colors hover:text-navy lg:text-[13px]"
             >

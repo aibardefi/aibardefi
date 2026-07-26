@@ -91,8 +91,8 @@ export function BearMascot({ pulseKey, showMemePower, medallionRef }: Props) {
           scale value would make the two animations fight. */}
       <motion.div
         key={pulseKey}
-        animate={reduced ? undefined : { scale: [1, 1.1, 1] }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
+        animate={reduced ? undefined : { scale: [1, 1.015, 1] }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         style={{ transformOrigin: "bottom center" }}
       >
         <motion.div

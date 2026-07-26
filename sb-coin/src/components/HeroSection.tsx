@@ -7,6 +7,7 @@ import { asset } from "@/lib/asset";
 import { BearMascot } from "@/components/BearMascot";
 import { FloatingCoin } from "@/components/FloatingCoin";
 import { Header } from "@/components/Header";
+import { Reveal } from "@/components/Reveal";
 import { ScrollPrompt } from "@/components/ScrollPrompt";
 import { COINS, DOTS, FLIGHT, type Coin } from "@/lib/heroConfig";
 
@@ -108,11 +109,13 @@ export function HeroSection() {
         <Header />
 
         <div className="relative z-20 px-5 pt-24 sm:px-8 sm:pt-28 lg:absolute lg:top-1/2 lg:left-[4.5%] lg:max-w-[46%] lg:-translate-y-[54%] lg:px-0 lg:pt-0">
-          <h1 className="text-[clamp(2.25rem,10.5vw,3.5rem)] leading-[1.02] font-extrabold tracking-[-0.02em] text-navy uppercase lg:text-[clamp(2.75rem,10svh,6.75rem)]">
-            Lock <span className="text-orange">Memes.</span>
-            <br />
-            Borrow $SB.
-          </h1>
+          <Reveal>
+            <h1 className="text-[clamp(2.25rem,10.5vw,3.5rem)] leading-[1.02] font-extrabold tracking-[-0.02em] text-navy uppercase lg:text-[clamp(2.75rem,10svh,6.75rem)]">
+              Lock <span className="text-orange">Memes.</span>
+              <br />
+              Borrow $SB.
+            </h1>
+          </Reveal>
         </div>
 
         {/* Stage keeps the bear and coins locked to the courtyard behind them. */}
