@@ -10,7 +10,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "$SB — Lock Memes. Borrow $SB.",
+  title: "$SB — Lock Memes. Borrow The Meme.",
   description: "Lock your memecoins, borrow $SB.",
 };
 
