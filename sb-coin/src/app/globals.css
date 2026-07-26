@@ -731,6 +731,70 @@ html {
   height: 15px;
   fill: currentColor;
 }
+.y-ca {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 100%;
+  margin-top: 18px;
+  padding: 8px 8px 8px 12px;
+  border-radius: 9999px;
+  border: 1.5px solid rgba(20, 36, 63, 0.18);
+  background: rgba(255, 255, 255, 0.5);
+  color: var(--navy);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+}
+.y-ca:hover:not(:disabled) {
+  border-color: rgba(20, 36, 63, 0.42);
+  background: rgba(255, 255, 255, 0.85);
+}
+.y-ca:active:not(:disabled) {
+  transform: scale(0.99);
+}
+.y-ca:disabled {
+  cursor: default;
+  opacity: 0.72;
+}
+.y-ca-label {
+  flex: none;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--navy);
+  padding: 3px 8px;
+  border-radius: 9999px;
+}
+.y-ca-addr {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12.5px;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: min(56vw, 330px);
+}
+.y-ca-icon {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--orange);
+  background: rgba(244, 88, 30, 0.1);
+  padding: 4px 10px;
+  border-radius: 9999px;
+}
+.y-ca-icon svg {
+  width: 13px;
+  height: 13px;
+  fill: currentColor;
+}
 .y-stage {
   position: relative;
   z-index: 10;
