@@ -44,6 +44,36 @@ export function JoinSection() {
     flashTimer.current = window.setTimeout(() => setShowToast(false), 1600);
   }, []);
 
+  /**
+   * Last resort when the Clipboard API is missing or refused.
+   *
+   * navigator.clipboard is only defined in a secure context, so anyone opening
+   * the site over plain http — or in an in-app browser that withholds it — got
+   * "Press Ctrl+C" and no way to act on it, since the address is inside a
+   * button and never selected. This puts the real string in a throwaway
+   * textarea, selects it and copies, which is supported everywhere the modern
+   * API is not.
+   */
+  const copyFallback = useCallback((text: string) => {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    // Off-screen rather than hidden: a display:none field cannot be selected,
+    // and any on-screen position scrolls the page when it takes focus.
+    ta.style.cssText = "position:fixed;top:-1000px;opacity:0";
+    document.body.appendChild(ta);
+    ta.select();
+    ta.setSelectionRange(0, text.length);
+    let ok = false;
+    try {
+      ok = document.execCommand("copy");
+    } catch {
+      ok = false;
+    }
+    document.body.removeChild(ta);
+    return ok;
+  }, []);
+
   const handleCopy = useCallback(() => {
     if (!ready) {
       flash("Not yet");
@@ -51,14 +81,14 @@ export function JoinSection() {
       return;
     }
     const done = () => flash("Copied");
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(CONTRACT!).then(done, () => {
-        flash("Press Ctrl+C");
-      });
+    const fallback = () => flash(copyFallback(CONTRACT!) ? "Copied" : "Copy failed");
+
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(CONTRACT!).then(done, fallback);
     } else {
-      flash("Press Ctrl+C");
+      fallback();
     }
-  }, [ready, flash]);
+  }, [ready, flash, copyFallback]);
 
   const handleLink = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>) => {
