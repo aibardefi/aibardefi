@@ -62,16 +62,18 @@
 
   --linen: #5b7b93;
 
-  /* Headline pair: navy carries the line, tangerine picks out the one word
-     that word is actually about.
+  /* Headline pair: the blue carries the line, the orange picks out the one word
+     the line is actually about.
 
-     Both were pulled forward off the flat, slightly dusty naval blue and amber
-     they started as. A vivid indigo reads contemporary where #2f5aa0 read like
-     a team crest, and pulling the orange back toward red gets it out of the
-     gold's territory — at #ff8f1f it was competing with the $SB coins for the
-     same warm note instead of contrasting the blue. */
-  --navy: #3b5bd9;
-  --tangerine: #ff7a18;
+     Both are sampled straight off the cyan-on-orange reference — #29cdec is the
+     letter body, #f37208 the ground behind it. The names are historical: this
+     was navy and tangerine before, and every section's markup still says
+     .sticker / .hot, so renaming the tokens would touch seven modules to say
+     nothing new. Note the pair is inverted from the reference on purpose —
+     there the orange is the field and the blue the type; here the field is the
+     site's fixed cream, so the blue leads and the orange accents. */
+  --navy: #29cdec;
+  --tangerine: #f37208;
 
   /* One background for every page, per the brief. The second value only feeds
      the radial wash at the foot of each screen — kept close to the first now,
