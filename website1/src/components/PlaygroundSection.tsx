@@ -209,7 +209,7 @@ export function PlaygroundSection() {
 
       <div className="head" data-ent="up" data-ent-delay="90">
         <h1 className="sticker">
-          Poke the <span className="hot">bear</span>.
+          Poke <span className="hot">Capy Bear</span>.
         </h1>
       </div>
 

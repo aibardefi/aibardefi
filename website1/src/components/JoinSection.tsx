@@ -118,10 +118,10 @@ export function JoinSection() {
       <div className="head" data-ent="up" data-ent-delay="90">
         {/* Lower case in the markup, uppercase on screen — .sticker applies the
             transform, so writing it shouted here would only make the source
-            harder to read. The accent lands on the last word: it is the payoff
-            of the line and the thing the whole site is collateralised by. */}
+            harder to read. The accent is on the first "meme", the token itself;
+            the memes powering it stay in the line's own colour. */}
         <h1 className="sticker">
-          The meme powered by <span className="hot">memes</span>
+          The <span className="hot">meme</span> powered by memes
         </h1>
       </div>
 
