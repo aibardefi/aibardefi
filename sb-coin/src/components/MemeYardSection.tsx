@@ -142,7 +142,7 @@ export function MemeYardSection() {
           The bear kingdom.
         </p>
         <a className="y-join" href="#">
-          Join The Yard
+          Launch App
         </a>
         <ContractAddress />
         <div className="y-social">
