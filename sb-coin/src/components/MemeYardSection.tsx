@@ -136,11 +136,6 @@ export function MemeYardSection() {
           <br />
           Powered By Memes.
         </h2>
-        <p className="mt-4 text-[clamp(0.95rem,4vw,1.15rem)] font-semibold text-navy/90 lg:text-[clamp(1rem,2.4svh,1.35rem)]">
-          Meme power. Community chaos.
-          <br />
-          The bear kingdom.
-        </p>
         <a className="y-join" href="#">
           Launch App
         </a>
