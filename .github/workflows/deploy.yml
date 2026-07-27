@@ -41,6 +41,9 @@ jobs:
         working-directory: website1
         env:
           NEXT_PUBLIC_BASE_PATH: /aibardefi/website1
+          # Absolute, for og:image — a crawler has nothing to resolve a
+          # relative image URL against, and gets no preview card at all.
+          NEXT_PUBLIC_SITE_URL: https://aibardefi.github.io/aibardefi/website1
 
       - name: Nest the $SB export inside the original export
         run: |
