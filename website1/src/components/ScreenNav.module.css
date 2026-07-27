@@ -1,0 +1,75 @@
+.nav {
+  position: fixed;
+  top: 50%;
+  /* Clears the notch and the rounded corner on a phone held in landscape. */
+  right: max(0.35rem, env(safe-area-inset-right));
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Under the speech bubbles (z-index 4) on purpose: a dot column that covers
+     what he is saying is worse than one that is briefly covered. */
+  z-index: 3;
+}
+
+/* The dot is 9px but the target is 44 — the smallest square anyone can hit
+   reliably with a thumb. Padding does the work so the dots still look spaced. */
+.hit {
+  width: 44px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 2.5px solid var(--ink);
+  background: transparent;
+  opacity: 0.45;
+  transition: background 240ms ease, transform 320ms var(--spring-big),
+    opacity 240ms ease;
+}
+
+.on .dot {
+  background: var(--ink);
+  opacity: 1;
+  transform: scale(1.35);
+}
+
+/* Hover is a preview of the jump, so it reads as a control rather than as a
+   progress readout. */
+.hit:hover .dot {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+.hit:focus-visible {
+  outline: none;
+}
+.hit:focus-visible .dot {
+  outline: 3px solid var(--stamp);
+  outline-offset: 4px;
+  opacity: 1;
+}
+
+/* On a short screen seven 30px rows plus the notch is most of the height, so
+   the column tightens rather than running off the top and bottom. */
+@media (max-height: 700px), (max-width: 400px) {
+  .hit {
+    height: 24px;
+    width: 34px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dot {
+    transition: none;
+  }
+}
