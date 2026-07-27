@@ -19,13 +19,32 @@ export type Coin = {
   glyph: ReactNode;
 };
 
+/**
+ * The roster's colours, addressable by name.
+ *
+ * These six are the only decorative colours on the site. Anything that needs to
+ * be tinted — a mood button, a story card — takes one of these rather than
+ * inventing a hue, which is how the palette went from thirty-five values to
+ * this plus eight roles. They are not in globals.css on purpose: they belong to
+ * the tokens, not to the page, and a coin leaving the roster should take its
+ * colour with it.
+ */
+export const COIN_COLOR = {
+  cashcat: "#b9b3a6",
+  cashdog: "#7fb3dd",
+  littlejohn: "#2f6f4f",
+  tendies: "#e0a33c",
+  yolo: "#c4392b",
+  ansemcat: "#8b6fd4",
+} as const;
+
 export const COINS: Coin[] = [
   {
     // Cash + cat, so the money has to be on the face. Dollar-sign eyes are the
     // oldest cartoon shorthand there is and survive being shrunk to a 36px
     // button better than a banknote or a money bag would.
     ticker: "CASHCAT",
-    bg: "#b9b3a6",
+    bg: COIN_COLOR.cashcat,
     glyphOn: "#12110c",
     glyph: (
       <>
@@ -66,7 +85,7 @@ export const COINS: Coin[] = [
     // Same money eyes as the cat — they are a pair, and the ears are what tell
     // them apart: his hang, hers point.
     ticker: "CASH DOG",
-    bg: "#7fb3dd",
+    bg: COIN_COLOR.cashdog,
     glyphOn: "#12110c",
     glyph: (
       <>
@@ -103,7 +122,7 @@ export const COINS: Coin[] = [
     // into a smudge at this size, and the feather is the mark everyone already
     // reads as Robinhood — which is the joke, since this is its chain.
     ticker: "LITTLE JOHN",
-    bg: "#2f6f4f",
+    bg: COIN_COLOR.littlejohn,
     glyphOn: "#f7edd9",
     glyph: (
       <>
@@ -134,7 +153,7 @@ export const COINS: Coin[] = [
     // Three actual tenders in a row. The single lumpy shape it used to be read
     // as a chocolate-chip cookie — the count is what makes it chicken.
     ticker: "TENDIES",
-    bg: "#e0a33c",
+    bg: COIN_COLOR.tendies,
     glyphOn: "#12110c",
     glyph: (
       <>
@@ -173,7 +192,7 @@ export const COINS: Coin[] = [
     // A rocket that reads as a rocket. The old one had a 44-unit nose cone on a
     // straight-sided body with no flame, which at button size was the letter A.
     ticker: "YOLO",
-    bg: "#c4392b",
+    bg: COIN_COLOR.yolo,
     glyphOn: "#f7edd9",
     glyph: (
       <>
@@ -189,7 +208,7 @@ export const COINS: Coin[] = [
   {
     // The shades are the whole point — without them this is CASHCAT again.
     ticker: "ANSEMCAT",
-    bg: "#8b6fd4",
+    bg: COIN_COLOR.ansemcat,
     glyphOn: "#12110c",
     glyph: (
       <>

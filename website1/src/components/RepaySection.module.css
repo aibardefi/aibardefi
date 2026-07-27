@@ -56,7 +56,9 @@
   inset: 12px 0;
   border: 4px solid var(--ink);
   border-radius: 99px;
-  background: var(--vault);
+  /* Ink, not a navy of its own: --vault was a one-off #2e3a4f used nowhere
+     else on the site. */
+  background: var(--ink);
   overflow: hidden;
 }
 /* Gold fills the track from the left as you repay. */

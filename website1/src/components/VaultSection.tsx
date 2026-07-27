@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { MASCOT_HREF } from "./Mascot";
-import { COINS, CoinGlyph } from "./coins";
+import { COINS, COIN_COLOR, CoinGlyph } from "./coins";
 import { useEntrance, prefersReducedMotion } from "@/lib/useEntrance";
 import { useAutoRearm } from "@/lib/useAutoRearm";
 import s from "./VaultSection.module.css";
@@ -178,6 +178,9 @@ export function VaultSection() {
         const g = document.createElementNS(SVGNS, "g");
         const c = document.createElementNS(SVGNS, "circle");
         c.setAttribute("r", "17");
+        // Literal, not var(--gold): setAttribute writes a plain attribute value,
+        // and an attribute cannot resolve a custom property. These three are the
+        // only hard-coded colours left outside the coin roster.
         c.setAttribute("fill", "#d9a020");
         c.setAttribute("stroke", "#12110c");
         c.setAttribute("stroke-width", "5");
@@ -429,7 +432,7 @@ export function VaultSection() {
                       className={`${s.feedcoin} ${idle ? s.bob : ""}`}
                       style={{ animationDelay: `${-0.4 * i}s` }}
                     >
-                      <circle r="19" cx="19" cy="19" fill={coin.bg} stroke="#12110c" strokeWidth="4" />
+                      <circle r="19" cx="19" cy="19" fill={coin.bg} stroke="var(--ink)" strokeWidth="4" />
                       <g transform="translate(19 19) scale(0.3) translate(-50 -50)" fill={coin.glyphOn}>
                         {coin.glyph}
                       </g>
@@ -441,7 +444,7 @@ export function VaultSection() {
 
             <g
               className={s.shell}
-              stroke="#12110c"
+              stroke="var(--ink)"
               strokeWidth="7"
               strokeLinejoin="round"
               strokeLinecap="round"
@@ -514,7 +517,7 @@ export function VaultSection() {
                   transform={`translate(${INSIDE_AT[i].x} ${INSIDE_AT[i].y})`}
                 >
                   <g className={`${s.inside} ${landed > i ? s.insideIn : ""}`}>
-                    <circle r="21" fill={coin.bg} stroke="#12110c" strokeWidth="4" />
+                    <circle r="21" fill={coin.bg} stroke="var(--ink)" strokeWidth="4" />
                     <g transform="scale(0.33) translate(-50 -50)" fill={coin.glyphOn}>
                       {coin.glyph}
                     </g>
@@ -550,7 +553,7 @@ export function VaultSection() {
                 <circle cx="392" cy="236" r="19" fill="var(--gold-deep)" />
                 <path d="M392 236 L392 208" strokeWidth="7" />
               </g>
-              <g stroke="#12110c" strokeWidth="4" strokeLinecap="round">
+              <g stroke="var(--ink)" strokeWidth="4" strokeLinecap="round">
                 <path d="M392 194 v8 M392 270 v8 M350 236 h8 M426 236 h8" />
               </g>
 
@@ -603,8 +606,8 @@ export function VaultSection() {
               />
               <rect x="236" y="380" width="188" height="30" rx="9" fill="none" />
 
-              <rect x="176" y="452" width="58" height="34" rx="12" fill="#12110c" />
-              <rect x="426" y="452" width="58" height="34" rx="12" fill="#12110c" />
+              <rect x="176" y="452" width="58" height="34" rx="12" fill="var(--ink)" />
+              <rect x="426" y="452" width="58" height="34" rx="12" fill="var(--ink)" />
             </g>
 
             {/* The only red on the page, so the thing you touch is the thing
@@ -629,7 +632,7 @@ export function VaultSection() {
                 height="26"
                 rx="6"
                 fill="var(--machine-dark)"
-                stroke="#12110c"
+                stroke="var(--ink)"
                 strokeWidth="6"
               />
               <g className={s.leverArm}>
@@ -640,7 +643,7 @@ export function VaultSection() {
                   height="100"
                   rx="7"
                   fill="var(--machine-dark)"
-                  stroke="#12110c"
+                  stroke="var(--ink)"
                   strokeWidth="6"
                 />
                 <circle
@@ -649,7 +652,7 @@ export function VaultSection() {
                   cy="146"
                   r="27"
                   fill="var(--stamp)"
-                  stroke="#12110c"
+                  stroke="var(--ink)"
                   strokeWidth="7"
                 />
               </g>
@@ -745,27 +748,27 @@ export function VaultSection() {
               <svg viewBox="0 0 100 100" aria-hidden="true">
                 <g
                   transform="translate(-5 -1) scale(1.1)"
-                  stroke="#12110c"
+                  stroke="var(--ink)"
                   strokeWidth="5"
                   strokeLinejoin="round"
                 >
                   <path d="M79 34 L79 44 M90 34 L90 44" strokeLinecap="round" />
-                  <path d="M73 29 L97 29 L97 34 L73 34 Z" fill="#12110c" />
+                  <path d="M73 29 L97 29 L97 34 L73 34 Z" fill="var(--ink)" />
 
                   {/* One wedge: nose almost on the floor, windscreen raked back
                       further than the bonnet is long, a roof barely wider than
                       the screen, then a flat deck to the tail. */}
                   <path
                     d="M5 57 L10 48 L36 44 L46 33 L61 33 L71 41 L95 44 L97 51 L97 57 Z"
-                    fill="#c4392b"
+                    fill="var(--stamp)"
                   />
-                  <path d="M47 43 L50 36 L60 36 L66 42 Z" fill="#f7edd9" strokeWidth="3.5" />
-                  <path d="M66 47 L79 49 L79 52 L66 51 Z" fill="#12110c" strokeWidth="0" />
+                  <path d="M47 43 L50 36 L60 36 L66 42 Z" fill="var(--cream)" strokeWidth="3.5" />
+                  <path d="M66 47 L79 49 L79 52 L66 51 Z" fill="var(--ink)" strokeWidth="0" />
 
-                  <circle cx="28" cy="58" r="10.5" fill="#12110c" />
-                  <circle cx="77" cy="58" r="11.5" fill="#12110c" />
-                  <circle cx="28" cy="58" r="4" fill="#f7edd9" strokeWidth="0" />
-                  <circle cx="77" cy="58" r="4.5" fill="#f7edd9" strokeWidth="0" />
+                  <circle cx="28" cy="58" r="10.5" fill="var(--ink)" />
+                  <circle cx="77" cy="58" r="11.5" fill="var(--ink)" />
+                  <circle cx="28" cy="58" r="4" fill="var(--cream)" strokeWidth="0" />
+                  <circle cx="77" cy="58" r="4.5" fill="var(--cream)" strokeWidth="0" />
                 </g>
               </svg>
             </span>
@@ -782,14 +785,14 @@ export function VaultSection() {
               <svg viewBox="0 0 100 100" aria-hidden="true">
                 <path
                   d="M50 10 L86 82 Q50 96 14 82 Z"
-                  fill="#e0a33c"
-                  stroke="#12110c"
+                  fill={COIN_COLOR.tendies}
+                  stroke="var(--ink)"
                   strokeWidth="6"
                   strokeLinejoin="round"
                 />
-                <circle cx="42" cy="56" r="6" fill="#c4392b" />
-                <circle cx="62" cy="64" r="6" fill="#c4392b" />
-                <circle cx="50" cy="76" r="5" fill="#c4392b" />
+                <circle cx="42" cy="56" r="6" fill="var(--stamp)" />
+                <circle cx="62" cy="64" r="6" fill="var(--stamp)" />
+                <circle cx="50" cy="76" r="5" fill="var(--stamp)" />
               </svg>
             </span>
             <span className={s.spendLabel}>PIZZA</span>
@@ -815,7 +818,7 @@ export function VaultSection() {
                   { coin: COINS[1], cx: 50, cy: 58, r: 25 },
                 ].map(({ coin, cx, cy, r }) => (
                   <g key={coin.ticker} transform={`translate(${cx} ${cy})`}>
-                    <circle r={r} fill={coin.bg} stroke="#12110c" strokeWidth="6" />
+                    <circle r={r} fill={coin.bg} stroke="var(--ink)" strokeWidth="6" />
                     <g
                       transform={`scale(${(1.5 * r) / 100}) translate(-50 -50)`}
                       fill={coin.glyphOn}
@@ -824,8 +827,8 @@ export function VaultSection() {
                     </g>
                   </g>
                 ))}
-                <g stroke="#12110c" strokeWidth="5" strokeLinecap="round">
-                  <circle cx="82" cy="18" r="13" fill="#f7edd9" />
+                <g stroke="var(--ink)" strokeWidth="5" strokeLinecap="round">
+                  <circle cx="82" cy="18" r="13" fill="var(--cream)" />
                   <path d="M82 12 V24 M76 18 H88" />
                 </g>
               </svg>

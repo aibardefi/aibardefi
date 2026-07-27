@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Mascot } from "./Mascot";
+import { COIN_COLOR } from "./coins";
 import { useEntrance, prefersReducedMotion } from "@/lib/useEntrance";
 import { useReplay } from "@/lib/useReplay";
 import { useAutoRearm } from "@/lib/useAutoRearm";
@@ -13,21 +14,21 @@ const CARDS = [
   {
     pip: "1st",
     job: "An honest job",
-    bg: "#5fae3f",
+    bg: COIN_COLOR.littlejohn,
     label: "Reveal what happened with the honest job",
     punch: "Lasted four hours.",
   },
   {
     pip: "2nd",
     job: "Day trading",
-    bg: "#c4392b",
+    bg: COIN_COLOR.yolo,
     label: "Reveal what happened with day trading",
     punch: "Down 94%. Twice.",
   },
   {
     pip: "3rd",
     job: "Asked a bank",
-    bg: "#2fa8c4",
+    bg: COIN_COLOR.ansemcat,
     label: "Reveal what happened with the bank",
     punch: "They laughed. No collateral.",
   },
@@ -121,7 +122,7 @@ export function StorySection() {
                 key={i}
                 className={`${s.card} ${state === "flipped" ? s.flipped : ""} ${state === "lifting" ? s.lift : ""}`}
                 onClick={() => flipCard(i)}
-                style={{ "--card-bg": card.bg } as React.CSSProperties}
+                style={{ "--disc-bg": card.bg } as React.CSSProperties}
                 aria-label={card.label}
               >
                 <span className={`${s.face} ${s.faceFront}`}>
@@ -146,7 +147,7 @@ export function StorySection() {
                           />
                           <path
                             d="M32 56 h36 l-6 30 q-12 8 -24 0 z"
-                            fill="#9aa0a6"
+                            fill={COIN_COLOR.cashcat}
                           />
                         </g>
                       </svg>

@@ -11,78 +11,76 @@
    what keeps them from colliding.
    --------------------------------------------------------------------------- */
 
+/* ---------------------------------------------------------------------------
+   The palette, as eight roles.
+
+   It used to be thirty-five values: seven tokens defined and never used, a
+   handful of near-misses (two teals four points apart, two creams, two drop
+   shadows for one effect) and eleven colours invented purely to tint buttons.
+   Every colour now has one job, and anything decorative borrows from the coin
+   roster in coins.tsx rather than inventing a new hue.
+
+   Read this as: ground and ink are the page, cyan and orange are type, lime is
+   money, gold is hardware, violet is glass, red is whatever wants touching.
+   --------------------------------------------------------------------------- */
+
 :root {
+  /* --- ground: the page, unchanged on all seven screens, per the brief. The
+         second value only feeds the radial wash at the foot of each screen and
+         is kept close, because a full shade below it painted a visible grey
+         band rather than the hint of ground it was meant to be. */
+  --ground: #efece5;
+  --ground-2: #e7e3da;
+
+  /* --- ink: every outline and every word. */
   --ink: #12110c;
+  --text: var(--ink);
+  --text-dim: #4f4b42;
+  /* Paper, not ground: speech bubbles, dials, card faces — things that sit on
+     the page rather than being it. */
   --cream: #f7edd9;
-  --fur: #8c5a33;
-  --fur-dark: #6f4526;
-  --vault: #2e3a4f;
+
+  /* --- type: the blue carries the headline, the orange picks out the one word
+         the line is about. Both sampled off the cyan-on-orange reference.
+         The names are historical — every section's markup says .sticker /
+         .hot, so renaming would touch seven modules to say nothing new. */
+  --navy: #29cdec;
+  --tangerine: #f37208;
+
+  /* --- value: $SB and nothing else. Counters, $SB coins, the launch button.
+         Gold is for things that are merely metal. --sb-lit exists because the
+         launch button's hover was a loose #8ddc0a with no token behind it. */
+  --sb: #7cc606;
+  --sb-lit: #8ddc0a;
+  --sb-deep: #5d9504;
+
+  /* --- metal: all hardware. Dial, throw bolts, barrel hinges, handle, chute,
+         brass corners, the clock's alarm. */
   --gold: #d9a020;
   --gold-deep: #b07d14;
 
-  /* $SB itself. Everything that IS the token wears this — the counters, the
-     coins, the chute, the launch button. Gold stays on things that are merely
-     warm or metal: brass hinges, lamplight, the clock's alarm. Note the ink
-     stroke everywhere it carries text: at this luminance it would otherwise
-     vanish into the page's own background. */
-  --sb: #7cc606;
-  --sb-deep: #5d9504;
-  --stamp: #c4392b;
-
-  /* Each screen gets its own object colour so the seven do not read as one
-     long brown page. The ground never changes; the thing standing on it does.
-     Machine is cold slate, safe is bank green, and the bedroom stays warm wood
-     — the warmth is the point right after two rooms of metal. */
-  --machine: #3f4d63;
-  --machine-dark: #2c374a;
-  --machine-deep: #33415c;
-  /* The hopper is its own part so the mouth you post memes into reads as
-     separate from the slab under it. Teal rather than the copper it started as
-     — copper was one more brown on a page that already has a brown bear, and
-     it sat too close to the red lever to leave the lever shouting alone. */
-  --funnel: #2fa8a0;
-  --funnel-dark: #1f7d77;
-
-  /* Furniture. Coral, not wood: the bedroom was brown frame, brown stool,
-     brown lamp and a brown bear, which flattened the whole scene into one
-     colour. Coral against the linen blanket gives the room two. */
-  --furniture: #e07a5f;
-  --furniture-dark: #c25a41;
-
-  /* The vault chamber: violet glass rather than a dark hole. Translucent on
-     purpose — the point of the screen is that you can see your memes sitting
-     in there, and a solid door hid the very thing it was locking. */
+  /* --- glass: every transparent volume. Translucent on purpose — the point of
+         both safes is that you can see your memes sitting inside them. */
   --glass: #8b5cf6;
   --glass-lit: #c4a8ff;
   --glass-deep: #4c2a9e;
 
-  --safe: #2f6157;
-  --safe-dark: #21473f;
-  --safe-deep: #1f5049;
+  /* --- alert: only ever the thing asking to be touched right now. */
+  --stamp: #c4392b;
 
+  /* --- scene colours. Two rooms still need their own objects: the hopper on
+         the machine screen and the bedroom on screen four. Everything else
+         that used to live here — slate, bank green, brown fur — is gone. */
+  --funnel: #2fa8a0;
+  --funnel-dark: #1f7d77;
+  --machine-dark: #2c374a;
+  --furniture: #e07a5f;
+  --furniture-dark: #c25a41;
   --linen: #5b7b93;
 
-  /* Headline pair: the blue carries the line, the orange picks out the one word
-     the line is actually about.
-
-     Both are sampled straight off the cyan-on-orange reference — #29cdec is the
-     letter body, #f37208 the ground behind it. The names are historical: this
-     was navy and tangerine before, and every section's markup still says
-     .sticker / .hot, so renaming the tokens would touch seven modules to say
-     nothing new. Note the pair is inverted from the reference on purpose —
-     there the orange is the field and the blue the type; here the field is the
-     site's fixed cream, so the blue leads and the orange accents. */
-  --navy: #29cdec;
-  --tangerine: #f37208;
-
-  /* One background for every page, per the brief. The second value only feeds
-     the radial wash at the foot of each screen — kept close to the first now,
-     because a full shade below it painted a visible grey band across the bottom
-     third rather than the hint of ground it was meant to be. */
-  --ground: #efece5;
-  --ground-2: #e7e3da;
-  --text: var(--ink);
-  --text-dim: #4f4b42;
+  /* One shadow for one effect. There were two, at different colours and
+     alphas, doing the same job in globals and on the hero. */
+  --shadow: rgba(18, 17, 12, 0.16);
 
   --display: var(--font-sb), ui-sans-serif, system-ui, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif;
@@ -92,7 +90,6 @@
   --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --spring-big: cubic-bezier(0.34, 1.8, 0.5, 1);
   --swift: cubic-bezier(0.2, 0.8, 0.2, 1);
-  --heavy: cubic-bezier(0.5, 0, 0.75, 0);
 }
 
 * {
@@ -351,7 +348,7 @@ h1 {
 }
 
 .grounded {
-  filter: drop-shadow(0 10px 8px rgba(18, 17, 12, 0.16));
+  filter: drop-shadow(0 10px 8px var(--shadow));
 }
 
 /* --------------------------------------------------------------------------

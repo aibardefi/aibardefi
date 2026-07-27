@@ -226,7 +226,10 @@ export function HeroSection() {
               onClick={(e) => feed(coin, e)}
               aria-label={`Feed him ${coin.ticker}`}
             >
-              <span className="disc" style={{ background: coin.bg }}>
+              <span
+              className="disc"
+              style={{ "--disc-bg": coin.bg } as React.CSSProperties}
+            >
                 <CoinGlyph coin={coin} />
               </span>
               <span className="slabel">{coin.ticker}</span>

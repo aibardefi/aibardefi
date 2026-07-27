@@ -207,7 +207,6 @@
   flex-wrap: wrap;
 }
 
-.mbtn :global(.disc) { background: var(--mood-bg); }
 
 .active :global(.disc) {
   transform: translateY(3px);

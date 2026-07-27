@@ -349,8 +349,8 @@ export function RepaySection() {
                 <rect x="422" y="330" width="22" height="34" rx="9" />
               </g>
 
-              <rect x="90" y="426" width="72" height="26" rx="10" fill="#12110c" />
-              <rect x="358" y="426" width="72" height="26" rx="10" fill="#12110c" />
+              <rect x="90" y="426" width="72" height="26" rx="10" fill="var(--ink)" />
+              <rect x="358" y="426" width="72" height="26" rx="10" fill="var(--ink)" />
             </g>
 
             {/* Dial and handle: solid brass over the glass, and the only parts

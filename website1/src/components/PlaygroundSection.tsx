@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { MASCOT_HREF } from "./Mascot";
+import { COIN_COLOR } from "./coins";
 import { useEntrance, prefersReducedMotion } from "@/lib/useEntrance";
 import s from "./PlaygroundSection.module.css";
 
@@ -27,11 +28,21 @@ const MOODS: Record<MoodKey, MoodDef> = {
 
 const ALL_KEYS = Object.keys(MOODS) as MoodKey[];
 
+/**
+ * The six buttons wear the six coin colours.
+ *
+ * They used to carry six invented hues, three of which happened to duplicate a
+ * coin or a token exactly and three of which existed nowhere else on the site.
+ * Borrowing from the roster means the playground is tinted in the same six
+ * colours the first screen taught you, and adds nothing to the palette.
+ *
+ * Icon fill follows the disc: ink on the four light ones, cream on the two dark.
+ */
 const MOOD_BUTTONS: { key: MoodKey; label: string; bg: string; icon: React.ReactNode }[] = [
   {
-    key: "jump", label: "JUMP", bg: "#a8c24e",
+    key: "jump", label: "JUMP", bg: COIN_COLOR.littlejohn,
     icon: (
-      <svg viewBox="0 0 100 100" fill="var(--ink)" aria-hidden="true">
+      <svg viewBox="0 0 100 100" fill="var(--cream)" aria-hidden="true">
         <path d="M50 14 L64 40 L50 32 L36 40 Z" />
         <rect x="42" y="44" width="16" height="30" rx="6" />
         <ellipse cx="50" cy="84" rx="26" ry="7" />
@@ -39,7 +50,7 @@ const MOOD_BUTTONS: { key: MoodKey; label: string; bg: string; icon: React.React
     ),
   },
   {
-    key: "spin", label: "SPIN", bg: "#7fb3dd",
+    key: "spin", label: "SPIN", bg: COIN_COLOR.cashdog,
     icon: (
       <svg viewBox="0 0 100 100" fill="none" stroke="var(--ink)" strokeWidth="9" strokeLinecap="round" aria-hidden="true">
         <path d="M76 34 a32 32 0 1 0 8 22" />
@@ -48,7 +59,7 @@ const MOOD_BUTTONS: { key: MoodKey; label: string; bg: string; icon: React.React
     ),
   },
   {
-    key: "rage", label: "RAGE", bg: "#c4392b",
+    key: "rage", label: "RAGE", bg: COIN_COLOR.yolo,
     icon: (
       <svg viewBox="0 0 100 100" fill="var(--cream)" aria-hidden="true">
         <path d="M54 8 L26 56 h20 l-8 36 30 -50 h-20 z" />
@@ -56,7 +67,7 @@ const MOOD_BUTTONS: { key: MoodKey; label: string; bg: string; icon: React.React
     ),
   },
   {
-    key: "fat", label: "INFLATE", bg: "#d9a020",
+    key: "fat", label: "INFLATE", bg: COIN_COLOR.tendies,
     icon: (
       <svg viewBox="0 0 100 100" fill="var(--ink)" aria-hidden="true">
         <ellipse cx="50" cy="56" rx="34" ry="28" />
@@ -65,15 +76,15 @@ const MOOD_BUTTONS: { key: MoodKey; label: string; bg: string; icon: React.React
     ),
   },
   {
-    key: "shy", label: "SHY", bg: "#e8635e",
+    key: "shy", label: "SHY", bg: COIN_COLOR.ansemcat,
     icon: (
-      <svg viewBox="0 0 100 100" fill="var(--ink)" aria-hidden="true">
+      <svg viewBox="0 0 100 100" fill="var(--cream)" aria-hidden="true">
         <path d="M50 84 C6 56 20 16 50 34 C80 16 94 56 50 84 Z" />
       </svg>
     ),
   },
   {
-    key: "sleep", label: "NAP", bg: "#9aa0a6",
+    key: "sleep", label: "NAP", bg: COIN_COLOR.cashcat,
     icon: (
       <svg viewBox="0 0 100 100" fill="var(--ink)" aria-hidden="true">
         <path d="M62 12 a38 38 0 1 0 26 62 A42 42 0 0 1 62 12 Z" />
@@ -305,7 +316,7 @@ export function PlaygroundSection() {
             <button
               key={mb.key}
               className={`sbtn ${s.mbtn} ${activeBtn === mb.key ? s.active : ""}`}
-              style={{ "--mood-bg": mb.bg } as React.CSSProperties}
+              style={{ "--disc-bg": mb.bg } as React.CSSProperties}
               onClick={() => play(mb.key)}
               aria-label={mb.label}
             >

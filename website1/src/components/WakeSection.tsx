@@ -293,7 +293,7 @@ export function WakeSection() {
                   cx="128"
                   cy="310"
                   r="50"
-                  fill="#efe2c8"
+                  fill="var(--cream)"
                   stroke="none"
                 />
                 <path d="M128 310 v-30 M128 310 l24 16" strokeWidth="7" />

@@ -84,7 +84,7 @@
 }
 
 .faceBack {
-  background: var(--card-bg);
+  background: var(--disc-bg);
   transform: rotateY(180deg);
   place-items: center;
   padding: 10%;
