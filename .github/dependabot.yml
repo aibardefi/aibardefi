@@ -1,0 +1,23 @@
+# Keep the two apps and the workflow actions current without anyone having to
+# remember. Weekly rather than daily: this is a static site with three runtime
+# dependencies, and a daily cadence would only train everyone to ignore it.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+
+  - package-ecosystem: npm
+    directory: /website1
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+
+  # The realistic supply-chain risk to a repo with no runtime dependencies is a
+  # compromised third-party action, so this one matters most.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
