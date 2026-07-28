@@ -180,9 +180,10 @@ export const DOTS = [
   { x: 70.9, y: 20.5, r: 3, color: "var(--dot-blue)" },
 ] as const;
 
-/** Placeholder destinations until the real ones exist. */
 export const LINKS = {
-  borrow: "#",
+  /** The lending app, deployed from sbprotocol/app to its own subdomain. */
+  borrow: "https://app.cykablyat.vip",
+  /** Placeholder until the exchange listing exists. */
   buy: "#",
 } as const;
 
