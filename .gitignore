@@ -44,3 +44,11 @@ next-env.d.ts
 **/target/
 **/*.rs.bk
 Cargo.lock
+
+# Redis writes its snapshot into whatever directory it was started from, which
+# while running this project's tests is the repository root. It is a database
+# file, and one that has held session tokens and single-use quote locks — not
+# something to keep in version control even when the values are from a
+# throwaway instance.
+dump.rdb
+*.rdb
